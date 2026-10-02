@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Основы языка Python — шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#EEF3F8;--card:#FFFFFF;--ink:#13203A;--mute:#5A6A85;--line:#D5DEEA;--a1:#0C7C86;--a2:#B9660A;--a3:#5B4BC4;--a4:#B8325A;--code:#0F1A30;--ct:#E3EAF6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--code:#080F1D}}
+:root[data-theme="dark"]{--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--code:#080F1D}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,Arial,sans-serif}
+header{padding:48px 20px 28px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--mute);max-width:62ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;padding:10px 20px;overflow-x:auto}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+main{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+h2{font-size:28px;margin:44px 0 6px}
+.sub{color:var(--mute);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+article{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));border-radius:10px;padding:16px 18px;min-width:0}
+.t{--c:var(--a1)}.v{--c:var(--a2)}.s{--c:var(--a3)}.k{--c:var(--a4)}
+h3{margin:0 0 6px;font-size:17px}
+article p{margin:0 0 10px;color:var(--mute);font-size:14.5px}
+pre{margin:0;background:var(--code);color:var(--ct);border-radius:8px;padding:12px 14px;overflow-x:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace}
+i.k{color:#FFB454;font-style:normal;font-weight:600}i.s{color:#8EE6A0;font-style:normal}i.c{color:#7F90B0;font-style:italic}i.n{color:#7FC4FF;font-style:normal}
+.wide{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+td code,p code,.sub code,footer code{font:500 13px 'JetBrains Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px}
+.tw{overflow-x:auto}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>Основы языка Python</h1>
+<p>Типы данных, переменные, строки и лаконичные конструкции — с короткими примерами. Комментарий <code>#</code> показывает результат.</p>
+</header>
+<nav><a href="#types">Типы данных</a><a href="#vars">Переменные</a><a href="#str">Строки</a><a href="#short">Лаконичный код</a></nav>
+<main>
+
+<h2 id="types">Типы данных</h2>
+<p class="sub">Тип определяет, какие значения хранятся и что с ними можно делать. Узнать тип: <code>type(x)</code>, проверить: <code>isinstance(x, int)</code>.</p>
+<div class="grid">
+<article class="t wide"><h3>Основные типы</h3><div class="tw"><table>
+<tr><th>Тип</th><th>Пример</th><th>Что это</th><th>Изменяемый</th></tr>
+<tr><td><code>int</code></td><td><code>42</code>, <code>-7</code></td><td>Целое число, размер не ограничен</td><td>нет</td></tr>
+<tr><td><code>float</code></td><td><code>3.14</code>, <code>2e3</code></td><td>Число с плавающей точкой</td><td>нет</td></tr>
+<tr><td><code>complex</code></td><td><code>2+3j</code></td><td>Комплексное число</td><td>нет</td></tr>
+<tr><td><code>bool</code></td><td><code>True</code>, <code>False</code></td><td>Логическое значение (подтип <code>int</code>)</td><td>нет</td></tr>
+<tr><td><code>str</code></td><td><code>"привет"</code></td><td>Строка (текст)</td><td>нет</td></tr>
+<tr><td><code>list</code></td><td><code>[1, "a", 2.5]</code></td><td>Упорядоченный список</td><td>да</td></tr>
+<tr><td><code>tuple</code></td><td><code>(1, 2)</code></td><td>Упорядоченный кортеж</td><td>нет</td></tr>
+<tr><td><code>dict</code></td><td><code>{"a": 1}</code></td><td>Пары «ключ: значение»</td><td>да</td></tr>
+<tr><td><code>set</code></td><td><code>{1, 2, 3}</code></td><td>Множество уникальных элементов</td><td>да</td></tr>
+<tr><td><code>frozenset</code></td><td><code>frozenset({1})</code></td><td>Неизменяемое множество</td><td>нет</td></tr>
+<tr><td><code>NoneType</code></td><td><code>None</code></td><td>«Ничего», отсутствие значения</td><td>нет</td></tr>
+<tr><td><code>bytes</code></td><td><code>b"ab"</code></td><td>Последовательность байт</td><td>нет</td></tr>
+</table></div></article>
+
+<article class="t"><h3>Проверка типа</h3><p>Python определяет тип по значению (динамическая типизация).</p>
+<pre><code>type(5)              # &lt;class 'int'&gt;
+type("5")            # &lt;class 'str'&gt;
+isinstance(2.5, float)  # True
+isinstance(True, int)   # True</code></pre></article>
+
+<article class="t"><h3>Приведение типов</h3><p>Функции-конструкторы превращают значение в другой тип.</p>
+<pre><code>int("15")      # 15
+int(3.9)       # 3 (отбрасывает дробную часть)
+float("2.5")   # 2.5
+str(100)       # '100'
+bool(0)        # False
+list("abc")    # ['a', 'b', 'c']
+set([1, 1, 2]) # {1, 2}</code></pre></article>
+
+<article class="t"><h3>Арифметика чисел</h3><p><code>/</code> всегда даёт <code>float</code>, <code>//</code> — целое деление.</p>
+<pre><code>7 / 2      # 3.5
+7 // 2     # 3
+7 % 2      # 1 (остаток)
+2 ** 10    # 1024
+divmod(7, 2)  # (3, 1)
+abs(-4)    # 4
+round(2.675, 1)  # 2.7</code></pre></article>
+
+<article class="t"><h3>Точность float</h3><p>Дробные числа хранятся приблизительно. Для сравнения используйте <code>round</code> или <code>math.isclose</code>.</p>
+<pre><code>0.1 + 0.2             # 0.30000000000000004
+round(0.1 + 0.2, 2)   # 0.3
+2 ** 100              # int без ограничений</code></pre></article>
+
+<article class="t"><h3>Изменяемые и неизменяемые</h3><p>Изменяемые (<code>list</code>, <code>dict</code>, <code>set</code>) правятся «на месте». Неизменяемые (<code>int</code>, <code>str</code>, <code>tuple</code>) создаются заново.</p>
+<pre><code>a = [1, 2]; a.append(3)   # a → [1, 2, 3]
+t = (1, 2)
+t[0] = 9    # TypeError</code></pre></article>
+
+<article class="t"><h3>Литералы и разделители</h3>
+<pre><code>1_000_000    # 1000000 (подчёркивания для чтения)
+0xFF         # 255 (16-ричное)
+0b101        # 5 (двоичное)
+0o17         # 15 (восьмеричное)
+1.5e-3       # 0.0015</code></pre></article>
+</div>
+
+<h2 id="vars">Переменные</h2>
+<p class="sub">Переменная — это имя, привязанное к объекту в памяти. Оператор <code>=</code> не копирует значение, а связывает имя с объектом.</p>
+<div class="grid">
+<article class="v"><h3>Создание</h3><p>Объявлять тип заранее не нужно. Имя можно привязать к другому типу.</p>
+<pre><code>age = 25          # int
+name = "Анна"     # str
+age = "двадцать"  # теперь str
+del age           # удалить имя</code></pre></article>
+
+<article class="v"><h3>Правила имён</h3><p>Допустимы буквы, цифры и <code>_</code>. Нельзя начинать с цифры, использовать пробелы, дефисы и ключевые слова. Регистр важен.</p>
+<pre><code>user_1 = 1     # верно
+_tmp = 2       # верно
+1user = 3      # SyntaxError
+my-var = 4     # SyntaxError
+class = 5      # SyntaxError
+Age != age     # разные имена</code></pre></article>
+
+<article class="v"><h3>Стиль имён (PEP 8)</h3><p>Договорённости, которые не проверяет интерпретатор, но ждут от кода.</p>
+<pre><code>user_name = "ann"   # snake_case: переменные
+MAX_SIZE = 100      # КОНСТАНТЫ
+_hidden = 1         # «внутреннее» имя
+__x = 2             # защита имени в классе</code></pre></article>
+
+<article class="v"><h3>Ключевые слова</h3><p>Зарезервированы языком, использовать как имена нельзя. Полный список:</p>
+<pre><code>import keyword
+print(keyword.kwlist)
+# False None True and as assert async await
+# break class continue def del elif else except
+# finally for from global if import in is
+# lambda nonlocal not or pass raise return
+# try while with yield</code></pre></article>
+
+<article class="v"><h3>Присваивание</h3><p>Несколько имён одним оператором, обмен значений без временной переменной.</p>
+<pre><code>a, b = 1, 2        # два значения сразу
+x = y = 0          # одно значение двум именам
+a, b = b, a        # обмен: a=2, b=1
+first, *rest = [1, 2, 3]   # 1 и [2, 3]</code></pre></article>
+
+<article class="v"><h3>Составное присваивание</h3><p>Короткая запись «изменить и сохранить».</p>
+<pre><code>n = 10
+n += 5    # 15
+n -= 3    # 12
+n *= 2    # 24
+n //= 5   # 4
+n **= 2   # 16
+s = "a"; s += "b"   # 'ab'</code></pre></article>
+
+<article class="v"><h3>Имя — это ссылка</h3><p>Два имени могут указывать на один изменяемый объект. Для независимой копии используйте <code>.copy()</code>.</p>
+<pre><code>a = [1, 2]
+b = a
+b.append(3)
+print(a)     # [1, 2, 3] — a тоже изменился
+c = a.copy()   # независимая копия
+id(a) == id(b) # True: один объект</code></pre></article>
+
+<article class="v"><h3>Ввод и вывод</h3><p><code>input()</code> всегда возвращает строку. <code>print()</code> принимает <code>sep</code> и <code>end</code>.</p>
+<pre><code>name = input("Имя: ")
+print("Привет,", name)
+print(1, 2, 3, sep="-")      # 1-2-3
+print("a", end="")           # без переноса</code></pre></article>
+</div>
+
+<h2 id="str">Работа со строками</h2>
+<p class="sub">Строка (<code>str</code>) — неизменяемая упорядоченная последовательность символов. Методы возвращают новую строку.</p>
+<div class="grid">
+<article class="s"><h3>Создание и экранирование</h3>
+<pre><code>a = 'одинарные'
+b = "двойные"
+c = """несколько
+строк"""
+d = "Он сказал: \"привет\"\n"   # \n перенос
+e = r"C:\new\file"   # raw: \ как есть
+"Py" "thon"          # 'Python' (склейка)</code></pre></article>
+
+<article class="s"><h3>Индексы и срезы</h3><p>Индексация с 0, с конца — отрицательные. Срез <code>[старт:стоп:шаг]</code>, стоп не включается.</p>
+<pre><code>s = "Python"
+s[0]       # 'P'
+s[-1]      # 'n'
+s[1:4]     # 'yth'
+s[:2]      # 'Py'
+s[::2]     # 'Pto'
+s[::-1]    # 'nohtyP' (разворот)</code></pre></article>
+
+<article class="s"><h3>Операции</h3>
+<pre><code>"ab" + "cd"     # 'abcd'
+"ab" * 3        # 'ababab'
+len("Привет")   # 6
+"th" in "Python"   # True
+"a" &lt; "b"        # True (по коду символа)
+ord("a"), chr(98)  # (97, 'b')</code></pre></article>
+
+<article class="s"><h3>Регистр и очистка</h3>
+<pre><code>"hello".upper()       # 'HELLO'
+"HeLLo".lower()       # 'hello'
+"hello world".title() # 'Hello World'
+"hello".capitalize()  # 'Hello'
+"  hi  ".strip()      # 'hi'
+"xxhixx".strip("x")   # 'hi'
+"Ab".swapcase()       # 'aB'</code></pre></article>
+
+<article class="s"><h3>split и join</h3><p><code>split</code> режет строку на список, <code>join</code> собирает обратно.</p>
+<pre><code>"a b  c".split()       # ['a', 'b', 'c']
+"1,2,3".split(",")     # ['1', '2', '3']
+"-".join(["a", "b"])   # 'a-b'
+"".join(["x", "y"])    # 'xy'
+"a\nb".splitlines()    # ['a', 'b']</code></pre></article>
+
+<article class="s"><h3>Поиск и замена</h3>
+<pre><code>s = "banana"
+s.find("an")      # 1 (или -1, если нет)
+s.index("an")     # 1 (или ValueError)
+s.count("a")      # 3
+s.replace("a", "o")   # 'bonono'
+s.startswith("ba")    # True
+s.endswith("na")      # True</code></pre></article>
+
+<article class="s"><h3>Проверки содержимого</h3>
+<pre><code>"123".isdigit()    # True
+"abc".isalpha()    # True
+"ab1".isalnum()    # True
+"abc".islower()    # True
+"  ".isspace()     # True</code></pre></article>
+
+<article class="s"><h3>Выравнивание</h3>
+<pre><code>"7".zfill(3)         # '007'
+"hi".center(6, "*")  # '**hi**'
+"hi".ljust(5, ".")   # 'hi...'
+"hi".rjust(5)        # '   hi'</code></pre></article>
+
+<article class="s wide"><h3>Форматирование: f-строки, format, %</h3><p>f-строка — самый удобный способ: внутри <code>{}</code> можно писать выражения и спецификации формата.</p>
+<pre><code>name, pi, n = "Аня", 3.14159, 1234567
+f"Привет, {name}!"          # 'Привет, Аня!'
+f"{pi:.2f}"                 # '3.14'  (2 знака)
+f"{n:,}"                    # '1,234,567'
+f"{5:03d}"                  # '005'
+f"{name:&gt;6}|{name:&lt;6}|{name:^6}"   # '   Аня|Аня   | Аня '
+f"{2 + 3 = }"               # '2 + 3 = 5' (отладка)
+"{} и {}".format("a", "b")  # 'a и b'
+"%s: %d" % ("x", 5)         # 'x: 5' (старый стиль)</code></pre></article>
+</div>
+
+<h2 id="short">Вложенность и лаконичные конструкции</h2>
+<p class="sub">Python позволяет подставлять вызов функции прямо в аргумент другой и цеплять методы. Читается изнутри наружу.</p>
+<div class="grid">
+<article class="k"><h3>Ввод числа в одну строку</h3><p>Вместо трёх строк — один вложенный вызов.</p>
+<pre><code># длинно:
+s = input()
+n = int(s)
+# коротко:
+n = int(input())
+x = float(input("Вес: "))</code></pre></article>
+
+<article class="k"><h3>Несколько чисел с одной строки</h3><p><code>input().split()</code> даёт список строк, <code>map</code> применяет <code>int</code> к каждой.</p>
+<pre><code># ввод: 3 5
+a, b = map(int, input().split())
+print(a + b)    # 8
+# ввод: 4 1 9
+nums = list(map(int, input().split()))   # [4, 1, 9]</code></pre></article>
+
+<article class="k"><h3>Цепочка методов</h3><p>Каждый метод строки возвращает строку, поэтому вызовы можно соединять точкой.</p>
+<pre><code>cmd = input().strip().lower()
+# "  START " → 'start'
+"a,b".upper().split(",")   # ['A', 'B']
+" x ".strip().center(5, "-")  # '--x--'</code></pre></article>
+
+<article class="k"><h3>Вложенные вызовы</h3><p>Результат внутренней функции сразу передаётся во внешнюю.</p>
+<pre><code>len(str(2 ** 100))      # 31 — цифр в числе
+sum(map(int, "12345"))  # 15 — сумма цифр
+max(len(w) for w in ["a", "abc"])  # 3
+abs(int(input()))       # модуль введённого</code></pre></article>
+
+<article class="k"><h3>Встроенные функции вместо кода</h3><p>Готовые функции заменяют ручные вычисления.</p>
+<pre><code>nums = [4, 1, 9]
+sum(nums)        # 14
+min(nums)        # 1
+max(nums)        # 9
+sorted(nums)     # [1, 4, 9]
+len(nums)        # 3
+sum(nums) / len(nums)   # среднее 4.666…</code></pre></article>
+
+<article class="k"><h3>Компактный вывод</h3><p>Звёздочка распаковывает список в аргументы <code>print</code>.</p>
+<pre><code>nums = [1, 2, 3]
+print(*nums)                # 1 2 3
+print(*nums, sep=", ")      # 1, 2, 3
+print(" ".join(map(str, nums)))  # 1 2 3
+print(f"Сумма: {sum(nums)}")     # Сумма: 6</code></pre></article>
+
+<article class="k"><h3>Цепочка сравнений и значение по умолчанию</h3><p>Условия записываются без <code>and</code>, а <code>or</code> подставляет запасное значение.</p>
+<pre><code>x = 5
+0 &lt; x &lt; 10          # True
+a = b = c = 0       # одно значение трём именам
+name = input() or "аноним"   # если пусто → 'аноним'</code></pre></article>
+
+<article class="k"><h3>Распаковка</h3><p>Раскладывает последовательность по именам за один шаг.</p>
+<pre><code>x, y = (10, 20)
+h, m = map(int, "12:30".split(":"))   # 12, 30
+first, *mid, last = [1, 2, 3, 4]      # 1, [2, 3], 4
+_, b = "a b".split()                  # _ — не нужно</code></pre></article>
+
+<article class="k wide"><h3>Принцип вложенности структур</h3><p>Списки, кортежи и словари можно класть друг в друга. К значению обращаются цепочкой индексов и ключей, слева направо.</p>
+<pre><code>matrix = [[1, 2, 3], [4, 5, 6]]
+matrix[1][2]            # 6 — строка 1, столбец 2
+
+user = {"name": "Аня", "langs": ["ru", "en"], "addr": {"city": "Москва"}}
+user["langs"][0]        # 'ru'
+user["addr"]["city"]    # 'Москва'
+user.get("age", 0)      # 0 — безопасно, если ключа нет
+
+data = {"users": [{"id": 1, "tags": ("a", "b")}]}
+data["users"][0]["tags"][1]   # 'b'
+len(matrix[0]), len(user)     # (3, 3)</code></pre></article>
+</div>
+</main>
+<footer>Совет: если вложенный вызов стал трудно читать, разбейте его на два-три шага с понятными именами переменных.</footer>
+<script>
+document.querySelectorAll('pre code').forEach(function(c){
+var t=c.textContent;
+c.innerHTML=t.replace(/[&<>]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})
+.replace(/(#.*$)|("[^"\n]*"|'[^'\n]*')|\b(if|elif|else|for|while|in|not|and|or|is|break|continue|pass|import|del|class|True|False|None)\b|\b(\d+)\b/gm,function(m,c1,s,k){
+return '<i class="'+(c1?'c':s?'s':k?'k':'n')+'">'+m+'</i>'});
+});
+</script>
+</body>
+</html>

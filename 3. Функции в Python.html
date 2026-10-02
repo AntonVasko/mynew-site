@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Функции в Python: шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#EDF1F7; --card:#FFFFFF; --ink:#16233F; --muted:#55617A; --blue:#2F6DA8; --yellow:#FFD43B;
+  --line:#D3DBE8; --code:#14213D; --warnbg:#FFF6CC;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0E1524;--card:#17223A;--ink:#E8EDF7;--muted:#9AA7C0;--blue:#79B2EC;--line:#2A3856;--code:#0A101E;--warnbg:#2B2A18;}
+}
+:root[data-theme="dark"]{--bg:#0E1524;--card:#17223A;--ink:#E8EDF7;--muted:#9AA7C0;--blue:#79B2EC;--line:#2A3856;--code:#0A101E;--warnbg:#2B2A18;}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 20px 56px}
+header{margin-bottom:36px}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.05;margin:0 0 10px;font-weight:700;letter-spacing:-.02em}
+.lead{color:var(--muted);max-width:60ch;margin:0 0 28px}
+.sig{background:var(--code);border-radius:14px;padding:22px 22px 8px;border-bottom:6px solid var(--yellow)}
+.sig pre{margin:0 0 18px;overflow-x:auto;font-size:clamp(14px,2.4vw,22px);line-height:1.5}
+.order{list-style:none;margin:0;padding:0 0 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.order li{background:rgba(255,255,255,.07);border-radius:8px;padding:9px 12px;color:#D6DEEE;font-size:14px;line-height:1.4}
+.order b{display:block;font:600 14px "JetBrains Mono",ui-monospace,monospace;color:var(--yellow);margin-bottom:2px}
+.order span.n{display:inline-block;min-width:1.4em;color:#8FA3C7;font-weight:500}
+.grid{columns:340px;column-gap:20px}
+.card{break-inside:avoid;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--blue);border-radius:6px 14px 14px 6px;margin:0 0 20px;padding:18px 18px 16px}
+.card.warn{border-left-color:var(--yellow);background:var(--warnbg)}
+.card.wide{border-left-width:1px;border-top:6px solid var(--blue);border-radius:14px}
+h2{font-size:19px;line-height:1.25;margin:0 0 6px;font-weight:700}
+.note{color:var(--muted);font-size:14.5px;margin:0 0 12px}
+.card pre{margin:0;background:var(--code);color:#E6ECF8;border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:13.5px;line-height:1.6}
+code,pre{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.note code{background:rgba(47,109,168,.14);padding:1px 5px;border-radius:4px;font-size:.92em}
+.k{color:#FFD43B;font-weight:600}.s{color:#9FE3B0}.c{color:#7E8CA8;font-style:italic}
+.nu{color:#FFA8A8}.f{color:#8EC5FF;font-weight:600}.b{color:#C9B8FF}.d{color:#F5A9E1}
+footer{color:var(--muted);font-size:14px;margin-top:8px}
+a:focus-visible,pre:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+@page{size:A4;margin:10mm}
+@media print{
+  html,body,.sig,.card pre,.order li,.card.warn{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  :root,:root[data-theme="dark"]{--bg:#fff;--card:#fff;--ink:#16233F;--muted:#55617A;--blue:#2F6DA8;--line:#D3DBE8;--code:#14213D;--warnbg:#FFF6CC;padding:0}
+  body{background:#fff;font-size:11px;line-height:1.45}
+  .wrap{max-width:none;padding:0}
+  header{margin-bottom:14px}
+  h1{font-size:30px}
+  .lead{margin-bottom:12px}
+  .sig{padding:12px 14px 2px}
+  .sig pre{font-size:13px;margin-bottom:10px}
+  .order{gap:6px;padding-bottom:8px}
+  .order li{font-size:10px;padding:5px 8px}
+  .grid{columns:2;column-gap:12px}
+  .card{padding:10px 12px;margin-bottom:12px}
+  h2{font-size:13px}
+  .note{font-size:10.5px;margin-bottom:8px}
+  .card pre{font-size:9.5px;padding:8px 10px;overflow:visible;white-space:pre-wrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Функции в Python</h1>
+  <p class="lead">Шпаргалка: от простого <code>def</code> до декораторов и генераторов. Сначала посмотрите, в каком порядке пишутся параметры.</p>
+  <div class="sig">
+    <pre tabindex="0" class="hl">def name(a, /, b, d=0, *args, c, **kwargs) -> int:</pre>
+    <ol class="order">
+      <li><b><span class="n">1</span>a, /</b>только по позиции</li>
+      <li><b><span class="n">2</span>b</b>по позиции или по имени</li>
+      <li><b><span class="n">3</span>d=0</b>значение по умолчанию</li>
+      <li><b><span class="n">4</span>*args</b>лишние позиционные</li>
+      <li><b><span class="n">5</span>c</b>только по имени</li>
+      <li><b><span class="n">6</span>**kwargs</b>лишние именованные</li>
+    </ol>
+  </div>
+</header>
+
+<main class="grid">
+
+<section class="card">
+  <h2>Определение и вызов</h2>
+  <p class="note">Без <code>return</code> функция вернёт <code>None</code>.</p>
+<pre tabindex="0" class="hl">def greet(name):
+    """Возвращает приветствие."""
+    return f"Привет, {name}!"
+
+msg = greet("Аня")   # вызов
+print(msg)</pre>
+</section>
+
+<section class="card">
+  <h2>Значения по умолчанию и ключевые аргументы</h2>
+  <p class="note">Параметры со значением по умолчанию идут после обычных.</p>
+<pre tabindex="0" class="hl">def power(base, exp=2):
+    return base ** exp
+
+power(3)               # 9
+power(3, 3)            # 27
+power(exp=3, base=2)   # 8</pre>
+</section>
+
+<section class="card">
+  <h2>*args и **kwargs</h2>
+  <p class="note"><code>*args</code> собирает позиционные аргументы в кортеж, <code>**kwargs</code> — именованные в словарь.</p>
+<pre tabindex="0" class="hl">def log(*args, **kwargs):
+    print(args)
+    print(kwargs)
+
+log(1, 2, sep="-")
+# (1, 2)
+# {'sep': '-'}
+
+nums = [1, 2, 3]
+opts = {"sep": "-"}
+log(*nums, **opts)   # распаковка</pre>
+</section>
+
+<section class="card">
+  <h2>Только позиционные и только ключевые</h2>
+  <p class="note">До <code>/</code> — только по позиции, после <code>*</code> — только по имени.</p>
+<pre tabindex="0" class="hl">def f(a, b, /, c, *, d):
+    ...
+
+f(1, 2, 3, d=4)          # ok
+f(1, 2, c=3, d=4)        # ok
+f(a=1, b=2, c=3, d=4)    # TypeError</pre>
+</section>
+
+<section class="card warn">
+  <h2>Ловушка: изменяемое значение по умолчанию</h2>
+  <p class="note">Значение по умолчанию создаётся один раз, при определении функции. Список будет общим для всех вызовов.</p>
+<pre tabindex="0" class="hl"># плохо
+def add(x, bucket=[]):
+    bucket.append(x)
+    return bucket
+
+# хорошо
+def add(x, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(x)
+    return bucket</pre>
+</section>
+
+<section class="card">
+  <h2>Несколько возвращаемых значений</h2>
+  <p class="note">На самом деле возвращается один кортеж.</p>
+<pre tabindex="0" class="hl">def min_max(items):
+    return min(items), max(items)
+
+lo, hi = min_max([4, 1, 9])   # 1, 9</pre>
+</section>
+
+<section class="card">
+  <h2>Аннотации типов</h2>
+  <p class="note">Python их не проверяет. Они помогают читателю, IDE и <code>mypy</code>.</p>
+<pre tabindex="0" class="hl">def area(w: float, h: float = 1.0) -> float:
+    return w * h
+
+def find(xs: list[int], x: int) -> int | None:
+    return xs.index(x) if x in xs else None</pre>
+</section>
+
+<section class="card">
+  <h2>lambda</h2>
+  <p class="note">Одно выражение, без <code>return</code>. Для сложной логики берите обычный <code>def</code>.</p>
+<pre tabindex="0" class="hl">square = lambda x: x ** 2
+
+words = ["кот", "слон", "ёж"]
+sorted(words, key=lambda w: len(w))</pre>
+</section>
+
+<section class="card">
+  <h2>Области видимости</h2>
+  <p class="note">Поиск имени идёт так: Local → Enclosing → Global → Built-in.</p>
+<pre tabindex="0" class="hl">count = 0
+
+def inc():
+    global count
+    count += 1
+
+def outer():
+    n = 0
+    def inner():
+        nonlocal n
+        n += 1
+    inner()
+    return n   # 1</pre>
+</section>
+
+<section class="card">
+  <h2>Замыкание: функция, которая делает функции</h2>
+  <p class="note">Внутренняя функция помнит переменные внешней.</p>
+<pre tabindex="0" class="hl">def multiplier(k):
+    def mul(x):
+        return x * k
+    return mul
+
+double = multiplier(2)
+double(5)   # 10</pre>
+</section>
+
+<section class="card">
+  <h2>Декоратор</h2>
+  <p class="note"><code>@functools.wraps</code> сохраняет имя и docstring исходной функции.</p>
+<pre tabindex="0" class="hl">import functools
+
+def logged(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        print("вызов", func.__name__)
+        return func(*args, **kwargs)
+    return wrapper
+
+@logged
+def hello():
+    print("hi")</pre>
+</section>
+
+<section class="card">
+  <h2>Генератор</h2>
+  <p class="note"><code>yield</code> отдаёт значения по одному и приостанавливает функцию между ними.</p>
+<pre tabindex="0" class="hl">def countdown(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+for i in countdown(3):
+    print(i)   # 3, 2, 1</pre>
+</section>
+
+<section class="card">
+  <h2>async def</h2>
+  <p class="note">Вызов создаёт корутину. Она выполняется через <code>await</code> или <code>asyncio.run</code>.</p>
+<pre tabindex="0" class="hl">import asyncio
+
+async def fetch(n):
+    await asyncio.sleep(1)
+    return n * 2
+
+async def main():
+    res = await asyncio.gather(fetch(1), fetch(2))
+    print(res)   # [2, 4]
+
+asyncio.run(main())</pre>
+</section>
+
+<section class="card">
+  <h2>Методы класса</h2>
+  <p class="note">Первый параметр — <code>self</code> (экземпляр) или <code>cls</code> (класс). Это соглашение об именах.</p>
+<pre tabindex="0" class="hl">class Counter:
+    def __init__(self, start=0):
+        self.n = start
+
+    def inc(self):          # метод экземпляра
+        self.n += 1
+
+    @classmethod
+    def zero(cls):          # получает класс
+        return cls(0)
+
+    @staticmethod
+    def is_valid(x):        # ни self, ни cls
+        return x >= 0</pre>
+</section>
+
+</main>
+<footer>Python 3.10+ (для <code>X | None</code> и <code>list[int]</code> в аннотациях).</footer>
+</div>
+
+<script>
+(function(){
+  var re=/(#.*$)|("""[\s\S]*?"""|"[^"\n]*"|'[^'\n]*')|\b(def|return|lambda|yield|global|nonlocal|if|else|while|for|in|import|is|None|True|False|not|and|or|class|async|await)\b|\b(print|min|max|sorted|len|self|cls)\b|(?<=def )(\w+)|(@\w+(?:\.\w+)*)|\b(\d+(?:\.\d+)?)\b/gm;
+  function esc(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  document.querySelectorAll("pre.hl").forEach(function(p){
+    var src=p.textContent, out="", last=0, m;
+    re.lastIndex=0;
+    while((m=re.exec(src))){
+      out+=esc(src.slice(last,m.index));
+      var cls=m[1]?"c":m[2]?"s":m[3]?"k":m[4]?"b":m[5]?"f":m[6]?"d":"nu";
+      out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+      last=m.index+m[0].length;
+    }
+    out+=esc(src.slice(last));
+    p.innerHTML="<code>"+out+"</code>";
+  });
+})();
+</script>
+</body>
+</html>
