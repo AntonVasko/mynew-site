@@ -1,26 +1,319 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Python CheatSheets</title>
-  </head>
-  <body>
-    <img src="https://www.python.org/static/img/python-logo.png" alt="python image" />
-    <ol>
-      <li><a href="1. Основы языка Python.html">Основы языка Python</a></li>
-      <li><a href="2. Python_ управляющие конструкции.html">Python_ управляющие конструкции</a></li>
-      <li><a href="3. Функции в Python.html">Функции в Python</a></li>
-      <li><a href="4. Python_ модули.html">Python модули</a></li>
-      <li><a href="5. Python turtle.html">Python turtle</a></li>
-      <li><a href="6. GIT_GPT.html">Git+GitHub+GitFlic+VSC</a></li>
-      <li><a href="7. Python ООП.html">Python ООП</a></li>
-      <li><a href="8. Pygame.html">Pygame</a></li>
-      <li><a href="9. Стуктуры данных_GEMINI.html">Структуры данных</a></li>
-      <li><a href="10. PyQt5_GPT.html">PyQt5</a></li>
-      <li><a href="11. Текстовые файлы и json_GPT.html">Работа с текстовыми файлами + модуль json</a></li>
-      <li><a href="12. PIL_GPT.html">PIL (pillow)</a></li>
-     <li><a href="13. Kivy_GPT.html">Мобильная разработка (Kivy)</a></li>
-      <li><a href="14. Анализ данных_Qwen.html">Анализ данных</a></li>
-    </ol>
-  </body>
+    <style>
+        /* === Базовые настройки и шрифты === */
+        :root {
+            --py-blue: #306998;
+            --py-yellow: #FFD43B;
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.6);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(48, 105, 152, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 212, 59, 0.1) 0%, transparent 40%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        /* === Шапка === */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo-container {
+            display: inline-block;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(48, 105, 152, 0.3);
+        }
+
+        .logo {
+            width: 280px;
+            height: auto;
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--py-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* === Сетка карточек === */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            list-style: none; /* Убираем маркеры списка */
+        }
+
+        /* === Стиль карточки-кнопки === */
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        /* Задержка анимации для каждой карточки */
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.15s; }
+        .card:nth-child(4) { animation-delay: 0.2s; }
+        .card:nth-child(5) { animation-delay: 0.25s; }
+        .card:nth-child(6) { animation-delay: 0.3s; }
+        .card:nth-child(7) { animation-delay: 0.35s; }
+        .card:nth-child(8) { animation-delay: 0.4s; }
+        .card:nth-child(9) { animation-delay: 0.45s; }
+        .card:nth-child(10) { animation-delay: 0.5s; }
+        .card:nth-child(11) { animation-delay: 0.55s; }
+        .card:nth-child(12) { animation-delay: 0.6s; }
+        .card:nth-child(13) { animation-delay: 0.65s; }
+        .card:nth-child(14) { animation-delay: 0.7s; }
+
+        /* Эффект при наведении */
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--py-yellow);
+            box-shadow: 0 12px 30px rgba(255, 212, 59, 0.15);
+            background: rgba(48, 105, 152, 0.2);
+        }
+
+        /* Блик при наведении */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.08),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        /* Номер темы */
+        .card-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--py-yellow);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-number {
+            background: var(--py-yellow);
+            color: var(--bg-dark);
+            border-color: var(--py-yellow);
+        }
+
+        /* Текст карточки */
+        .card-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            flex-grow: 1;
+        }
+
+        /* Стрелка справа */
+        .card-arrow {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .card:hover .card-arrow {
+            transform: translateX(4px);
+            color: var(--py-yellow);
+        }
+
+        /* === Анимации === */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === Адаптивность для мобильных === */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .logo { width: 200px; }
+            .grid-menu { grid-template-columns: 1fr; }
+            .card { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://www.python.org/static/img/python-logo.png" alt="Python Logo" class="logo" />
+        </div>
+        <h1>Python CheatSheets</h1>
+        <p class="subtitle">Шпаргалки и справочные материалы по языку программирования Python</p>
+    </header>
+
+    <!-- Список превращен в сетку карточек-ссылок -->
+    <nav class="grid-menu">
+        <a href="1. Основы языка Python.html" class="card">
+            <span class="card-number">01</span>
+            <span class="card-title">Основы языка Python</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="2. Python_ управляющие конструкции.html" class="card">
+            <span class="card-number">02</span>
+            <span class="card-title">Управляющие конструкции</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="3. Функции в Python.html" class="card">
+            <span class="card-number">03</span>
+            <span class="card-title">Функции в Python</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="4. Python_ модули.html" class="card">
+            <span class="card-number">04</span>
+            <span class="card-title">Модули Python</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="5. Python turtle.html" class="card">
+            <span class="card-number">05</span>
+            <span class="card-title">Python Turtle</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="6. GIT_GPT.html" class="card">
+            <span class="card-number">06</span>
+            <span class="card-title">Git + GitHub + GitFlic + VSC</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="7. Python ООП.html" class="card">
+            <span class="card-number">07</span>
+            <span class="card-title">Объектно-ориентированное программирование (ООП)</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="8. Pygame.html" class="card">
+            <span class="card-number">08</span>
+            <span class="card-title">Pygame (Разработка игр)</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="9. Стуктуры данных_GEMINI.html" class="card">
+            <span class="card-number">09</span>
+            <span class="card-title">Структуры данных</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="10. PyQt5_GPT.html" class="card">
+            <span class="card-number">10</span>
+            <span class="card-title">PyQt5 (Графический интерфейс)</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="11. Текстовые файлы и json_GPT.html" class="card">
+            <span class="card-number">11</span>
+            <span class="card-title">Текстовые файлы и модуль JSON</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="12. PIL_GPT.html" class="card">
+            <span class="card-number">12</span>
+            <span class="card-title">PIL (Pillow) – Работа с изображениями</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="13. Kivy_GPT.html" class="card">
+            <span class="card-number">13</span>
+            <span class="card-title">Мобильная разработка (Kivy)</span>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="14. Анализ данных_Qwen.html" class="card">
+            <span class="card-number">14</span>
+            <span class="card-title">Анализ данных</span>
+            <span class="card-arrow">→</span>
+        </a>
+    </nav>
+
+</body>
 </html>
