@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Визуализация данных — шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#EEF3F8;--card:#FFFFFF;--ink:#13203A;--mute:#5A6A85;--line:#D5DEEA;--a1:#0C7C86;--a2:#B9660A;--a3:#5B4BC4;--a4:#B8325A;--a5:#3A7D2C;--code:#0F1A30;--ct:#E3EAF6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}}
+:root[data-theme="dark"]{--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,Arial,sans-serif}
+header{padding:48px 20px 28px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--mute);max-width:66ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;padding:10px 20px;overflow-x:auto}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+main{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+h2{font-size:28px;margin:44px 0 6px}
+.sub{color:var(--mute);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+article{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));border-radius:10px;padding:16px 18px;min-width:0}
+.s1{--c:var(--a1)}.s2{--c:var(--a2)}.s3{--c:var(--a3)}.s4{--c:var(--a4)}.s5{--c:var(--a5)}
+h3{margin:0 0 6px;font-size:17px}
+article p{margin:0 0 10px;color:var(--mute);font-size:14.5px}
+article ul,article ol{margin:0 0 10px;padding-left:20px;color:var(--mute);font-size:14.5px}
+pre{margin:0;background:var(--code);color:var(--ct);border-radius:8px;padding:12px 14px;overflow-x:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace}
+pre+pre,pre+p,p+pre,pre+ul,pre+ol{margin-top:8px}
+i.k{color:#FFB454;font-style:normal;font-weight:600}i.s{color:#8EE6A0;font-style:normal}i.c{color:#7F90B0;font-style:italic}i.n{color:#7FC4FF;font-style:normal}
+.wide{grid-column:1/-1}
+.hl{border-width:2px;border-left-width:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+td code,p code,li code,.sub code,footer code,header code{font:500 13px 'JetBrains Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px}
+.tw{overflow-x:auto}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>Визуализация данных в Python</h1>
+<p>matplotlib, seaborn и Plotly: установка, основные графики, связь с анализом данных и ML, работа с API GitHub, внедрение в веб-страницу и мини-проекты. Комментарий <code>#</code> показывает результат.</p>
+</header>
+<nav><a href="#install">Установка</a><a href="#mpl">matplotlib</a><a href="#charts">Диаграммы</a><a href="#sns">seaborn</a><a href="#plotly">Plotly</a><a href="#pick">Выбор</a><a href="#eda">Анализ данных</a><a href="#ml">ML</a><a href="#gh">API GitHub</a><a href="#web">На веб-страницу</a><a href="#proj">Мини-проекты</a></nav>
+<main>
+
+<h2 id="install">Установка</h2>
+<p class="sub">Команды выполняются в терминале. Рекомендуется виртуальное окружение: так версии библиотек не конфликтуют между проектами.</p>
+<div class="grid">
+<article class="s1"><h3>pip: всё сразу</h3><p><code>seaborn</code> сам подтянет <code>matplotlib</code>, <code>pandas</code> и <code>numpy</code>.</p>
+<pre><code class="sh">python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install matplotlib seaborn plotly pandas requests</code></pre></article>
+
+<article class="s1"><h3>pip: по отдельности и обновление</h3>
+<pre><code class="sh">pip install matplotlib
+pip install seaborn
+pip install plotly
+pip install --upgrade matplotlib seaborn plotly
+pip show plotly                  # версия и путь</code></pre></article>
+
+<article class="s1"><h3>conda</h3>
+<pre><code class="sh">conda install -c conda-forge matplotlib seaborn plotly</code></pre></article>
+
+<article class="s1"><h3>Jupyter</h3><p>В ноутбуке графики показываются под ячейкой. Если Plotly не отображается, поставьте <code>nbformat</code>.</p>
+<pre><code class="sh">pip install jupyterlab nbformat
+jupyter lab</code></pre>
+<pre><code class="py">%matplotlib inline      # графики matplotlib внутри ноутбука</code></pre></article>
+
+<article class="s1"><h3>Проверка установки</h3>
+<pre><code class="py">import matplotlib, seaborn, plotly
+print(matplotlib.__version__, seaborn.__version__, plotly.__version__)</code></pre></article>
+
+<article class="s1"><h3>Plotly: экспорт в PNG</h3><p>Для <code>fig.write_image()</code> нужен пакет <code>kaleido</code> (в новых версиях может требоваться установленный браузер Chrome/Chromium — смотрите документацию Plotly).</p>
+<pre><code class="sh">pip install kaleido</code></pre></article>
+
+<article class="s1 wide"><h3>Стандартные импорты</h3>
+<pre><code class="py">import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go</code></pre></article>
+</div>
+
+<h2 id="mpl">matplotlib</h2>
+<p class="sub">Базовая библиотека для графиков: полный контроль над каждым элементом. На ней построен seaborn и работает <code>df.plot()</code> в pandas.</p>
+<div class="grid">
+<article class="s2"><h3>Анатомия графика</h3>
+<ul><li><b>Figure</b> — всё полотно (окно или картинка).</li><li><b>Axes</b> — область с графиком, осями, подписями. В одной Figure их может быть несколько.</li><li><b>Axis</b> — ось с делениями.</li><li><b>Artist</b> — любой нарисованный элемент: линия, текст, столбик.</li></ul></article>
+
+<article class="s2"><h3>Первый график (объектный стиль)</h3><p>Рекомендуемый способ: <code>fig, ax = plt.subplots()</code>.</p>
+<pre><code class="py">x = [1, 2, 3, 4]
+y = [1, 4, 9, 16]
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.plot(x, y, marker="o", color="tab:blue", label="y = x²")
+ax.set_title("Квадраты чисел")
+ax.set_xlabel("x"); ax.set_ylabel("y")
+ax.grid(True, alpha=0.3)
+ax.legend()
+plt.show()</code></pre></article>
+
+<article class="s2"><h3>Короткий стиль pyplot</h3>
+<pre><code class="py">plt.plot(x, y)
+plt.title("Квадраты"); plt.xlabel("x"); plt.ylabel("y")
+plt.show()</code></pre></article>
+
+<article class="s2 wide"><h3>Основные типы графиков</h3><div class="tw"><table>
+<tr><th>Метод</th><th>Что показывает</th><th>Пример</th></tr>
+<tr><td><code>ax.plot</code></td><td>линия, тренд во времени</td><td><code>ax.plot(dates, values)</code></td></tr>
+<tr><td><code>ax.scatter</code></td><td>связь двух величин</td><td><code>ax.scatter(x, y, c=color, s=size)</code></td></tr>
+<tr><td><code>ax.bar</code> / <code>barh</code></td><td>сравнение категорий</td><td><code>ax.bar(names, counts)</code></td></tr>
+<tr><td><code>ax.hist</code></td><td>распределение числа</td><td><code>ax.hist(data, bins=20)</code></td></tr>
+<tr><td><code>ax.boxplot</code></td><td>медиана, квартили, выбросы</td><td><code>ax.boxplot([a, b, c])</code></td></tr>
+<tr><td><code>ax.pie</code></td><td>доли целого (до 5–6 частей)</td><td><code>ax.pie(parts, labels=names, autopct="%1.0f%%")</code></td></tr>
+<tr><td><code>ax.imshow</code></td><td>матрица, изображение, карта</td><td><code>ax.imshow(matrix, cmap="viridis")</code></td></tr>
+<tr><td><code>ax.fill_between</code></td><td>область, доверительный интервал</td><td><code>ax.fill_between(x, lo, hi, alpha=0.2)</code></td></tr>
+</table></div></article>
+
+<article class="s2"><h3>Оформление</h3>
+<pre><code class="py">ax.plot(x, y, color="#E4572E", linestyle="--",
+        linewidth=2, marker="s", alpha=0.8)
+ax.set_xlim(0, 10); ax.set_ylim(0, 100)
+ax.set_yscale("log")                     # логарифмическая ось
+ax.tick_params(axis="x", rotation=45)
+ax.axhline(50, color="gray", ls=":")     # горизонтальная линия
+ax.annotate("пик", xy=(3, 9), xytext=(2, 14),
+            arrowprops=dict(arrowstyle="-&gt;"))
+plt.style.use("ggplot")                  # готовый стиль
+print(plt.style.available)               # список стилей</code></pre></article>
+
+<article class="s2"><h3>Несколько графиков</h3>
+<pre><code class="py">fig, axs = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
+axs[0].hist(data, bins=20); axs[0].set_title("Гистограмма")
+axs[1].boxplot(data);       axs[1].set_title("Ящик с усами")
+fig.suptitle("Одни данные — два взгляда")
+
+# две оси Y на одном графике
+ax2 = ax.twinx()
+ax2.plot(x, z, color="tab:red")</code></pre></article>
+
+<article class="s2"><h3>Гистограмма и scatter на случайных данных</h3>
+<pre><code class="py">import numpy as np
+rng = np.random.default_rng(42)
+a = rng.normal(0, 1, 500)
+b = a * 0.7 + rng.normal(0, 0.5, 500)
+fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+axs[0].hist(a, bins=25, color="tab:blue", edgecolor="white")
+axs[1].scatter(a, b, s=12, alpha=0.5)
+plt.show()</code></pre></article>
+
+<article class="s2"><h3>Графики прямо из pandas</h3>
+<pre><code class="py">df["price"].hist(bins=30)
+df.groupby("city")["price"].mean().plot(kind="bar")
+df.plot(x="date", y="sales", figsize=(8, 3))
+plt.show()</code></pre></article>
+
+<article class="s2"><h3>Сохранение и работа на сервере</h3>
+<pre><code class="py">fig.savefig("chart.png", dpi=150, bbox_inches="tight")
+fig.savefig("chart.svg")       # вектор, масштабируется без потерь
+fig.savefig("chart.pdf")       # для печати
+plt.close(fig)                 # освободить память
+
+# на сервере без экрана — до импорта pyplot:
+import matplotlib
+matplotlib.use("Agg")</code></pre></article>
+</div>
+
+
+<h2 id="charts">Виды диаграмм: Matplotlib + Pandas</h2>
+<p class="sub">Для всех примеров ниже используется один <code>DataFrame</code>. Matplotlib даёт полный контроль над графиком, а Pandas предоставляет удобную оболочку <code>plot()</code> поверх Matplotlib.</p>
+<div class="grid">
+
+<article class="s2 wide"><h3>Общие данные для примеров</h3>
+<pre><code class="py">import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({
+    "name":  ["Анна", "Борис", "Вера", "Глеб", "Даша", "Егор", "Жанна", "Илья"],
+    "age":   [14, 15, 14, 16, 15, 14, 16, 15],
+    "score": [78, 91, 67, 88, 95, 72, 84, 90],
+    "group": ["A", "B", "A", "B", "B", "A", "C", "C"]
+})
+
+print(df)</code></pre>
+</article>
+
+<article class="s1"><h3>1. Гистограмма — <code>hist</code></h3>
+<p>Показывает распределение числовой величины: сколько значений попало в каждый интервал.</p>
+<pre><code class="py"># Matplotlib
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.hist(df["score"], bins=5, edgecolor="black")
+ax.set_title("Распределение оценок")
+ax.set_xlabel("Оценка")
+ax.set_ylabel("Количество")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+df["score"].plot.hist(
+    bins=5,
+    edgecolor="black",
+    title="Распределение оценок"
+)
+plt.xlabel("Оценка")
+plt.ylabel("Количество")
+plt.show()</code></pre>
+</article>
+
+<article class="s1"><h3>2. «Ящик с усами» — <code>boxplot</code></h3>
+<p>Показывает медиану, квартили, диапазон данных и потенциальные выбросы.</p>
+<pre><code class="py"># Matplotlib
+fig, ax = plt.subplots(figsize=(5, 4))
+ax.boxplot(df["score"])
+ax.set_title("Разброс оценок")
+ax.set_ylabel("Оценка")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+df.boxplot(column="score")
+plt.title("Разброс оценок")
+plt.ylabel("Оценка")
+plt.show()</code></pre>
+</article>
+
+<article class="s3"><h3>3. Диаграмма рассеяния — <code>scatter</code></h3>
+<p>Каждая точка — одно наблюдение. Используется для поиска связи между двумя числовыми признаками.</p>
+<pre><code class="py"># Matplotlib
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.scatter(df["age"], df["score"], alpha=0.8)
+ax.set_title("Возраст и оценка")
+ax.set_xlabel("Возраст")
+ax.set_ylabel("Оценка")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+df.plot.scatter(
+    x="age",
+    y="score",
+    alpha=0.8,
+    title="Возраст и оценка"
+)
+plt.show()</code></pre>
+</article>
+
+<article class="s4"><h3>4. Круговая диаграмма — <code>pie</code></h3>
+<p>Показывает доли категорий в одном целом. Лучше использовать для небольшого числа частей.</p>
+<pre><code class="py"># Matplotlib
+counts = df["group"].value_counts()
+
+fig, ax = plt.subplots(figsize=(5, 5))
+ax.pie(
+    counts.values,
+    labels=counts.index,
+    autopct="%1.0f%%"
+)
+ax.set_title("Распределение по группам")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+counts = df["group"].value_counts()
+
+counts.plot.pie(
+    autopct="%1.0f%%",
+    ylabel="",
+    title="Распределение по группам"
+)
+plt.show()</code></pre>
+</article>
+
+<article class="s5"><h3>5. Вертикальная столбчатая диаграмма — <code>bar</code></h3>
+<p>Удобна для сравнения категорий. Например, можно сравнить средний результат по группам.</p>
+<pre><code class="py"># Matplotlib
+avg = df.groupby("group")["score"].mean()
+
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.bar(avg.index, avg.values)
+ax.set_title("Средняя оценка по группам")
+ax.set_xlabel("Группа")
+ax.set_ylabel("Средняя оценка")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+avg = df.groupby("group")["score"].mean()
+
+avg.plot.bar(
+    title="Средняя оценка по группам",
+    xlabel="Группа",
+    ylabel="Средняя оценка"
+)
+plt.show()</code></pre>
+</article>
+
+<article class="s2"><h3>6. Горизонтальная столбчатая диаграмма — <code>barh</code></h3>
+<p>Полезна, когда названия категорий длинные или нужно удобно сравнить несколько значений.</p>
+<pre><code class="py"># Matplotlib
+avg = df.groupby("group")["score"].mean().sort_values()
+
+fig, ax = plt.subplots(figsize=(6, 4))
+ax.barh(avg.index, avg.values)
+ax.set_title("Средняя оценка по группам")
+ax.set_xlabel("Средняя оценка")
+ax.set_ylabel("Группа")
+plt.show()</code></pre>
+<pre><code class="py"># Pandas
+avg = df.groupby("group")["score"].mean().sort_values()
+
+avg.plot.barh(
+    title="Средняя оценка по группам",
+    xlabel="Средняя оценка",
+    ylabel="Группа"
+)
+plt.show()</code></pre>
+</article>
+
+<article class="s1 wide"><h3>Как выбрать нужную диаграмму</h3>
+<div class="tw"><table>
+<tr><th>Диаграмма</th><th>Matplotlib</th><th>Pandas</th><th>Для чего</th></tr>
+<tr><td>Гистограмма</td><td><code>ax.hist()</code></td><td><code>Series.plot.hist()</code></td><td>распределение числовых значений</td></tr>
+<tr><td>Ящик с усами</td><td><code>ax.boxplot()</code></td><td><code>DataFrame.boxplot()</code></td><td>медиана, квартили, выбросы</td></tr>
+<tr><td>Рассеяние</td><td><code>ax.scatter()</code></td><td><code>df.plot.scatter()</code></td><td>связь двух числовых признаков</td></tr>
+<tr><td>Круговая</td><td><code>ax.pie()</code></td><td><code>Series.plot.pie()</code></td><td>доли целого</td></tr>
+<tr><td>Вертикальные столбцы</td><td><code>ax.bar()</code></td><td><code>Series.plot.bar()</code></td><td>сравнение категорий</td></tr>
+<tr><td>Горизонтальные столбцы</td><td><code>ax.barh()</code></td><td><code>Series.plot.barh()</code></td><td>сравнение категорий, длинные подписи</td></tr>
+</table></div>
+</article>
+
+<article class="s3 wide"><h3>Полезная схема: Pandas → Matplotlib</h3>
+<p>Методы визуализации Pandas не являются отдельной системой рисования: при обычном использовании они строят график средствами Matplotlib. Поэтому после <code>plot()</code> можно продолжать настраивать рисунок через <code>plt</code> или объект <code>Axes</code>.</p>
+<pre><code class="py">fig, ax = plt.subplots(figsize=(7, 4))
+
+df.groupby("group")["score"].mean().plot.bar(
+    ax=ax,
+    title="Средняя оценка"
+)
+
+ax.set_xlabel("Группа")
+ax.set_ylabel("Средняя оценка")
+ax.grid(axis="y", alpha=0.3)
+
+plt.show()</code></pre>
+</article>
+
+</div>
+
+<h2 id="sns">seaborn</h2>
+<p class="sub">Надстройка над matplotlib для статистических графиков. Работает с <code>DataFrame</code>: достаточно указать столбцы, а группировку, цвета и сглаживание seaborn делает сам.</p>
+<div class="grid">
+<article class="s3"><h3>Начало работы</h3>
+<pre><code class="py">import seaborn as sns
+sns.set_theme(style="whitegrid", palette="deep", context="notebook")
+
+df = sns.load_dataset("penguins")   # учебные данные (скачиваются из интернета)
+df.head()</code></pre><p style="margin-top:8px">Наборы: <code>penguins</code>, <code>tips</code>, <code>titanic</code>, <code>iris</code>, <code>flights</code>. Список: <code>sns.get_dataset_names()</code>.</p></article>
+
+<article class="s3 wide"><h3>Основные функции</h3><div class="tw"><table>
+<tr><th>Задача</th><th>Функции</th></tr>
+<tr><td>Распределения</td><td><code>histplot</code>, <code>kdeplot</code>, <code>ecdfplot</code>, <code>boxplot</code>, <code>violinplot</code></td></tr>
+<tr><td>Категории</td><td><code>barplot</code>, <code>countplot</code>, <code>stripplot</code>, <code>swarmplot</code>, <code>pointplot</code></td></tr>
+<tr><td>Связи между числами</td><td><code>scatterplot</code>, <code>lineplot</code>, <code>regplot</code> (с линией регрессии)</td></tr>
+<tr><td>Матрицы</td><td><code>heatmap</code>, <code>clustermap</code></td></tr>
+<tr><td>Сетки по группам</td><td><code>pairplot</code>, <code>jointplot</code>, <code>displot</code>, <code>relplot</code>, <code>catplot</code>, <code>FacetGrid</code></td></tr>
+</table></div></article>
+
+<article class="s3"><h3>Распределение и группы</h3>
+<pre><code class="py">sns.histplot(data=df, x="body_mass_g", hue="species", kde=True)
+sns.boxplot(data=df, x="species", y="flipper_length_mm")
+sns.violinplot(data=df, x="species", y="bill_length_mm")
+sns.countplot(data=df, x="island", hue="species")</code></pre></article>
+
+<article class="s3"><h3>Связь двух признаков</h3><p><code>hue</code> — цвет по категории, <code>style</code> — форма маркера, <code>size</code> — размер.</p>
+<pre><code class="py">sns.scatterplot(data=df, x="bill_length_mm", y="bill_depth_mm",
+                hue="species", style="sex", size="body_mass_g")
+sns.regplot(data=df, x="flipper_length_mm", y="body_mass_g")</code></pre></article>
+
+<article class="s3"><h3>Корреляции: heatmap</h3>
+<pre><code class="py">corr = df.corr(numeric_only=True)
+sns.heatmap(corr, annot=True, fmt=".2f",
+            cmap="coolwarm", center=0, vmin=-1, vmax=1)</code></pre></article>
+
+<article class="s3"><h3>Все пары признаков: pairplot</h3>
+<pre><code class="py">sns.pairplot(df, hue="species", corner=True)   # scatter для пар, KDE на диагонали</code></pre></article>
+
+<article class="s3"><h3>Сетка по группам (figure-level)</h3><p>Функции <code>relplot</code>, <code>displot</code>, <code>catplot</code> создают целую фигуру и сами раскладывают панели по <code>col</code> и <code>row</code>.</p>
+<pre><code class="py">g = sns.relplot(data=df, x="bill_length_mm", y="bill_depth_mm",
+                hue="species", col="island")
+g.set_titles("{col_name}")
+g.savefig("grid.png")</code></pre></article>
+
+<article class="s3"><h3>Два уровня функций</h3>
+<ul><li><b>Axes-level</b> (<code>scatterplot</code>, <code>boxplot</code>, <code>heatmap</code>…) рисуют на заданной области: параметр <code>ax=</code>, возвращают <code>Axes</code>.</li><li><b>Figure-level</b> (<code>relplot</code>, <code>displot</code>, <code>catplot</code>, <code>pairplot</code>) создают свою фигуру и возвращают сетку.</li></ul>
+<pre><code class="py">fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+sns.histplot(data=df, x="body_mass_g", ax=axs[0])
+sns.boxplot(data=df, x="species", y="body_mass_g", ax=axs[1])</code></pre></article>
+
+<article class="s3"><h3>Палитры и темы</h3>
+<pre><code class="py">sns.set_theme(style="darkgrid", context="talk")  # talk — крупнее шрифт
+sns.set_palette("colorblind")                    # для людей с нарушением цветового зрения
+sns.color_palette("viridis", 5)                  # 5 цветов
+sns.boxplot(data=df, x="species", y="body_mass_g", palette="pastel")
+ax = sns.histplot(data=df, x="body_mass_g")
+ax.set_title("Подпись через matplotlib")         # настройка как у matplotlib</code></pre></article>
+</div>
+
+<h2 id="plotly">Plotly</h2>
+<p class="sub">Интерактивные графики: наведение показывает значения, колесо мыши масштабирует, клик по легенде скрывает ряд. Результат — HTML со встроенным JavaScript, который легко вставить на сайт.</p>
+<div class="grid">
+<article class="s4"><h3>Plotly Express (быстро)</h3><p>Одна функция — один график. Данные берутся из <code>DataFrame</code> по именам столбцов.</p>
+<pre><code class="py">import plotly.express as px
+df = px.data.iris()                 # встроенные данные
+fig = px.scatter(df, x="sepal_width", y="sepal_length",
+                 color="species", size="petal_length",
+                 hover_data=["petal_width"],
+                 title="Ирисы")
+fig.show()                          # откроется в браузере или ноутбуке</code></pre></article>
+
+<article class="s4"><h3>Основные функции px</h3><div class="tw"><table>
+<tr><td><code>px.scatter</code></td><td>точки, пузырьки</td></tr>
+<tr><td><code>px.line</code>, <code>px.area</code></td><td>тренды во времени</td></tr>
+<tr><td><code>px.bar</code></td><td>столбцы, <code>barmode="group"</code></td></tr>
+<tr><td><code>px.histogram</code>, <code>px.box</code>, <code>px.violin</code></td><td>распределения</td></tr>
+<tr><td><code>px.pie</code>, <code>px.treemap</code>, <code>px.sunburst</code></td><td>доли и иерархии</td></tr>
+<tr><td><code>px.imshow</code></td><td>матрицы и изображения</td></tr>
+<tr><td><code>px.scatter_matrix</code></td><td>аналог pairplot</td></tr>
+<tr><td><code>px.choropleth</code>, <code>px.scatter_geo</code></td><td>карты</td></tr>
+<tr><td><code>px.scatter_3d</code></td><td>трёхмерные точки</td></tr>
+</table></div></article>
+
+<article class="s4"><h3>Анимация по времени</h3>
+<pre><code class="py">g = px.data.gapminder()
+px.scatter(g, x="gdpPercap", y="lifeExp", size="pop", color="continent",
+           hover_name="country", log_x=True, size_max=50,
+           animation_frame="year", animation_group="country",
+           range_y=[25, 90])</code></pre></article>
+
+<article class="s4"><h3>graph_objects (тонкая настройка)</h3><p>Любой график — набор «трасс» (traces). Можно смешивать типы на одном рисунке.</p>
+<pre><code class="py">import plotly.graph_objects as go
+fig = go.Figure()
+fig.add_trace(go.Bar(x=["Пн", "Вт", "Ср"], y=[5, 8, 3], name="Заказы"))
+fig.add_trace(go.Scatter(x=["Пн", "Вт", "Ср"], y=[4, 6, 5],
+                         mode="lines+markers", name="План"))
+fig.update_layout(title="Заказы и план", template="plotly_white")
+fig.show()</code></pre></article>
+
+<article class="s4"><h3>Оформление</h3>
+<pre><code class="py">fig.update_layout(title="Заголовок", width=800, height=450,
+                  template="plotly_dark",       # plotly, plotly_white, ggplot2, seaborn
+                  legend_title="Группа")
+fig.update_xaxes(title="Год", rangeslider_visible=True)  # ползунок диапазона
+fig.update_yaxes(title="Значение", tickformat=",")
+fig.update_traces(marker=dict(size=10, line=dict(width=1)))</code></pre></article>
+
+<article class="s4"><h3>Несколько панелей</h3>
+<pre><code class="py">from plotly.subplots import make_subplots
+fig = make_subplots(rows=1, cols=2, subplot_titles=("Линия", "Столбцы"))
+fig.add_trace(go.Scatter(y=[1, 3, 2]), row=1, col=1)
+fig.add_trace(go.Bar(y=[2, 1, 4]), row=1, col=2)</code></pre></article>
+
+<article class="s4"><h3>Показ и экспорт</h3>
+<pre><code class="py">fig.show()                                   # браузер / ноутбук
+fig.write_html("chart.html")                 # отдельный интерактивный файл
+fig.write_html("chart.html", include_plotlyjs="cdn")   # меньший файл, JS из CDN
+html = fig.to_html(full_html=False, include_plotlyjs="cdn")  # фрагмент для вставки
+js = fig.to_json()                           # данные графика в JSON
+fig.write_image("chart.png", scale=2)        # нужен kaleido</code></pre></article>
+
+<article class="s4"><h3>Дашборды: Dash</h3><p>Библиотека на базе Plotly для интерактивных веб-приложений с кнопками и фильтрами без JavaScript.</p>
+<pre><code class="sh">pip install dash</code></pre></article>
+</div>
+
+<h2 id="pick">Сравнение и выбор графика</h2>
+<div class="grid">
+<article class="s5 wide"><h3>matplotlib, seaborn, Plotly</h3><div class="tw"><table>
+<tr><th></th><th>matplotlib</th><th>seaborn</th><th>Plotly</th></tr>
+<tr><td>Уровень</td><td>базовый, максимум контроля</td><td>высокий, над matplotlib</td><td>высокий (px) и базовый (go)</td></tr>
+<tr><td>Интерактивность</td><td>нет (по умолчанию)</td><td>нет</td><td>да: наведение, масштаб, анимация</td></tr>
+<tr><td>Результат</td><td>PNG, SVG, PDF</td><td>PNG, SVG, PDF</td><td>HTML, JSON, PNG</td></tr>
+<tr><td>Сильная сторона</td><td>любые графики, публикации</td><td>статистика и EDA в пару строк</td><td>веб, дашборды, исследование данных</td></tr>
+<tr><td>Слабая сторона</td><td>много кода для красоты</td><td>меньше типов графиков</td><td>большой размер HTML, слабее для печати</td></tr>
+<tr><td>Лучше всего для</td><td>отчётов, статей, тонкой настройки</td><td>анализа распределений и связей</td><td>сайтов и презентаций с интерактивом</td></tr>
+</table></div></article>
+
+<article class="s5 wide"><h3>Какой график выбрать</h3><div class="tw"><table>
+<tr><th>Задача</th><th>График</th></tr>
+<tr><td>Распределение одной величины</td><td>гистограмма, KDE, ящик с усами, скрипка</td></tr>
+<tr><td>Сравнение категорий</td><td>столбчатая диаграмма (ось от нуля!)</td></tr>
+<tr><td>Изменение во времени</td><td>линейный график</td></tr>
+<tr><td>Связь двух чисел</td><td>scatter (+ линия регрессии)</td></tr>
+<tr><td>Корреляции многих признаков</td><td>heatmap, pairplot</td></tr>
+<tr><td>Доли целого</td><td>столбцы с процентами; круговая — до 5–6 частей</td></tr>
+<tr><td>Географические данные</td><td>карта (choropleth)</td></tr>
+</table></div></article>
+
+<article class="s5"><h3>Правила хорошего графика</h3>
+<ul><li>Заголовок, подписи осей и единицы измерения.</li><li>Не обрезайте ось Y у столбцов: это искажает сравнение.</li><li>Мало цветов и логичные: один цвет — одна категория.</li><li>Палитра <code>colorblind</code> или <code>viridis</code>.</li><li>Избегайте 3D и лишних эффектов.</li><li>Подписывайте источник данных.</li></ul></article>
+</div>
+
+<h2 id="eda">Визуализация и анализ данных (EDA)</h2>
+<p class="sub">Разведочный анализ (EDA) — первое знакомство с данными. Графики показывают то, что не видно в таблице: пропуски, выбросы, перекосы, связи.</p>
+<div class="grid">
+<article class="s1 wide"><h3>Что рисовать на каждом этапе</h3><div class="tw"><table>
+<tr><th>Вопрос</th><th>Как проверить</th><th>График</th></tr>
+<tr><td>Размер, типы, пропуски</td><td><code>df.info()</code>, <code>df.isna().sum()</code></td><td><code>sns.heatmap(df.isna())</code></td></tr>
+<tr><td>Как распределены значения</td><td><code>df.describe()</code></td><td>гистограмма, KDE</td></tr>
+<tr><td>Есть ли выбросы</td><td>квартили, <code>max</code></td><td>ящик с усами (<code>boxplot</code>)</td></tr>
+<tr><td>Сбалансированы ли классы</td><td><code>df["y"].value_counts()</code></td><td><code>countplot</code></td></tr>
+<tr><td>Как признаки связаны с целью</td><td><code>groupby</code>, корреляция</td><td><code>barplot</code>, <code>scatterplot</code>, <code>pairplot</code></td></tr>
+<tr><td>Какие признаки дублируют друг друга</td><td><code>df.corr()</code></td><td><code>heatmap</code></td></tr>
+<tr><td>Есть ли тренд и сезонность</td><td><code>resample</code>, <code>rolling</code></td><td>линейный график по времени</td></tr>
+</table></div></article>
+
+<article class="s1 wide"><h3>Пример: быстрый EDA на данных «Титаника»</h3>
+<pre><code class="py">import seaborn as sns, matplotlib.pyplot as plt
+
+df = sns.load_dataset("titanic")
+df.info(); print(df.describe())
+
+fig, axs = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
+sns.heatmap(df.isna(), cbar=False, ax=axs[0, 0]);          axs[0, 0].set_title("Пропуски")
+sns.countplot(data=df, x="survived", ax=axs[0, 1]);        axs[0, 1].set_title("Баланс классов")
+sns.histplot(data=df, x="age", hue="survived", kde=True, ax=axs[0, 2]); axs[0, 2].set_title("Возраст")
+sns.barplot(data=df, x="sex", y="survived", hue="pclass", ax=axs[1, 0]); axs[1, 0].set_title("Доля выживших")
+sns.boxplot(data=df, x="pclass", y="fare", ax=axs[1, 1]);  axs[1, 1].set_title("Цена билета: выбросы")
+sns.heatmap(df.corr(numeric_only=True), annot=True, fmt=".2f",
+            cmap="coolwarm", center=0, ax=axs[1, 2]);      axs[1, 2].set_title("Корреляции")
+plt.show()</code></pre></article>
+
+<article class="s1"><h3>Что находят графики</h3>
+<ul><li><b>Пропуски</b> → нужно решить: заполнить медианой, удалить, добавить признак «был пропуск».</li><li><b>Выбросы</b> → ошибки данных или редкие случаи; влияют на линейные модели и KNN.</li><li><b>Дисбаланс классов</b> → accuracy вводит в заблуждение, нужны precision/recall.</li><li><b>Сильная корреляция признаков</b> → один можно убрать.</li><li><b>Утечка данных</b> → признак почти идеально коррелирует с целью, он не будет известен в реальности.</li></ul></article>
+
+<article class="s1"><h3>Временной ряд</h3>
+<pre><code class="py">s = df.set_index("date")["sales"]
+fig, ax = plt.subplots(figsize=(9, 3))
+ax.plot(s, alpha=0.3, label="день")
+ax.plot(s.rolling(7).mean(), label="среднее за 7 дней")
+ax.plot(s.resample("MS").mean(), label="месяц")   # тренд виден лучше
+ax.legend()</code></pre></article>
+</div>
+
+<h2 id="ml">Визуализация и машинное обучение</h2>
+<p class="sub">График помогает на каждом шаге: выбрать признаки и модель, заметить переобучение, понять ошибки и объяснить результат.</p>
+<div class="grid">
+<article class="s2 wide"><h3>Где визуализация помогает</h3><div class="tw"><table>
+<tr><th>Этап</th><th>Что смотрим</th><th>Инструмент</th></tr>
+<tr><td>Подготовка данных</td><td>распределения, выбросы, корреляции, масштаб до и после</td><td>histplot, boxplot, heatmap</td></tr>
+<tr><td>Выбор признаков</td><td>важность признаков, проекция PCA</td><td>barh, scatter</td></tr>
+<tr><td>Обучение</td><td>кривые loss и accuracy по эпохам</td><td>plot</td></tr>
+<tr><td>Оценка</td><td>матрица ошибок, ROC, precision-recall</td><td>ConfusionMatrixDisplay, RocCurveDisplay</td></tr>
+<tr><td>Диагностика</td><td>переобучение (learning curve), остатки регрессии</td><td>learning_curve, scatter</td></tr>
+<tr><td>Подбор параметров</td><td>качество при разных гиперпараметрах</td><td>heatmap по GridSearchCV</td></tr>
+<tr><td>Объяснение</td><td>граница решения, структура дерева</td><td>DecisionBoundaryDisplay, plot_tree</td></tr>
+</table></div></article>
+
+<article class="s2"><h3>Кривые обучения нейросети</h3><p>Если <code>val_loss</code> растёт, а <code>loss</code> падает — переобучение. Если обе кривые высоко — недообучение.</p>
+<pre><code class="py">h = model.fit(x_tr, y_tr, validation_split=0.2, epochs=20)
+fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+for ax, m in zip(axs, ["loss", "accuracy"]):
+    ax.plot(h.history[m], label="обучение")
+    ax.plot(h.history["val_" + m], label="проверка")
+    ax.set_title(m); ax.set_xlabel("эпоха"); ax.legend()</code></pre></article>
+
+<article class="s2"><h3>Матрица ошибок и ROC-кривая</h3><p>Матрица показывает, в каких классах модель путается. ROC — компромисс между полнотой и ложными срабатываниями (площадь под кривой, AUC, чем ближе к 1, тем лучше).</p>
+<pre><code class="py">from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay
+fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+ConfusionMatrixDisplay.from_estimator(model, X_test, y_test,
+                                      ax=axs[0], cmap="Blues")
+RocCurveDisplay.from_estimator(model, X_test, y_test, ax=axs[1])
+axs[1].plot([0, 1], [0, 1], "k--")      # случайный угадыватель</code></pre></article>
+
+<article class="s2"><h3>Кривая обучения: нужно ли больше данных</h3><p>Большой разрыв между кривыми — переобучение. Обе кривые сошлись, но низко — модель слишком проста.</p>
+<pre><code class="py">import numpy as np
+from sklearn.model_selection import learning_curve
+sizes, tr, va = learning_curve(model, X, y, cv=5,
+                               train_sizes=np.linspace(0.1, 1.0, 6))
+plt.plot(sizes, tr.mean(axis=1), "o-", label="обучение")
+plt.plot(sizes, va.mean(axis=1), "o-", label="кросс-валидация")
+plt.xlabel("объём данных"); plt.ylabel("accuracy"); plt.legend()</code></pre></article>
+
+<article class="s2"><h3>Важность признаков</h3>
+<pre><code class="py">imp = pd.Series(forest.feature_importances_, index=feature_names)
+imp.sort_values().tail(10).plot(kind="barh", figsize=(6, 4))
+plt.title("Топ-10 признаков")</code></pre></article>
+
+<article class="s2"><h3>Граница решения</h3><p>Работает для двух признаков: видно, как метод делит плоскость (линейно у логистической регрессии, «ступеньками» у дерева).</p>
+<pre><code class="py">from sklearn.inspection import DecisionBoundaryDisplay
+X2 = X[:, :2]
+clf.fit(X2, y)
+disp = DecisionBoundaryDisplay.from_estimator(
+    clf, X2, response_method="predict", cmap="coolwarm", alpha=0.3)
+disp.ax_.scatter(X2[:, 0], X2[:, 1], c=y, edgecolor="k")</code></pre></article>
+
+<article class="s2"><h3>Проекция PCA в 2D (Plotly)</h3><p>Сжимает много признаков до двух, чтобы увидеть, разделяются ли классы.</p>
+<pre><code class="py">from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+Z = PCA(n_components=2).fit_transform(StandardScaler().fit_transform(X))
+px.scatter(x=Z[:, 0], y=Z[:, 1], color=y.astype(str),
+           labels={"x": "PC1", "y": "PC2", "color": "класс"})</code></pre></article>
+
+<article class="s2"><h3>Подбор параметров: heatmap</h3>
+<pre><code class="py">from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+gs = GridSearchCV(SVC(), {"C": [0.1, 1, 10], "gamma": [0.01, 0.1, 1]}, cv=5).fit(X, y)
+res = pd.DataFrame(gs.cv_results_)
+table = res.pivot(index="param_C", columns="param_gamma",
+                  values="mean_test_score").astype(float)
+sns.heatmap(table, annot=True, fmt=".2f", cmap="viridis")</code></pre></article>
+
+<article class="s2"><h3>Остатки регрессии</h3><p>Хорошая модель: остатки разбросаны случайно вокруг нуля. Дуга или «воронка» — признак неучтённой зависимости.</p>
+<pre><code class="py">pred = reg.predict(X_test)
+plt.scatter(pred, y_test - pred, alpha=0.5)
+plt.axhline(0, color="k", ls="--")
+plt.xlabel("предсказание"); plt.ylabel("остаток")</code></pre></article>
+</div>
+
+<h2 id="gh">Визуализация и API GitHub</h2>
+<p class="sub">API GitHub отдаёт данные о репозиториях, коммитах и пользователях в формате JSON. Из них легко получить таблицу <code>pandas</code> и построить график.</p>
+<div class="grid">
+<article class="s3 wide"><h3>Основные запросы и графики</h3><div class="tw"><table>
+<tr><th>Запрос (GET, база <code>https://api.github.com</code>)</th><th>Данные</th><th>График</th></tr>
+<tr><td><code>/users/{user}/repos</code>, <code>/orgs/{org}/repos</code></td><td>репозитории: звёзды, форки, язык, размер, даты</td><td>barh топ по звёздам, scatter звёзды/форки</td></tr>
+<tr><td><code>/repos/{owner}/{repo}/languages</code></td><td>байты кода по языкам</td><td>круговая или столбцы</td></tr>
+<tr><td><code>/repos/{owner}/{repo}/stats/commit_activity</code></td><td>коммиты по неделям за год</td><td>линия или столбцы по времени</td></tr>
+<tr><td><code>/repos/{owner}/{repo}/contributors</code></td><td>участники и число коммитов</td><td>barh</td></tr>
+<tr><td><code>/repos/{owner}/{repo}/commits</code></td><td>история коммитов с датами</td><td>активность по дням недели и часам (heatmap)</td></tr>
+<tr><td><code>/search/repositories?q=...</code></td><td>поиск репозиториев по условиям</td><td>языки, распределение звёзд</td></tr>
+</table></div></article>
+
+<article class="s3"><h3>Токен и лимиты</h3><p>Без токена доступно примерно 60 запросов в час, с токеном — 5000. Поиск ограничен отдельно (меньше запросов в минуту). Токен создают в GitHub: Settings → Developer settings → Personal access tokens. Для публичных данных права не нужны. Хранить токен нужно в переменной окружения, а не в коде и не в репозитории.</p>
+<pre><code class="sh">export GITHUB_TOKEN=ваш_токен              # Linux / macOS
+$env:GITHUB_TOKEN="ваш_токен"              # Windows PowerShell</code></pre>
+<pre><code class="py">gh_get("/rate_limit")["resources"]["core"]
+# {'limit': 60, 'remaining': 57, 'reset': 1760000000}</code></pre></article>
+
+<article class="s3"><h3>Вспомогательная функция</h3>
+<pre><code class="py">import os, requests
+API = "https://api.github.com"
+HEADERS = {"Accept": "application/vnd.github+json"}
+if os.getenv("GITHUB_TOKEN"):
+    HEADERS["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+
+def gh_get(path, **params):
+    r = requests.get(API + path, headers=HEADERS, params=params, timeout=15)
+    r.raise_for_status()           # 404, 403 (лимит) → исключение
+    return r.json()</code></pre></article>
+
+<article class="s3"><h3>Репозитории → DataFrame → график</h3>
+<pre><code class="py">import pandas as pd
+repos = gh_get("/orgs/pallets/repos", per_page=100)
+df = pd.DataFrame(repos)[["name", "language", "stargazers_count",
+                          "forks_count", "size", "created_at"]]
+df["created_at"] = pd.to_datetime(df["created_at"])
+top = df.nlargest(8, "stargazers_count")
+top.plot(x="name", y="stargazers_count", kind="barh", legend=False)</code></pre></article>
+
+<article class="s3"><h3>Языки репозитория</h3>
+<pre><code class="py">langs = gh_get("/repos/pallets/flask/languages")   # {'Python': 1234567, ...}
+s = pd.Series(langs).sort_values(ascending=False)
+px.pie(names=s.index, values=s.values, title="Языки Flask")</code></pre></article>
+
+<article class="s3"><h3>Активность коммитов</h3><p>GitHub считает статистику не сразу: первый ответ может быть <code>202</code>. Нужно подождать и повторить.</p>
+<pre><code class="py">import time
+def commit_activity(owner, repo, tries=6):
+    for _ in range(tries):
+        r = requests.get(f"{API}/repos/{owner}/{repo}/stats/commit_activity",
+                         headers=HEADERS, timeout=15)
+        if r.status_code == 202:
+            time.sleep(2); continue
+        r.raise_for_status()
+        return r.json()
+    return []
+
+w = pd.DataFrame(commit_activity("pallets", "flask"))
+w["date"] = pd.to_datetime(w["week"], unit="s")
+px.bar(w, x="date", y="total")</code></pre></article>
+
+<article class="s3"><h3>Поиск репозиториев</h3>
+<pre><code class="py">res = gh_get("/search/repositories", q="language:python stars:&gt;5000",
+              sort="stars", order="desc", per_page=50)
+df = pd.DataFrame(res["items"])     # результаты лежат в ключе items</code></pre></article>
+
+<article class="s3"><h3>Пагинация</h3><p>Один ответ — максимум 100 элементов. Для остальных запрашивают следующие страницы.</p>
+<pre><code class="py">def gh_pages(path, **params):
+    params.setdefault("per_page", 100)
+    out, page = [], 1
+    while True:
+        chunk = gh_get(path, page=page, **params)
+        out += chunk
+        if len(chunk) &lt; params["per_page"]:
+            break
+        page += 1
+    return out
+contributors = gh_pages("/repos/pallets/flask/contributors")</code></pre></article>
+
+<article class="s3"><h3>Кэширование и этика</h3>
+<ul><li>Сохраняйте ответ, чтобы не тратить лимит при каждом запуске.</li><li>Обрабатывайте <code>403</code> (лимит) и <code>404</code> (нет репозитория).</li><li>Не опрашивайте API в цикле без пауз.</li></ul>
+<pre><code class="py">from pathlib import Path
+cache = Path("repos.csv")
+if cache.exists():
+    df = pd.read_csv(cache)
+else:
+    df = pd.DataFrame(gh_get("/orgs/pallets/repos", per_page=100))
+    df.to_csv(cache, index=False)</code></pre></article>
+</div>
+
+<h2 id="web">Внедрение визуализации на веб-страницу</h2>
+<div class="grid">
+<article class="s4 wide"><h3>Какой способ выбрать</h3><div class="tw"><table>
+<tr><th>Способ</th><th>Библиотека</th><th>Интерактив</th><th>Когда</th></tr>
+<tr><td>Файл PNG + <code>&lt;img&gt;</code></td><td>matplotlib, seaborn</td><td>нет</td><td>графики меняются редко</td></tr>
+<tr><td>PNG в base64 прямо в HTML</td><td>matplotlib, seaborn</td><td>нет</td><td>график строится на лету в Flask</td></tr>
+<tr><td>Встроенный SVG</td><td>matplotlib, seaborn</td><td>нет, но чёткий при любом масштабе</td><td>небольшие графики, адаптивный сайт</td></tr>
+<tr><td>HTML-файл в <code>&lt;iframe&gt;</code></td><td>Plotly</td><td>да</td><td>готовый отчёт, простое подключение</td></tr>
+<tr><td>Фрагмент HTML в шаблоне</td><td>Plotly</td><td>да</td><td>Flask + Jinja2</td></tr>
+<tr><td>JSON + JavaScript</td><td>Plotly</td><td>да</td><td>обновление данных без перезагрузки страницы</td></tr>
+<tr><td>Статический сайт (GitHub Pages)</td><td>Plotly</td><td>да</td><td>публикация без сервера</td></tr>
+</table></div></article>
+
+<article class="s4"><h3>1. PNG-файл и тег img</h3>
+<pre><code class="py">fig.savefig("static/chart.png", dpi=150, bbox_inches="tight")</code></pre>
+<pre><code class="html">&lt;img src="{{ url_for('static', filename='chart.png') }}"
+     alt="График продаж" style="max-width:100%"&gt;</code></pre></article>
+
+<article class="s4"><h3>2. PNG в памяти (base64)</h3><p>Без записи файлов. На сервере используйте <code>Figure</code> вместо <code>pyplot</code>: он безопасен при нескольких запросах.</p>
+<pre><code class="py">import io, base64
+from matplotlib.figure import Figure
+
+fig = Figure(figsize=(6, 4)); ax = fig.subplots()
+ax.plot([1, 2, 3], [3, 1, 2])
+buf = io.BytesIO()
+fig.savefig(buf, format="png", bbox_inches="tight")
+img = base64.b64encode(buf.getvalue()).decode()</code></pre>
+<pre><code class="html">&lt;img src="data:image/png;base64,{{ img }}" alt="график"&gt;</code></pre></article>
+
+<article class="s4"><h3>3. SVG прямо в странице</h3>
+<pre><code class="py">buf = io.StringIO()
+fig.savefig(buf, format="svg")
+svg = buf.getvalue()           # в шаблон: {{ svg|safe }}</code></pre></article>
+
+<article class="s4"><h3>4. Plotly: отдельный HTML и iframe</h3>
+<pre><code class="py">fig.write_html("static/chart.html", include_plotlyjs="cdn")</code></pre>
+<pre><code class="html">&lt;iframe src="/static/chart.html" width="100%" height="500"
+        style="border:0"&gt;&lt;/iframe&gt;</code></pre></article>
+
+<article class="s4"><h3>5. Plotly: фрагмент в шаблоне Flask</h3><p>Параметр <code>include_plotlyjs="cdn"</code> подключает библиотеку JavaScript один раз из сети, а не копирует её (около 4 МБ) в каждую страницу.</p>
+<pre><code class="py">chart = fig.to_html(full_html=False, include_plotlyjs="cdn")
+return render_template("page.html", chart=chart)</code></pre>
+<pre><code class="html">&lt;h1&gt;Продажи&lt;/h1&gt;
+{{ chart|safe }}</code></pre></article>
+
+<article class="s4"><h3>6. Plotly: JSON и JavaScript</h3><p>Страница запрашивает данные у сервера и перерисовывает график без перезагрузки. Версию Plotly.js узнайте командой <code>plotly.offline.get_plotlyjs_version()</code>.</p>
+<pre><code class="py">@app.route("/chart.json")
+def chart_json():
+    fig = px.line(df, x="date", y="value")
+    return app.response_class(fig.to_json(), mimetype="application/json")</code></pre>
+<pre><code class="html">&lt;div id="chart" style="height:400px"&gt;&lt;/div&gt;
+&lt;script src="https://cdn.plot.ly/plotly-X.Y.Z.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+fetch("/chart.json").then(r =&gt; r.json())
+  .then(f =&gt; Plotly.newPlot("chart", f.data, f.layout, {responsive: true}));
+&lt;/script&gt;</code></pre></article>
+
+<article class="s4"><h3>7. Публикация без сервера (GitHub Pages)</h3>
+<ol><li>Сохраните график: <code>fig.write_html("docs/index.html", include_plotlyjs="cdn")</code>.</li><li>Загрузите папку <code>docs</code> в репозиторий GitHub.</li><li>Settings → Pages → источник: ветка <code>main</code>, папка <code>/docs</code>.</li><li>Страница откроется по адресу <code>https://ИМЯ.github.io/РЕПОЗИТОРИЙ/</code>.</li></ol></article>
+
+<article class="s4"><h3>Безопасность и скорость</h3>
+<ul><li><code>|safe</code> применяйте только к HTML, который создали сами, не к тексту пользователей.</li><li>На сервере: <code>matplotlib.use("Agg")</code> или <code>Figure</code>, а после использования <code>plt.close(fig)</code>.</li><li>Много точек (десятки тысяч): <code>px.scatter(..., render_mode="webgl")</code> или сократите данные.</li><li>Кэшируйте графики и ответы внешних API.</li><li>Готовые платформы: Dash, Streamlit, Bokeh.</li></ul></article>
+</div>
+
+<h2 id="proj">Мини-проекты</h2>
+<p class="sub">Все проекты работают с открытыми данными GitHub. Для небольшого числа запусков токен не нужен; при ошибке <code>403</code> (лимит) подождите или добавьте токен. Установка: <code>pip install matplotlib seaborn plotly pandas requests flask</code>.</p>
+<div class="grid">
+<article class="s5 wide"><h3>Проект 1 (matplotlib): топ репозиториев организации</h3><p>Горизонтальная столбчатая диаграмма по числу звёзд, сохранение в PNG.</p>
+<pre><code class="py">import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+
+ORG = "pallets"
+r = requests.get(f"https://api.github.com/orgs/{ORG}/repos",
+                 params={"per_page": 100}, timeout=15)
+r.raise_for_status()
+df = pd.DataFrame(r.json())[["name", "stargazers_count", "forks_count"]]
+
+top = df.nlargest(10, "stargazers_count").sort_values("stargazers_count")
+fig, ax = plt.subplots(figsize=(8, 5))
+bars = ax.barh(top["name"], top["stargazers_count"], color="#2a7de1")
+ax.bar_label(bars, padding=3)                      # числа на столбцах
+ax.set_title(f"Топ репозиториев {ORG} по звёздам")
+ax.set_xlabel("Звёзды")
+ax.spines[["top", "right"]].set_visible(False)     # убрать лишние рамки
+fig.tight_layout()
+fig.savefig("top_repos.png", dpi=150)
+plt.show()</code></pre></article>
+
+<article class="s5 wide"><h3>Проект 2 (seaborn): что общего у самых популярных репозиториев</h3><p>Топ-100 репозиториев по звёздам: языки, разброс звёзд, корреляции показателей.</p>
+<pre><code class="py">import requests
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+r = requests.get("https://api.github.com/search/repositories",
+                 params={"q": "stars:&gt;10000", "sort": "stars",
+                         "order": "desc", "per_page": 100}, timeout=15)
+r.raise_for_status()
+cols = ["name", "language", "stargazers_count", "forks_count",
+        "open_issues_count", "size"]
+df = pd.DataFrame(r.json()["items"])[cols].dropna(subset=["language"])
+
+top = df["language"].value_counts().head(6).index      # 6 частых языков
+d = df[df["language"].isin(top)]
+
+sns.set_theme(style="whitegrid", palette="colorblind")
+fig, axs = plt.subplots(1, 3, figsize=(17, 5), constrained_layout=True)
+
+sns.countplot(data=d, y="language", order=top, ax=axs[0])
+axs[0].set_title("Языки в топ-100")
+
+sns.boxplot(data=d, x="stargazers_count", y="language", order=top, ax=axs[1])
+axs[1].set_xscale("log"); axs[1].set_title("Звёзды по языкам (лог. шкала)")
+
+sns.heatmap(d.drop(columns=["name", "language"]).corr(), annot=True,
+            fmt=".2f", cmap="coolwarm", center=0, ax=axs[2])
+axs[2].set_title("Корреляции показателей")
+
+fig.savefig("github_seaborn.png", dpi=150)
+plt.show()</code></pre></article>
+
+<article class="s5 wide"><h3>Проект 3 (Plotly): интерактивная страница об организации</h3><p>Недельная активность коммитов с ползунком и пузырьковая диаграмма репозиториев. Всё сохраняется в один HTML-файл и открывается в браузере.</p>
+<pre><code class="py">import time, webbrowser
+from pathlib import Path
+import requests
+import pandas as pd
+import plotly.express as px
+
+API = "https://api.github.com"
+OWNER, REPO = "pallets", "flask"
+
+def get(path, **params):
+    for _ in range(6):
+        r = requests.get(API + path, params=params, timeout=15)
+        if r.status_code == 202:          # GitHub ещё считает статистику
+            time.sleep(2)
+            continue
+        r.raise_for_status()
+        return r.json()
+    return []
+
+weeks = pd.DataFrame(get(f"/repos/{OWNER}/{REPO}/stats/commit_activity"))
+weeks["date"] = pd.to_datetime(weeks["week"], unit="s")
+fig1 = px.bar(weeks, x="date", y="total",
+              title=f"Коммиты по неделям: {OWNER}/{REPO}",
+              labels={"total": "коммитов", "date": "неделя"})
+fig1.update_xaxes(rangeslider_visible=True)
+
+repos = pd.DataFrame(get(f"/orgs/{OWNER}/repos", per_page=100))
+fig2 = px.scatter(repos, x="forks_count", y="stargazers_count", size="size",
+                  color="language", hover_name="name",
+                  title=f"Репозитории {OWNER}: форки и звёзды")
+
+parts = [f.to_html(full_html=False, include_plotlyjs="cdn" if i == 0 else False)
+         for i, f in enumerate((fig1, fig2))]       # JS подключаем один раз
+Path("github_plotly.html").write_text(
+    f"&lt;meta charset='utf-8'&gt;&lt;h1&gt;GitHub: {OWNER}&lt;/h1&gt;" + "".join(parts),
+    encoding="utf-8")
+webbrowser.open(Path("github_plotly.html").resolve().as_uri())</code></pre></article>
+
+<article class="s5 wide"><h3>Проект 4: веб-дашборд на Flask из трёх библиотек</h3><p>Страница <code>http://127.0.0.1:5000/?org=pallets</code>: два статических графика (matplotlib и seaborn, base64) и один интерактивный (Plotly). Название организации можно менять в форме.</p>
+<pre><code class="py">import base64, io, os, re
+import pandas as pd, requests, seaborn as sns
+import plotly.express as px
+from flask import Flask, render_template_string, request
+from matplotlib.figure import Figure
+
+app = Flask(__name__)
+HEADERS = {"Accept": "application/vnd.github+json"}
+if os.getenv("GITHUB_TOKEN"):
+    HEADERS["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+
+def load_repos(org):
+    r = requests.get(f"https://api.github.com/orgs/{org}/repos",
+                     params={"per_page": 100}, headers=HEADERS, timeout=15)
+    r.raise_for_status()
+    return pd.DataFrame(r.json())[["name", "language", "stargazers_count", "forks_count"]]
+
+def png_b64(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", bbox_inches="tight")
+    return base64.b64encode(buf.getvalue()).decode()
+
+PAGE = """&lt;!DOCTYPE html&gt;&lt;html lang="ru"&gt;&lt;head&gt;&lt;meta charset="utf-8"&gt;
+&lt;title&gt;{{ org }}&lt;/title&gt;
+&lt;style&gt;body{font-family:Arial;max-width:1000px;margin:20px auto;padding:0 12px}
+.row{display:flex;gap:16px;flex-wrap:wrap}img{max-width:100%}&lt;/style&gt;&lt;/head&gt;
+&lt;body&gt;&lt;h1&gt;Репозитории {{ org }}&lt;/h1&gt;
+&lt;form&gt;&lt;input name="org" value="{{ org }}"&gt; &lt;button&gt;Показать&lt;/button&gt;&lt;/form&gt;
+&lt;div class="row"&gt;
+  &lt;img src="data:image/png;base64,{{ img1 }}" alt="matplotlib"&gt;
+  &lt;img src="data:image/png;base64,{{ img2 }}" alt="seaborn"&gt;
+&lt;/div&gt;
+{{ chart|safe }}
+&lt;/body&gt;&lt;/html&gt;"""
+
+@app.route("/")
+def dashboard():
+    org = request.args.get("org", "pallets")
+    if not re.fullmatch(r"[A-Za-z0-9-]{1,39}", org):      # защита от «странных» адресов
+        return "Некорректное имя организации", 400
+    try:
+        df = load_repos(org)
+    except requests.RequestException:
+        return "Не удалось получить данные GitHub", 502
+
+    top = df.nlargest(10, "stargazers_count")[::-1]
+    f1 = Figure(figsize=(6, 4)); ax1 = f1.subplots()
+    ax1.barh(top["name"], top["stargazers_count"])
+    ax1.set_title("matplotlib: звёзды")
+
+    f2 = Figure(figsize=(6, 4)); ax2 = f2.subplots()
+    sns.countplot(data=df.dropna(subset=["language"]), y="language", ax=ax2)
+    ax2.set_title("seaborn: языки")
+
+    f3 = px.scatter(df, x="forks_count", y="stargazers_count", color="language",
+                    hover_name="name", title="Plotly: звёзды и форки")
+    return render_template_string(
+        PAGE, org=org, img1=png_b64(f1), img2=png_b64(f2),
+        chart=f3.to_html(full_html=False, include_plotlyjs="cdn"))
+
+if __name__ == "__main__":
+    app.run(debug=True)</code></pre>
+<p style="margin-top:8px">Идеи для развития: кэшировать <code>load_repos</code> (например, <code>functools.lru_cache</code>), добавить график активности коммитов и список участников, опубликовать приложение на хостинге.</p></article>
+</div>
+</main>
+<footer>Совет: сначала простой график для понимания данных, потом оформление. Один график — одна мысль, а подписи и единицы измерения всегда на месте.</footer>
+<script>
+(function(){
+var esc=function(t){return t.replace(/[&<>]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})};
+var L={
+py:[/(#.*$)|("[^"\n]*"|'[^'\n]*')|\b(import|from|def|class|return|if|elif|else|for|in|while|with|not|and|or|as|try|except|break|continue|None|True|False|lambda)\b|\b(\d+)\b/gm,['c','s','k','n']],
+sh:[/(#.*$)|("[^"\n]*"|'[^'\n]*')/gm,['c','s']],
+html:[/(&lt;!--[\s\S]*?--&gt;)|("[^"\n]*")|(&lt;\/?[\w!]+|\/?&gt;)|(\{\{[^}]*\}\}|\{%[^%]*%\})/g,['c','s','k','n']]
+};
+document.querySelectorAll('pre code').forEach(function(c){
+var l=L[c.className]||L.py,cls=l[1];
+c.innerHTML=esc(c.textContent).replace(l[0],function(m){
+for(var i=1;i<=cls.length;i++){if(arguments[i]!==undefined)return '<i class="'+cls[i-1]+'">'+m+'</i>'}
+return m});
+});
+})();
+</script>
+</body>
+</html>
