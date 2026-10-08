@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Машинное обучение — шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#EEF3F8;--card:#FFFFFF;--ink:#13203A;--mute:#5A6A85;--line:#D5DEEA;--a1:#0C7C86;--a2:#B9660A;--a3:#5B4BC4;--a4:#B8325A;--a5:#3A7D2C;--code:#0F1A30;--ct:#E3EAF6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}}
+:root[data-theme="dark"]{--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,Arial,sans-serif}
+header{padding:48px 20px 28px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--mute);max-width:66ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;padding:10px 20px;overflow-x:auto}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+main{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+h2{font-size:28px;margin:44px 0 6px}
+.sub{color:var(--mute);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+article{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));border-radius:10px;padding:16px 18px;min-width:0}
+.s1{--c:var(--a1)}.s2{--c:var(--a2)}.s3{--c:var(--a3)}.s4{--c:var(--a4)}.s5{--c:var(--a5)}
+h3{margin:0 0 6px;font-size:17px}
+article p{margin:0 0 10px;color:var(--mute);font-size:14.5px}
+article ul,article ol{margin:0 0 10px;padding-left:20px;color:var(--mute);font-size:14.5px}
+article p.pro{color:var(--a5);margin:8px 0 0}
+article p.con{color:var(--a4);margin:4px 0 0}
+pre{margin:0;background:var(--code);color:var(--ct);border-radius:8px;padding:12px 14px;overflow-x:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace}
+pre+pre,pre+p,p+pre,pre+ul,pre+ol{margin-top:8px}
+i.k{color:#FFB454;font-style:normal;font-weight:600}i.s{color:#8EE6A0;font-style:normal}i.c{color:#7F90B0;font-style:italic}i.n{color:#7FC4FF;font-style:normal}
+.wide{grid-column:1/-1}
+.hl{border-width:2px;border-left-width:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+td code,p code,li code,.sub code,footer code,header code{font:500 13px 'JetBrains Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px}
+.tw{overflow-x:auto}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>Машинное обучение (ML)</h1>
+<p>Библиотеки, классические методы, звук (STT/TTS), компьютерное зрение, каскады Хаара и свёрточные сети — с короткими примерами. Комментарий <code>#</code> показывает результат.</p>
+</header>
+<nav><a href="#libs">Библиотеки</a><a href="#titanic">Титаник</a><a href="#methods">Методы ML</a><a href="#sound">Звук</a><a href="#cv">Зрение</a><a href="#haar">Каскады Хаара</a><a href="#train">Обучение каскада</a><a href="#cnn">CNN</a><a href="#rt">Реальное время</a></nav>
+<main>
+
+<h2 id="libs">Библиотеки</h2>
+<p class="sub">Установка выполняется в терминале, лучше внутри виртуального окружения (<code>python -m venv .venv</code>). Версии Python и пакетов совместимы не всегда — смотрите документацию на момент установки.</p>
+<div class="grid">
+<article class="s1"><h3>scikit-learn</h3><p>Классические алгоритмы ML: классификация, регрессия, кластеризация, предобработка, метрики. У всех моделей единый интерфейс: <code>fit</code>, <code>predict</code>, <code>score</code>.</p>
+<pre><code class="sh">pip install scikit-learn pandas numpy matplotlib</code></pre>
+<pre><code class="py">from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+
+X, y = load_iris(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.3, random_state=42)
+model = KNeighborsClassifier(n_neighbors=5).fit(X_tr, y_tr)
+model.score(X_te, y_te)      # доля верных ответов, ≈ 0.98
+model.predict([[5.1, 3.5, 1.4, 0.2]])   # [0] — класс setosa
+
+import joblib
+joblib.dump(model, "model.joblib")      # сохранить
+model = joblib.load("model.joblib")     # загрузить</code></pre></article>
+
+<article class="s1"><h3>scikit-learn: основные инструменты</h3><div class="tw"><table>
+<tr><th>Модуль</th><th>Что внутри</th></tr>
+<tr><td><code>datasets</code></td><td>учебные данные, <code>fetch_openml</code></td></tr>
+<tr><td><code>model_selection</code></td><td><code>train_test_split</code>, <code>cross_val_score</code>, <code>GridSearchCV</code></td></tr>
+<tr><td><code>preprocessing</code></td><td><code>StandardScaler</code>, <code>MinMaxScaler</code>, <code>OneHotEncoder</code></td></tr>
+<tr><td><code>impute</code></td><td><code>SimpleImputer</code> — заполнение пропусков</td></tr>
+<tr><td><code>pipeline</code>, <code>compose</code></td><td><code>Pipeline</code>, <code>make_pipeline</code>, <code>ColumnTransformer</code></td></tr>
+<tr><td><code>neighbors</code>, <code>tree</code>, <code>ensemble</code>, <code>svm</code>, <code>linear_model</code>, <code>naive_bayes</code>, <code>dummy</code></td><td>модели</td></tr>
+<tr><td><code>metrics</code></td><td><code>accuracy_score</code>, <code>classification_report</code>, <code>confusion_matrix</code></td></tr>
+<tr><td><code>feature_extraction.text</code></td><td><code>CountVectorizer</code>, <code>TfidfVectorizer</code></td></tr>
+</table></div></article>
+
+<article class="s1"><h3>vosk — распознавание речи (STT)</h3><p>Офлайн-распознавание на моделях Kaldi. Модели скачивают отдельно на alphacephei.com/vosk/models (для русского, например, <code>vosk-model-small-ru-0.22</code>) и распаковывают в папку проекта.</p>
+<pre><code class="sh">pip install vosk</code></pre>
+<pre><code class="py">import wave, json
+from vosk import Model, KaldiRecognizer
+
+wf = wave.open("speech.wav", "rb")       # нужен WAV, mono, 16 бит
+rec = KaldiRecognizer(Model("vosk-model-small-ru-0.22"), wf.getframerate())
+rec.SetWords(True)                       # слова с временем
+while True:
+    data = wf.readframes(4000)
+    if not data:
+        break
+    rec.AcceptWaveform(data)
+print(json.loads(rec.FinalResult())["text"])   # 'привет мир'</code></pre></article>
+
+<article class="s1"><h3>tensorflow (Keras)</h3><p>Библиотека для нейросетей. Высокоуровневый API — <code>tf.keras</code>. Подробнее: разделы «Зрение» и «CNN».</p>
+<pre><code class="sh">pip install tensorflow</code></pre>
+<pre><code class="py">import tensorflow as tf
+
+(x_tr, y_tr), (x_te, y_te) = tf.keras.datasets.mnist.load_data()
+x_tr, x_te = x_tr / 255.0, x_te / 255.0          # нормализация
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation="relu"),
+    tf.keras.layers.Dense(10, activation="softmax"),
+])
+model.compile(optimizer="adam",
+              loss="sparse_categorical_crossentropy",
+              metrics=["accuracy"])
+model.fit(x_tr, y_tr, epochs=3, validation_split=0.1)
+model.evaluate(x_te, y_te)          # точность ≈ 0.97
+model.save("digits.keras")</code></pre></article>
+
+<article class="s1"><h3>OpenCV — компьютерное зрение</h3><p>Чтение, обработка и показ изображений и видео, детекторы.</p>
+<pre><code class="sh">pip install opencv-python          # основной пакет
+# pip install opencv-contrib-python   # + дополнительные модули
+# pip install opencv-python-headless  # для серверов без окон</code></pre>
+<pre><code class="py">import cv2
+
+img = cv2.imread("photo.jpg")                 # BGR, массив NumPy
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+small = cv2.resize(img, (320, 240))
+blur = cv2.GaussianBlur(img, (5, 5), 0)
+edges = cv2.Canny(gray, 100, 200)
+cv2.rectangle(img, (10, 10), (110, 90), (0, 255, 0), 2)
+cv2.putText(img, "cat", (10, 130), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+cv2.imwrite("out.jpg", img)
+cv2.imshow("img", img); cv2.waitKey(0); cv2.destroyAllWindows()</code></pre></article>
+
+<article class="s1"><h3>pyttsx3 — синтез речи (офлайн)</h3><p>Использует системные голоса: SAPI5 (Windows), NSSpeech (macOS), eSpeak (Linux: <code>sudo apt install espeak</code>).</p>
+<pre><code class="sh">pip install pyttsx3</code></pre>
+<pre><code class="py">import pyttsx3
+
+engine = pyttsx3.init()
+engine.setProperty("rate", 170)         # скорость
+engine.setProperty("volume", 0.9)       # 0.0 … 1.0
+for v in engine.getProperty("voices"):
+    print(v.id, v.name, v.languages)    # список голосов
+# engine.setProperty("voice", voice_id) # выбрать голос
+engine.say("Привет, мир!")
+engine.save_to_file("Сохранить в файл", "say.wav")
+engine.runAndWait()                     # выполнить очередь</code></pre></article>
+
+<article class="s1"><h3>Coqui TTS — нейросетевой синтез речи</h3><p>Набор моделей TTS (Tacotron2, VITS, XTTS и др.). Оригинальный пакет <code>TTS</code> больше не развивается, поддерживаемый форк — <code>coqui-tts</code>. Нужен Python 3.9–3.12 (смотрите требования версии); для некоторых моделей — <code>espeak-ng</code>.</p>
+<pre><code class="sh">pip install coqui-tts          # форк (или: pip install TTS)
+tts --list_models              # список моделей
+tts --text "Hello world" --out_path out.wav \
+    --model_name "tts_models/en/ljspeech/tacotron2-DDC"</code></pre>
+<pre><code class="py">from TTS.api import TTS
+
+tts = TTS("tts_models/en/ljspeech/tacotron2-DDC")
+tts.tts_to_file(text="Hello, world!", file_path="out.wav")
+
+# многоязычная XTTS v2 (клонирование голоса по образцу)
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+tts.tts_to_file(text="Привет, мир!", speaker_wav="my_voice.wav",
+                language="ru", file_path="ru.wav")</code></pre>
+<p style="margin-top:8px">Модели скачиваются при первом запуске. Лицензия XTTS ограничивает коммерческое использование — проверяйте условия.</p></article>
+</div>
+
+<h2 id="titanic">Пример scikit-learn: кто выжил на «Титанике»</h2>
+<p class="sub">Задача бинарной классификации: по данным пассажира предсказать <code>Survived</code> (1 — выжил, 0 — погиб). Набор данных (<code>train.csv</code>, 891 строка) доступен на Kaggle (Titanic: Machine Learning from Disaster).</p>
+<div class="grid">
+<article class="s2"><h3>Признаки набора</h3><div class="tw"><table>
+<tr><td><code>Survived</code></td><td>целевая метка: 0 / 1</td></tr>
+<tr><td><code>Pclass</code></td><td>класс билета: 1, 2, 3</td></tr>
+<tr><td><code>Sex</code></td><td>пол</td></tr>
+<tr><td><code>Age</code></td><td>возраст (есть пропуски)</td></tr>
+<tr><td><code>SibSp</code>, <code>Parch</code></td><td>братья/сёстры/супруги, родители/дети на борту</td></tr>
+<tr><td><code>Fare</code></td><td>цена билета</td></tr>
+<tr><td><code>Embarked</code></td><td>порт посадки: C, Q, S</td></tr>
+</table></div><p style="margin-top:8px"><code>Name</code>, <code>Ticket</code>, <code>Cabin</code>, <code>PassengerId</code> в простой модели не используем.</p></article>
+
+<article class="s2 wide"><h3>Обучение модели в Pipeline</h3><p>Pipeline объединяет предобработку и модель: пропуски заполняются медианой, числа масштабируются, категории кодируются в 0/1. Все преобразования «учатся» только на обучающей выборке.</p>
+<pre><code class="py">import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+df = pd.read_csv("train.csv")
+X = df[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]]
+y = df["Survived"]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y)
+
+num = ["Age", "SibSp", "Parch", "Fare"]
+cat = ["Pclass", "Sex", "Embarked"]
+pre = ColumnTransformer([
+    ("num", Pipeline([("imp", SimpleImputer(strategy="median")),
+                      ("sc", StandardScaler())]), num),
+    ("cat", Pipeline([("imp", SimpleImputer(strategy="most_frequent")),
+                      ("oh", OneHotEncoder(handle_unknown="ignore"))]), cat),
+])
+model = Pipeline([("pre", pre),
+                  ("clf", RandomForestClassifier(n_estimators=200, random_state=42))])
+
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+print(accuracy_score(y_test, pred))          # обычно ≈ 0.80–0.84
+print(confusion_matrix(y_test, pred))        # [[TN FP] [FN TP]]
+print(classification_report(y_test, pred))   # precision, recall, f1</code></pre></article>
+
+<article class="s2"><h3>Предсказание для нового пассажира</h3>
+<pre><code class="py">new = pd.DataFrame([{"Pclass": 1, "Sex": "female", "Age": 29,
+                     "SibSp": 0, "Parch": 0, "Fare": 80.0, "Embarked": "C"}])
+model.predict(new)[0]            # 1 — выжила
+model.predict_proba(new)[0][1]   # вероятность выжить, ≈ 0.9
+# мужчина, 3 класс, 22 года, билет 7.25 → вероятность заметно ниже</code></pre></article>
+
+<article class="s2"><h3>Сравнение методов на тех же данных</h3><p>Одна предобработка, разные модели, кросс-валидация на 5 частях.</p>
+<pre><code class="py">from sklearn.dummy import DummyClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+
+models = {
+    "Dummy":  DummyClassifier(strategy="most_frequent"),
+    "KNN":    KNeighborsClassifier(),
+    "LogReg": LogisticRegression(max_iter=1000),
+    "Forest": RandomForestClassifier(random_state=42),
+}
+for name, clf in models.items():
+    pipe = Pipeline([("pre", pre), ("clf", clf)])
+    print(name, cross_val_score(pipe, X, y, cv=5).mean().round(3))
+# Dummy ≈ 0.616 (всегда «погиб»: 549 из 891), остальные ≈ 0.79–0.82</code></pre></article>
+
+<article class="s2"><h3>Какие признаки важнее</h3>
+<pre><code class="py">names = model.named_steps["pre"].get_feature_names_out()
+imp = model.named_steps["clf"].feature_importances_
+for n, v in sorted(zip(names, imp), key=lambda t: -t[1])[:5]:
+    print(n, round(v, 3))
+# сверху обычно: num__Fare, num__Age, cat__Sex_female / cat__Sex_male</code></pre><p style="margin-top:8px">Вывод: женщины и пассажиры 1 класса выживали заметно чаще. Точные числа зависят от разбиения.</p></article>
+</div>
+
+<h2 id="methods">Методы ML: примеры и сравнение</h2>
+<p class="sub">Все методы подключаются одинаково, поэтому сравнивать их просто. Общая схема для всех карточек ниже:</p>
+<div class="grid">
+<article class="s3 wide"><h3>Общая схема</h3>
+<pre><code class="py">from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_iris(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.3, random_state=42)
+
+model = ...                      # любой метод из карточек
+model.fit(X_tr, y_tr)            # обучение
+model.predict(X_te)              # предсказание
+model.score(X_te, y_te)          # accuracy на тесте
+# методам, чувствительным к масштабу:
+model = make_pipeline(StandardScaler(), model)</code></pre></article>
+
+<article class="s3"><h3>DummyClassifier — базовый уровень</h3><p>«Глупая» модель без обучения на признаках. Показывает точку отсчёта: любая настоящая модель должна быть лучше.</p>
+<pre><code class="py">from sklearn.dummy import DummyClassifier
+m = DummyClassifier(strategy="most_frequent")   # или "stratified", "uniform", "constant"
+m.fit(X_tr, y_tr); m.score(X_te, y_te)</code></pre>
+<p class="pro">＋ Мгновенный и честный ориентир качества.</p><p class="con">− Не использует признаки и ничего не предсказывает по сути.</p></article>
+
+<article class="s3"><h3>KNN — k ближайших соседей</h3><p>Класс определяется голосованием <code>k</code> ближайших объектов обучающей выборки. Расстояние: <code>d = √Σ(xᵢ − yᵢ)²</code>.</p>
+<pre><code class="py">from sklearn.neighbors import KNeighborsClassifier
+m = make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5))</code></pre>
+<p class="pro">＋ Простой, нелинейные границы, почти нет обучения.</p><p class="con">− Медленное предсказание на больших данных, нужен масштаб признаков, страдает при множестве признаков.</p></article>
+
+<article class="s3"><h3>Наивный байесовский классификатор</h3><p>По теореме Байеса: <code>P(класс | x) ∝ P(класс) · ΠP(xᵢ | класс)</code>. «Наивность» — признаки считаются независимыми. <code>GaussianNB</code> для чисел, <code>MultinomialNB</code> для частот слов.</p>
+<pre><code class="py">from sklearn.naive_bayes import GaussianNB, MultinomialNB
+m = GaussianNB()
+# текст: make_pipeline(CountVectorizer(), MultinomialNB())</code></pre>
+<p class="pro">＋ Очень быстрый, хорош для текста и малых данных.</p><p class="con">− Допущение о независимости редко верно, вероятности часто неточны.</p></article>
+
+<article class="s3"><h3>Решающее дерево (Decision Tree)</h3><p>Последовательность вопросов «признак &gt; порога?». Деление выбирается по снижению неоднородности: <code>Gini = 1 − Σpₖ²</code>.</p>
+<pre><code class="py">from sklearn.tree import DecisionTreeClassifier, export_text
+m = DecisionTreeClassifier(max_depth=3, random_state=42).fit(X_tr, y_tr)
+print(export_text(m))      # правила в виде текста
+# from sklearn.tree import plot_tree — рисунок дерева</code></pre>
+<p class="pro">＋ Понятная интерпретация, не нужна нормализация.</p><p class="con">− Легко переобучается, нестабильно к малым изменениям данных. Ограничивайте <code>max_depth</code>.</p></article>
+
+<article class="s3"><h3>Случайный лес (Random Forest)</h3><p>Много деревьев на случайных подвыборках данных и признаков; ответ — голосование. Снижает переобучение одиночного дерева.</p>
+<pre><code class="py">from sklearn.ensemble import RandomForestClassifier
+m = RandomForestClassifier(n_estimators=200, random_state=42).fit(X_tr, y_tr)
+m.feature_importances_         # важность признаков</code></pre>
+<p class="pro">＋ Точный, устойчивый, мало настроек, оценивает важность признаков.</p><p class="con">− Тяжелее и медленнее дерева, хуже интерпретируется.</p></article>
+
+<article class="s3"><h3>SGD — стохастический градиентный спуск</h3><p>Не отдельная модель, а способ обучения линейной модели малыми порциями: <code>w ← w − η · ∇L</code>. <code>loss="hinge"</code> даёт линейный SVM, <code>"log_loss"</code> — логистическую регрессию.</p>
+<pre><code class="py">from sklearn.linear_model import SGDClassifier
+m = make_pipeline(StandardScaler(),
+                  SGDClassifier(loss="log_loss", max_iter=1000, random_state=42))
+# дообучение порциями: m.partial_fit(X_batch, y_batch, classes=[0, 1, 2])</code></pre>
+<p class="pro">＋ Быстрый на больших данных, умеет дообучаться (<code>partial_fit</code>).</p><p class="con">− Чувствителен к масштабу и параметрам (<code>alpha</code>, <code>eta0</code>), только линейная граница.</p></article>
+
+<article class="s3"><h3>Логистическая регрессия</h3><p>Линейная модель с сигмоидой: <code>p = 1 / (1 + e^−(w·x + b))</code>. Выдаёт вероятность класса.</p>
+<pre><code class="py">from sklearn.linear_model import LogisticRegression
+m = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+m.predict_proba(X_te[:1])      # вероятности классов</code></pre>
+<p class="pro">＋ Быстрая, интерпретируемая (коэффициенты), даёт вероятности.</p><p class="con">− Линейная граница, нужны масштаб и подготовка признаков.</p></article>
+
+<article class="s3"><h3>SVM — метод опорных векторов</h3><p>Ищет разделяющую границу с максимальным зазором (<code>margin = 2 / ‖w‖</code>). Ядро <code>rbf</code> позволяет нелинейные границы. <code>C</code> — штраф за ошибки.</p>
+<pre><code class="py">from sklearn.svm import SVC
+m = make_pipeline(StandardScaler(), SVC(kernel="rbf", C=1.0, gamma="scale"))</code></pre>
+<p class="pro">＋ Хорош на небольших данных с большим числом признаков.</p><p class="con">− Медленный на больших выборках, нужен масштаб и подбор <code>C</code>/<code>gamma</code>, трудно интерпретировать.</p></article>
+
+<article class="s3"><h3>Метрики качества</h3>
+<pre><code class="py">from sklearn.metrics import classification_report, confusion_matrix
+# accuracy  = (TP + TN) / все
+# precision = TP / (TP + FP)       точность положительных ответов
+# recall    = TP / (TP + FN)       полнота: сколько найдено
+# F1        = 2·P·R / (P + R)
+print(confusion_matrix(y_te, m.predict(X_te)))
+print(classification_report(y_te, m.predict(X_te)))</code></pre><p style="margin-top:8px">Переобучение: на обучающей выборке отлично, на тестовой плохо. Лечится ограничением сложности, данными, кросс-валидацией.</p></article>
+
+<article class="s3 wide"><h3>Сравнение методов</h3><div class="tw"><table>
+<tr><th>Метод</th><th>Нужен масштаб</th><th>Скорость обучения</th><th>Интерпретируемость</th><th>Главная слабость</th></tr>
+<tr><td>Dummy</td><td>нет</td><td>мгновенно</td><td>полная</td><td>не использует признаки</td></tr>
+<tr><td>KNN</td><td>да</td><td>нет обучения, медленное предсказание</td><td>средняя</td><td>медленный на больших данных</td></tr>
+<tr><td>Наивный Байес</td><td>нет</td><td>очень быстро</td><td>хорошая</td><td>допущение независимости</td></tr>
+<tr><td>Решающее дерево</td><td>нет</td><td>быстро</td><td>высокая</td><td>переобучение</td></tr>
+<tr><td>Случайный лес</td><td>нет</td><td>средняя</td><td>средняя</td><td>тяжёлая модель</td></tr>
+<tr><td>SGD</td><td>да</td><td>быстро</td><td>коэффициенты</td><td>чувствителен к параметрам</td></tr>
+<tr><td>Логистическая регрессия</td><td>желательно</td><td>быстро</td><td>высокая</td><td>только линейная граница</td></tr>
+<tr><td>SVM</td><td>да</td><td>медленно на больших данных</td><td>низкая (с ядром)</td><td>плохо масштабируется</td></tr>
+</table></div>
+<p style="margin-top:8px">Рекомендация: начните с <code>DummyClassifier</code> и логистической регрессии, затем пробуйте случайный лес. Сравнивайте всё кросс-валидацией на одних данных.</p></article>
+</div>
+
+<h2 id="sound">Звук: кодирование, STT и TTS</h2>
+<p class="sub">Звук — непрерывная волна. Компьютеру она передаётся в виде чисел: волну измеряют через равные промежутки времени (<b>дискретизация</b>) и округляют значения до уровней (<b>квантование</b>).</p>
+<div class="grid">
+<article class="s4"><h3>Основные понятия</h3>
+<ul><li><b>Частота дискретизации</b> <code>fs</code> — число замеров в секунду (Гц).</li><li><b>Глубина</b> <code>N</code> — число бит на замер; уровней <code>2ᴺ</code>.</li><li><b>Каналы</b> <code>C</code>: 1 — моно, 2 — стерео.</li><li><b>Кадр (frame)</b> — один замер по всем каналам.</li><li><b>PCM</b> — несжатая запись замеров.</li></ul>
+<pre><code class="sh">fs: 8 кГц  телефон    | 16 кГц речь (Vosk, STT)
+    44,1 кГц CD       | 48 кГц видео
+N : 8 бит  256 уровней | 16 бит 65 536 | 24 бита 16,7 млн</code></pre></article>
+
+<article class="s4"><h3>Формулы</h3><div class="tw"><table>
+<tr><td>Теорема Котельникова (Найквиста)</td><td><code>fs ≥ 2 · f_max</code></td></tr>
+<tr><td>Число уровней</td><td><code>2ᴺ</code></td></tr>
+<tr><td>Битрейт PCM</td><td><code>fs · N · C</code> бит/с</td></tr>
+<tr><td>Размер данных PCM</td><td><code>fs · (N/8) · C · t</code> байт</td></tr>
+<tr><td>Динамический диапазон</td><td><code>≈ 6,02 · N</code> дБ</td></tr>
+<tr><td>Длительность</td><td><code>t = кадры / fs</code></td></tr>
+<tr><td>Размер WAV-файла</td><td><code>44 байта заголовка + данные</code></td></tr>
+<tr><td>Размер сжатого файла</td><td><code>битрейт / 8 · t</code> байт</td></tr>
+</table></div></article>
+
+<article class="s4"><h3>Примеры решений</h3>
+<pre><code class="sh">1) CD, стерео, 3 мин (180 с):
+   44100 · 2 · 2 · 180 = 31 752 000 байт ≈ 30,3 МиБ
+   битрейт = 44100 · 16 · 2 = 1 411 200 бит/с ≈ 1411 кбит/с
+
+2) Речь 16 кГц, моно, 16 бит, 10 с:
+   16000 · 2 · 1 · 10 = 320 000 байт ≈ 312,5 КиБ (256 кбит/с)
+   WAV-файл: 44 + 320 000 = 320 044 байта
+
+3) MP3 128 кбит/с, 3 мин:
+   128000 / 8 · 180 = 2 880 000 байт ≈ 2,75 МиБ
+   сжатие относительно CD ≈ 1411 / 128 ≈ 11 : 1
+
+4) fs = 8000 Гц → максимум 4000 Гц (Найквист).
+   Для 20 кГц нужно fs ≥ 40 кГц (CD: 44,1 кГц).
+
+5) 16 бит: 6,02 · 16 ≈ 96 дБ;  24 бита ≈ 144 дБ</code></pre></article>
+
+<article class="s4"><h3>Форматы аудиофайлов</h3><div class="tw"><table>
+<tr><th>Формат</th><th>Сжатие</th><th>Особенности</th></tr>
+<tr><td><code>.wav</code></td><td>нет (PCM)</td><td>стандарт для ML и STT; большой размер</td></tr>
+<tr><td><code>.flac</code></td><td>без потерь</td><td>примерно вдвое меньше WAV</td></tr>
+<tr><td><code>.mp3</code></td><td>с потерями</td><td>128–320 кбит/с, повсеместно</td></tr>
+<tr><td><code>.ogg</code> / <code>.opus</code></td><td>с потерями</td><td>Opus хорош для речи и связи</td></tr>
+<tr><td><code>.m4a</code> / <code>.aac</code></td><td>с потерями</td><td>Apple, потоковые сервисы</td></tr>
+<tr><td><code>.aiff</code></td><td>нет</td><td>аналог WAV у Apple</td></tr>
+<tr><td><code>.raw</code> / <code>.pcm</code></td><td>нет</td><td>только замеры, без заголовка</td></tr>
+</table></div></article>
+
+<article class="s4"><h3>Python: чтение и конвертация</h3>
+<pre><code class="py">import wave
+with wave.open("a.wav", "rb") as w:
+    fs, ch, width = w.getframerate(), w.getnchannels(), w.getsampwidth()
+    frames = w.getnframes()
+    print(fs, ch, width * 8, frames / fs)   # 16000 1 16 10.0 (с)
+
+# конвертация в формат для STT (нужен ffmpeg)
+# ffmpeg -i in.mp3 -ar 16000 -ac 1 -sample_fmt s16 out.wav
+
+from pydub import AudioSegment     # pip install pydub
+a = AudioSegment.from_file("in.mp3").set_frame_rate(16000).set_channels(1)
+a.export("out.wav", format="wav")
+
+import librosa                      # pip install librosa
+y, sr = librosa.load("in.mp3", sr=16000, mono=True)   # массив float</code></pre></article>
+
+<article class="s4"><h3>STT: Kaldi</h3><p>Kaldi — набор инструментов на C++ для распознавания речи (признаки MFCC, акустическая модель, словарь, языковая модель). В Python его модели удобно использовать через Vosk.</p>
+<pre><code class="sh"># Быстрый путь (Python)
+pip install vosk
+
+# Сборка самого Kaldi (Linux / WSL), вкратце
+git clone https://github.com/kaldi-asr/kaldi.git
+cd kaldi/tools &amp;&amp; extras/check_dependencies.sh &amp;&amp; make -j4
+cd ../src &amp;&amp; ./configure --shared &amp;&amp; make depend -j4 &amp;&amp; make -j4</code></pre>
+<pre><code class="py">rec = KaldiRecognizer(Model("vosk-model-small-ru-0.22"), 16000)
+rec.SetWords(True)
+# результат: {"text": "...", "result": [{"word": "привет", "start": 0.3,
+#             "end": 0.7, "conf": 0.98}, ...]}</code></pre>
+<p style="margin-top:8px">Для обучения своей модели в Kaldi готовят <code>wav.scp</code> (файлы), <code>text</code> (транскрипции) и <code>utt2spk</code> (дикторы).</p></article>
+
+<article class="s4"><h3>TTS: Tacotron2</h3><p>Нейросеть «текст → речь». Кодировщик превращает буквы в представление, декодер с вниманием строит <b>мел-спектрограмму</b>, а вокодер (WaveGlow, HiFi-GAN) превращает её в звук.</p>
+<pre><code class="sh">текст → [Tacotron2] → мел-спектрограмма → [вокодер] → WAV</code></pre>
+<pre><code class="sh">pip install coqui-tts
+tts --text "Machine learning is fun" \
+    --model_name "tts_models/en/ljspeech/tacotron2-DDC" \
+    --out_path tacotron.wav</code></pre>
+<pre><code class="py">from TTS.api import TTS
+tts = TTS("tts_models/en/ljspeech/tacotron2-DDC")
+tts.tts_to_file("Hello from Tacotron two", file_path="hello.wav")
+# tts.to("cuda")  — запуск на видеокарте</code></pre><p style="margin-top:8px">Эта модель говорит по-английски. Для русского используйте многоязычные модели (например, XTTS v2) или системные голоса pyttsx3.</p></article>
+
+<article class="s4 wide"><h3>Проект: голосовой помощник (Vosk + pyttsx3)</h3><p>Слушает микрофон, распознаёт команды и отвечает голосом. Понадобятся: <code>pip install vosk sounddevice pyttsx3</code> и распакованная модель <code>vosk-model-small-ru-0.22</code>. Используйте наушники, чтобы микрофон не ловил голос помощника.</p>
+<pre><code class="py">import json, queue, datetime
+import sounddevice as sd
+import pyttsx3
+from vosk import Model, KaldiRecognizer
+
+SAMPLE_RATE = 16000
+q = queue.Queue()
+tts = pyttsx3.init()
+tts.setProperty("rate", 170)
+
+def say(text):
+    print("Помощник:", text)
+    tts.say(text)
+    tts.runAndWait()
+
+def callback(indata, frames, time, status):
+    q.put(bytes(indata))               # сырые 16-битные замеры
+
+model = Model("vosk-model-small-ru-0.22")
+rec = KaldiRecognizer(model, SAMPLE_RATE)
+
+say("Слушаю вас")
+with sd.RawInputStream(samplerate=SAMPLE_RATE, blocksize=8000,
+                       dtype="int16", channels=1, callback=callback):
+    while True:
+        data = q.get()
+        if not rec.AcceptWaveform(data):
+            continue
+        text = json.loads(rec.Result())["text"]
+        if not text:
+            continue
+        print("Вы:", text)
+        if "время" in text:
+            say(datetime.datetime.now().strftime("Сейчас %H часов %M минут"))
+        elif "пока" in text or "стоп" in text:
+            say("До свидания")
+            break
+        else:
+            say("Вы сказали: " + text)</code></pre></article>
+</div>
+
+<h2 id="cv">Компьютерное зрение и нейросети</h2>
+<p class="sub">Три основные задачи: что на изображении, где оно находится и какие пиксели ему принадлежат.</p>
+<div class="grid">
+<article class="s5 wide"><h3>Классификация, детекция, сегментация</h3><div class="tw"><table>
+<tr><th>Задача</th><th>Вопрос</th><th>Результат</th><th>Примеры моделей</th></tr>
+<tr><td><b>Классификация</b></td><td>Что на картинке?</td><td>метка класса и вероятность</td><td>ResNet, MobileNet, EfficientNet</td></tr>
+<tr><td><b>Детекция</b></td><td>Что и где?</td><td>рамки (x, y, w, h) + метки</td><td>каскады Хаара, YOLO, SSD, Faster R-CNN</td></tr>
+<tr><td><b>Сегментация</b></td><td>Какому объекту принадлежит каждый пиксель?</td><td>маска; семантическая (по классам) или экземплярная (по объектам)</td><td>U-Net, DeepLab, Mask R-CNN</td></tr>
+</table></div></article>
+
+<article class="s5"><h3>Нейрон</h3><p>Складывает входы с весами, добавляет смещение и пропускает через функцию активации: <code>y = f(w₁x₁ + w₂x₂ + … + b)</code>.</p>
+<pre><code class="py">import numpy as np
+x = np.array([0.5, 0.8])      # признаки (входы)
+w = np.array([0.4, -0.6])     # веса
+b = 0.1                       # смещение
+z = x @ w + b                 # 0.2 - 0.48 + 0.1 = -0.18
+y = 1 / (1 + np.exp(-z))      # сигмоида → 0.455</code></pre></article>
+
+<article class="s5"><h3>Слои и термины</h3><div class="tw"><table>
+<tr><td><b>Признаки</b></td><td>входные значения: пиксели или извлечённые характеристики</td></tr>
+<tr><td><b>Вес</b></td><td>сила связи: сколько вклада даёт вход; именно веса обучаются</td></tr>
+<tr><td><b>Смещение (сдвиг, bias)</b></td><td>число <code>b</code>, сдвигающее порог срабатывания</td></tr>
+<tr><td><b>Пороговое значение</b></td><td>нейрон «срабатывает», если <code>Σwx ≥ θ</code>. Это то же смещение: <code>b = −θ</code></td></tr>
+<tr><td><b>Входной слой</b></td><td>принимает данные, вычислений нет</td></tr>
+<tr><td><b>Скрытые слои</b></td><td>строят промежуточные признаки; чем глубже, тем сложнее</td></tr>
+<tr><td><b>Выходной слой</b></td><td>итог: классы или число</td></tr>
+</table></div></article>
+
+<article class="s5"><h3>Функции активации</h3><div class="tw"><table>
+<tr><td>Ступенчатая</td><td>0 или 1 по порогу</td></tr>
+<tr><td>Сигмоида</td><td><code>1 / (1 + e⁻ᶻ)</code>, диапазон 0…1</td></tr>
+<tr><td>tanh</td><td>диапазон −1…1</td></tr>
+<tr><td>ReLU</td><td><code>max(0, z)</code>, стандарт для скрытых слоёв</td></tr>
+<tr><td>Softmax</td><td>превращает выходы в вероятности (сумма = 1)</td></tr>
+</table></div></article>
+
+<article class="s5"><h3>Нормализация данных</h3><p>Приводит значения к единой шкале: обучение идёт быстрее и стабильнее.</p>
+<pre><code class="py">img = img.astype("float32") / 255.0        # пиксели 0…255 → 0…1
+x = (x - x.mean()) / x.std()               # стандартизация (μ=0, σ=1)
+x = (x - x.min()) / (x.max() - x.min())    # min-max → 0…1
+# среднее и σ считают по обучающей выборке и применяют к тесту</code></pre></article>
+
+<article class="s5"><h3>Обратное распространение ошибки</h3>
+<ol><li><b>Прямой проход:</b> вход → слои → предсказание.</li><li><b>Ошибка</b> <code>L</code>: MSE <code>(1/n)Σ(y−ŷ)²</code> или кросс-энтропия <code>−Σy·log ŷ</code>.</li><li><b>Обратный проход:</b> по правилу цепочки считают <code>∂L/∂w</code> для каждого веса, от выхода к входу.</li><li><b>Шаг:</b> <code>w ← w − η · ∂L/∂w</code> (<code>η</code> — скорость обучения).</li><li>Повторяют по эпохам.</li></ol>
+<pre><code class="py">X = np.array([[0,0],[0,1],[1,0],[1,1]]); y = np.array([0,0,0,1])   # логическое И
+w, b, lr = np.zeros(2), 0.0, 0.5
+sig = lambda z: 1 / (1 + np.exp(-z))
+for _ in range(2000):
+    p = sig(X @ w + b)               # прямой проход
+    g = p - y                        # градиент ошибки по z
+    w -= lr * X.T @ g / len(X)       # обновить веса
+    b -= lr * g.mean()               # обновить смещение
+print((sig(X @ w + b) &gt; 0.5).astype(int))   # [0 0 0 1]</code></pre></article>
+
+<article class="s5"><h3>ImageNet</h3><p>Большая база размеченных изображений. В соревнованиях ILSVRC использовали подмножество: около 1,28 млн обучающих картинок и 1000 классов (животные, предметы, транспорт). Модели «с imagenet-весами» уже умеют узнавать эти 1000 классов и годятся для дообучения на своих данных (transfer learning).</p></article>
+
+<article class="s5 wide"><h3>Сравнение моделей: ResNet, MobileNetV3, EfficientNetV2</h3><div class="tw"><table>
+<tr><th>Модель</th><th>Идея</th><th>Параметры</th><th>Точность top-1 на ImageNet*</th><th>Когда брать</th></tr>
+<tr><td><b>ResNet50</b></td><td>остаточные связи (skip connections) позволяют обучать глубокие сети</td><td>≈ 25,6 млн</td><td>≈ 75 %</td><td>надёжная классика, много примеров</td></tr>
+<tr><td><b>MobileNetV3</b> (Small / Large)</td><td>лёгкие свёртки, оптимизирована под телефоны и камеры</td><td>≈ 2,5 / 5,4 млн</td><td>≈ 68 / 76 %</td><td>реальное время, слабое железо</td></tr>
+<tr><td><b>EfficientNetV2</b> (B0…S…)</td><td>сбалансированное масштабирование глубины, ширины и разрешения</td><td>≈ 7,2 млн (B0) … 21,6 млн (S)</td><td>≈ 79 % (B0) … 84 % (S)</td><td>лучшая точность при умеренном размере</td></tr>
+</table></div>
+<p style="margin-top:8px">* Округлённые значения из документации Keras Applications; точные цифры смотрите в ней. EfficientNetV2 и MobileNetV3 в Keras уже содержат нормировку внутри (на вход 0…255), а для ResNet50 нужен <code>tf.keras.applications.resnet50.preprocess_input</code>.</p></article>
+
+<article class="s5"><h3>Получение и подготовка изображения</h3><p>Нужно: прочитать, перевести цвета в RGB, изменить размер под модель и добавить размерность батча. OpenCV читает в порядке BGR!</p>
+<pre><code class="py">import cv2, numpy as np
+img = cv2.imread("cat.jpg")                    # BGR, (H, W, 3)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)     # в RGB
+img = cv2.resize(img, (224, 224))              # размер для модели
+x = img.astype("float32")                      # нормировка — по требованию модели
+x = np.expand_dims(x, axis=0)                  # (1, 224, 224, 3)
+
+# вариант средствами Keras
+import tensorflow as tf
+img = tf.keras.utils.load_img("cat.jpg", target_size=(224, 224))
+x = tf.keras.utils.img_to_array(img)[None, ...]</code></pre></article>
+
+<article class="s5"><h3>Предсказание готовой моделью</h3>
+<pre><code class="py">from tensorflow.keras.applications import MobileNetV3Large
+from tensorflow.keras.applications.mobilenet_v3 import decode_predictions
+
+model = MobileNetV3Large(weights="imagenet")   # веса скачаются сами
+preds = model.predict(x)                       # (1, 1000) вероятности
+for _, name, p in decode_predictions(preds, top=3)[0]:
+    print(f"{name}: {p:.1%}")                  # tabby: 62.3% …</code></pre>
+<p style="margin-top:8px">Для EfficientNetV2 замените на <code>EfficientNetV2B0</code> и модуль <code>efficientnet_v2</code>; для ResNet — <code>ResNet50</code> и <code>resnet50.preprocess_input(x)</code>.</p></article>
+
+<article class="s5"><h3>TensorFlow Hub</h3><p>Каталог готовых моделей (сейчас доступен также через Kaggle Models). Модель подключается как слой по ссылке.</p>
+<pre><code class="sh">pip install tensorflow-hub
+# для TF 2.16+ (Keras 3) обычно нужен и: pip install tf-keras
+# и переменная окружения TF_USE_LEGACY_KERAS=1</code></pre>
+<pre><code class="py">import os; os.environ["TF_USE_LEGACY_KERAS"] = "1"
+import tensorflow as tf, tensorflow_hub as hub
+
+url = "https://tfhub.dev/google/imagenet/mobilenet_v3_large_100_224/classification/5"
+model = tf.keras.Sequential([hub.KerasLayer(url, input_shape=(224, 224, 3))])
+x = x / 255.0                       # эта модель ждёт значения 0…1
+logits = model.predict(x)
+idx = int(logits[0].argmax())       # индекс класса; имена — в файле ImageNetLabels.txt
+# извлечение признаков для своих классов: ссылка вида .../feature_vector/5
+# и поверх hub-слоя (trainable=False) добавьте Dense(n_классов, "softmax")</code></pre>
+<p style="margin-top:8px">Формат входа (0…1 или 0…255) и число выходов (1000 или 1001 с классом «фон») указаны на странице каждой модели.</p></article>
+
+<article class="s5"><h3>Классификация нескольких изображений</h3>
+<pre><code class="py">from pathlib import Path
+
+def load(path):
+    im = tf.keras.utils.load_img(path, target_size=(224, 224))
+    return tf.keras.utils.img_to_array(im)
+
+files = sorted(Path("photos").glob("*.jpg"))
+batch = np.stack([load(f) for f in files])     # (N, 224, 224, 3)
+preds = model.predict(batch)                   # один вызов на всё
+for f, top in zip(files, decode_predictions(preds, top=1)):
+    print(f.name, top[0][1], f"{top[0][2]:.0%}")
+
+# целая папка с подпапками-классами:
+# ds = tf.keras.utils.image_dataset_from_directory("data", image_size=(224, 224))</code></pre></article>
+</div>
+
+<h2 id="haar">Каскады Хаара (OpenCV)</h2>
+<p class="sub">Классический быстрый метод детекции объектов (например, лиц). Работает без видеокарты и обучается на небольшом наборе картинок.</p>
+<div class="grid">
+<article class="s1"><h3>Признаки Хаара</h3><p>Признак — разность сумм яркости пикселей в светлой и тёмной прямоугольных областях. Реагирует на края, линии, перепады яркости (у лица глаза темнее щёк, переносица светлее).</p>
+<pre><code class="sh">край         линия         четыре области
+┌──┬──┐      ┌─┬───┬─┐   ┌──┬──┐
+│██│░░│      │░│███│░│   │██│░░│
+└──┴──┘      └─┴───┴─┘   ├──┼──┤
+                          │░░│██│
+                          └──┴──┘
+значение признака = Σ(светлая часть) − Σ(тёмная часть)</code></pre></article>
+
+<article class="s1"><h3>Интегральное изображение</h3><p>Каждая ячейка хранит сумму всех пикселей выше и левее: <code>ii(x, y) = Σ i(x′, y′)</code>. Сумма любого прямоугольника — всего 4 обращения: <code>D − B − C + A</code>. Поэтому признак считается за постоянное время.</p>
+<pre><code class="py">img = np.array([[1,2,3],[4,5,6],[7,8,9]], dtype=np.uint8)
+ii = cv2.integral(img)            # размер (4, 4), нулевые строка и столбец
+y1, x1, y2, x2 = 1, 1, 3, 3       # область строк 1–2, столбцов 1–2
+s = ii[y2, x2] - ii[y1, x2] - ii[y2, x1] + ii[y1, x1]
+print(s)                          # 45 − 6 − 12 + 1 = 28  (5+6+8+9)</code></pre></article>
+
+<article class="s1"><h3>Классификатор Хаара</h3><p><b>Классификатор — это модель, которая на основании значений признаков Хаара решает: в окне есть объект или нет.</b></p>
+<ul><li><b>Слабый классификатор:</b> один признак и порог (чуть лучше случайного).</li><li><b>AdaBoost:</b> объединяет сотни слабых в сильный, повышая вес сложных примеров.</li><li><b>Каскад:</b> несколько ступеней от простых к сложным. Окно без объекта отбрасывается на ранней ступени, поэтому детекция быстрая. Через все ступени проходят только окна с объектом.</li></ul></article>
+
+<article class="s1"><h3>Метод скользящего окна</h3><p>Окно фиксированного размера (например, 24×24) сдвигается по изображению с шагом, и в каждой позиции классификатор говорит «объект / не объект». Чтобы находить объекты разного размера, изображение уменьшают (пирамида) и проход повторяют.</p>
+<pre><code class="py">def windows(img, size=(24, 24), step=8):
+    h, w = img.shape[:2]
+    for y in range(0, h - size[1] + 1, step):
+        for x in range(0, w - size[0] + 1, step):
+            yield x, y, img[y:y + size[1], x:x + size[0]]
+# масштабы: img = cv2.resize(img, None, fx=1/1.1, fy=1/1.1)</code></pre></article>
+
+<article class="s1"><h3>Каскады в OpenCV</h3><p>Готовые файлы лежат в <code>cv2.data.haarcascades</code>: лица (<code>haarcascade_frontalface_default.xml</code>, <code>…_profileface.xml</code>), глаза (<code>…_eye.xml</code>), улыбка, верхняя часть тела, номера (<code>…_russian_plate_number.xml</code>).</p>
+<pre><code class="py">face = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+img = cv2.imread("people.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+boxes = face.detectMultiScale(gray, scaleFactor=1.1,
+                              minNeighbors=5, minSize=(30, 30))
+for (x, y, w, h) in boxes:
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+print(len(boxes), "лиц")</code></pre></article>
+
+<article class="s1"><h3>Параметры detectMultiScale</h3><div class="tw"><table>
+<tr><td><code>scaleFactor</code></td><td>шаг пирамиды (1,05–1,3). Меньше — точнее, но медленнее</td></tr>
+<tr><td><code>minNeighbors</code></td><td>сколько соседних рамок подтверждают объект. Больше — меньше ложных срабатываний, но можно пропустить объекты</td></tr>
+<tr><td><code>minSize</code> / <code>maxSize</code></td><td>границы размера искомого объекта</td></tr>
+</table></div></article>
+
+<article class="s1"><h3>Оценка классификатора</h3><p>Результаты проверки сравнивают с ручной разметкой.</p>
+<pre><code class="py"># TP — найдено верно, FP — ложное срабатывание, FN — пропущено
+TP, FP, FN = 45, 5, 10
+precision = TP / (TP + FP)                         # 0.90
+recall    = TP / (TP + FN)                         # 0.818
+f1 = 2 * precision * recall / (precision + recall) # 0.857
+# IoU = площадь пересечения / площадь объединения рамок;
+# рамка засчитывается верной обычно при IoU ≥ 0.5</code></pre></article>
+</div>
+
+<h2 id="train">Обучение каскада Хаара</h2>
+<p class="sub">Программа <b>Cascade Trainer GUI</b> (Windows, бесплатная) оборачивает утилиты OpenCV <code>opencv_createsamples</code> и <code>opencv_traincascade</code> и позволяет обучить каскад без командной строки. Результат — файл <code>classifier/cascade.xml</code>.</p>
+<div class="grid">
+<article class="s2"><h3>1. Подготовка данных</h3>
+<pre><code class="sh">project/
+├── p/        # positive: хорошие объекты
+│   ├── 001.jpg …
+└── n/        # negative: плохие объекты (фон)
+    ├── 001.jpg …</code></pre>
+<p style="margin-top:8px">В программе выберите папку <code>project</code> (внутри должны лежать <code>p</code> и <code>n</code>).</p></article>
+
+<article class="s2"><h3>Хорошие объекты (positive)</h3>
+<ul><li>Только искомый объект, обрезанный плотно, с одинаковой пропорцией сторон (лицо — 1:1, номер — 4:1).</li><li>Один ракурс и ориентация, как в целевой задаче.</li><li>Разный свет, фон, масштаб, экземпляры объекта.</li><li>Ориентир: от сотен до нескольких тысяч картинок.</li><li>Без размытых, обрезанных и чужих объектов.</li></ul></article>
+
+<article class="s2"><h3>Плохие объекты (negative)</h3><p>Картинки <b>без</b> искомого объекта — то, что каскад должен отбрасывать.</p>
+<ul><li>Фоны из той же среды, где будет поиск: комнаты, улицы, столы, небо.</li><li>Объекты, похожие на искомый (чтобы не путал).</li><li>Размер больше окна обучения; в кадре не должно быть искомого объекта даже частично.</li><li>Ориентир: в 1,5–3 раза больше, чем positive; чем разнообразнее, тем лучше.</li><li>Как выбрать: запустите первый каскад на «пустых» кадрах и добавьте в <code>n/</code> всё, что он ошибочно нашёл (hard negatives), затем обучите заново.</li></ul></article>
+
+<article class="s2 wide"><h3>2. Настройка параметров обучения</h3><div class="tw"><table>
+<tr><th>Параметр</th><th>Смысл</th><th>Типичное значение</th></tr>
+<tr><td>Sample width / height</td><td>размер окна (пропорции как у объекта). Меньше — быстрее, но менее детально</td><td>24×24 (лицо), 48×24 (машина)</td></tr>
+<tr><td>Positive / Negative count</td><td>сколько positive и negative использовать</td><td>numNeg ≈ 1,5–3 × numPos</td></tr>
+<tr><td>Number of stages</td><td>число ступеней каскада</td><td>10–20</td></tr>
+<tr><td>Feature type</td><td>HAAR — точнее, но медленнее; LBP — быстрее, чуть хуже</td><td>HAAR</td></tr>
+<tr><td>Min hit rate</td><td>какую долю объектов должна пропускать каждая ступень</td><td>0,995</td></tr>
+<tr><td>Max false alarm rate</td><td>какую долю «не объектов» ступень может пропустить</td><td>0,5</td></tr>
+<tr><td>Weight trim rate, max depth, max weak count</td><td>настройки бустинга (глубина слабых деревьев, их число)</td><td>0,95; 1; 100</td></tr>
+</table></div>
+<p style="margin-top:8px">Правило для числа positive: образцов должно хватать на все ступени: <code>образцов ≥ numPos + (numStages − 1) · (1 − minHitRate) · numPos</code>. Например, при 20 ступенях, <code>minHitRate = 0,995</code>, <code>numPos = 1000</code> нужно не менее 1095 образцов. Названия вкладок в разных версиях программы могут отличаться.</p></article>
+
+<article class="s2"><h3>3. Процесс обучения</h3>
+<ol><li>Нажмите <b>Start</b>; в окне журнала идут ступени (<code>STAGE n</code>).</li><li>Каждая ступень набирает positive и отбирает negative, которые прошли предыдущие ступени.</li><li>Время растёт от ступени к ступени (минуты → часы).</li><li>Конец: заданное число ступеней или сообщение <code>Required leaf false alarm rate achieved</code> — обучение остановлено, т.к. достигнута нужная точность или кончились подходящие negative.</li><li>Файл <code>classifier/cascade.xml</code> готов.</li></ol></article>
+
+<article class="s2"><h3>Командная строка (то же самое)</h3><p>Утилиты есть в полной сборке OpenCV (в <code>pip</code>-пакете их нет). <code>bg.txt</code> — список путей к negative по одному в строке.</p>
+<pre><code class="sh">opencv_createsamples -info pos.txt -vec pos.vec -num 1000 -w 24 -h 24
+opencv_traincascade -data classifier -vec pos.vec -bg bg.txt \
+    -numPos 900 -numNeg 1800 -numStages 15 -w 24 -h 24 \
+    -featureType HAAR -minHitRate 0.995 -maxFalseAlarmRate 0.5</code></pre></article>
+
+<article class="s2"><h3>4. Тестирование и улучшение</h3>
+<ul><li>Проверьте на отдельных картинках, которых не было при обучении.</li><li>Посчитайте TP / FP / FN, precision и recall.</li><li><b>Много ложных срабатываний</b> → больше и разнообразнее negative, hard negatives, больше ступеней, больше <code>minNeighbors</code>.</li><li><b>Пропуски объектов</b> → больше positive с разными условиями, меньше <code>minNeighbors</code>, меньше <code>scaleFactor</code>.</li><li><b>Работает только на обучающих кадрах</b> → переобучение: добавьте новые данные.</li><li>Меняйте один фактор за раз и сравнивайте результаты.</li></ul></article>
+
+<article class="s2"><h3>5. Проверка каскада</h3>
+<pre><code class="py">cascade = cv2.CascadeClassifier("classifier/cascade.xml")
+if cascade.empty():
+    raise SystemExit("Не удалось загрузить cascade.xml")
+
+img = cv2.imread("test.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+boxes = cascade.detectMultiScale(gray, 1.1, 5, minSize=(24, 24))
+print("найдено:", len(boxes))     # сравните с ручным подсчётом</code></pre></article>
+
+<article class="s2 wide"><h3>Проект: счётчик объектов с камеры на каскаде Хаара</h3><p>Ищет объекты своим (или стандартным) каскадом, считает их, рисует рамки, сохраняет вырезки по клавише <code>s</code>, выход по <code>q</code>.</p>
+<pre><code class="py">import time
+import cv2
+
+CASCADE_PATH = "classifier/cascade.xml"   # или cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+cascade = cv2.CascadeClassifier(CASCADE_PATH)
+if cascade.empty():
+    raise SystemExit("Каскад не загружен: проверьте путь")
+
+cap = cv2.VideoCapture(0)
+saved = 0
+while True:
+    t0 = time.perf_counter()
+    ok, frame = cap.read()
+    if not ok:
+        break
+    gray = cv2.equalizeHist(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY))
+    boxes = cascade.detectMultiScale(gray, scaleFactor=1.1,
+                                     minNeighbors=5, minSize=(30, 30))
+    for (x, y, w, h) in boxes:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    fps = 1 / (time.perf_counter() - t0)
+    cv2.putText(frame, f"Objects: {len(boxes)}  FPS: {fps:.0f}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+    cv2.imshow("Haar", frame)
+    key = cv2.waitKey(1) &amp; 0xFF
+    if key == ord("s") and len(boxes):
+        x, y, w, h = boxes[0]
+        cv2.imwrite(f"crop_{saved}.jpg", frame[y:y + h, x:x + w])
+        saved += 1
+    elif key == ord("q"):
+        break
+cap.release()
+cv2.destroyAllWindows()</code></pre></article>
+</div>
+
+<h2 id="cnn">Свёрточные нейросети (CNN)</h2>
+<p class="sub">Обычная полносвязная сеть для картинки 224×224×3 получает 150 528 входов, и вес каждого связан с каждым нейроном. CNN использует то, что соседние пиксели связаны, а один и тот же узор может встретиться в любом месте.</p>
+<div class="grid">
+<article class="s3"><h3>Принцип работы</h3>
+<pre><code class="sh">Изображение → [Conv + ReLU] → [Pooling] → [Conv + ReLU] → [Pooling]
+            → Flatten → [Dense] → [Softmax] → класс
+линии, края ─────────► текстуры ────────► части ───► объект</code></pre>
+<ul style="margin-top:8px"><li><b>Свёртка (Conv):</b> небольшое ядро (например, 3×3) скользит по изображению; в каждой позиции считается взвешенная сумма. Получается карта признаков. Веса ядра общие для всех позиций.</li><li><b>Фильтры:</b> несколько ядер дают несколько карт; каждое учится находить свой узор.</li><li><b>Pooling:</b> уменьшает карту (MaxPool берёт максимум в окне 2×2), даёт устойчивость к небольшим сдвигам.</li><li><b>Dense:</b> по итоговым признакам выдаёт класс.</li></ul></article>
+
+<article class="s3"><h3>Формулы и расчёты</h3>
+<pre><code class="sh">размер карты = (W − K + 2P) / S + 1
+   W — размер входа, K — ядро, P — padding, S — шаг
+   28×28, K=3, P=0, S=1 → 26×26
+
+параметры Conv = (K·K·C_in + 1) · C_out
+   вход 1 канал, ядро 3×3, 32 фильтра → (9+1)·32 = 320
+
+MaxPool 2×2: 26×26 → 13×13 (параметров нет)</code></pre></article>
+
+<article class="s3 wide"><h3>CNN на Keras (распознавание цифр MNIST)</h3>
+<pre><code class="py">import tensorflow as tf
+from tensorflow.keras import layers
+
+(x_tr, y_tr), (x_te, y_te) = tf.keras.datasets.mnist.load_data()
+x_tr = x_tr[..., None] / 255.0           # (N, 28, 28, 1)
+x_te = x_te[..., None] / 255.0
+
+model = tf.keras.Sequential([
+    layers.Input((28, 28, 1)),
+    layers.Conv2D(32, 3, activation="relu"),     # → 26×26×32
+    layers.MaxPooling2D(),                       # → 13×13×32
+    layers.Conv2D(64, 3, activation="relu"),     # → 11×11×64
+    layers.MaxPooling2D(),                       # → 5×5×64
+    layers.Flatten(),
+    layers.Dense(64, activation="relu"),
+    layers.Dense(10, activation="softmax"),
+])
+model.summary()                                  # слои и число параметров
+model.compile("adam", "sparse_categorical_crossentropy", metrics=["accuracy"])
+model.fit(x_tr, y_tr, epochs=3, validation_split=0.1)
+model.evaluate(x_te, y_te)                       # ≈ 0.99</code></pre></article>
+
+<article class="s3 wide"><h3>Перенос обучения (transfer learning)</h3><p>Берём готовую сеть, обученную на ImageNet, замораживаем её и обучаем только новую «голову» под свои классы. Нужно намного меньше данных.</p>
+<pre><code class="py">base = tf.keras.applications.MobileNetV3Small(
+    include_top=False, weights="imagenet", input_shape=(224, 224, 3))
+base.trainable = False                           # заморозить
+
+model = tf.keras.Sequential([
+    base,
+    layers.GlobalAveragePooling2D(),
+    layers.Dropout(0.2),
+    layers.Dense(3, activation="softmax"),       # 3 своих класса
+])
+model.compile("adam", "sparse_categorical_crossentropy", metrics=["accuracy"])
+
+ds = tf.keras.utils.image_dataset_from_directory(
+    "data", image_size=(224, 224), batch_size=32)   # data/класс_1/*.jpg …
+model.fit(ds, epochs=5)</code></pre></article>
+</div>
+
+<h2 id="rt">Компьютерное зрение в реальном времени</h2>
+<p class="sub">Видео — это поток кадров. Задача — обработать кадр быстрее, чем придёт следующий (для 30 кадров/с это около 33 мс).</p>
+<div class="grid">
+<article class="s4"><h3>Базовый цикл</h3>
+<pre><code class="py">cap = cv2.VideoCapture(0)        # 0 — первая камера или путь к видеофайлу
+while True:
+    ok, frame = cap.read()       # ok=False — кадры закончились
+    if not ok:
+        break
+    frame = cv2.flip(frame, 1)   # зеркало
+    # ... обработка ...
+    cv2.imshow("live", frame)
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+        break
+cap.release()                    # освободить камеру
+cv2.destroyAllWindows()</code></pre></article>
+
+<article class="s4"><h3>Измерение FPS</h3>
+<pre><code class="py">import time
+t0 = time.perf_counter()
+# ... обработка кадра ...
+fps = 1 / (time.perf_counter() - t0)
+cv2.putText(frame, f"{fps:.0f} FPS", (10, 30),
+            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)</code></pre></article>
+
+<article class="s4"><h3>Как ускорить</h3>
+<ul><li>Уменьшайте кадр перед обработкой (<code>cv2.resize</code>), рисуйте на оригинале.</li><li>Переходите в оттенки серого, если цвет не нужен.</li><li>Обрабатывайте не каждый кадр, а каждый N-й.</li><li>Ищите в области интереса (ROI), а не во всём кадре.</li><li>Берите лёгкие модели: MobileNetV3, TensorFlow Lite.</li><li>Для нейросети вызывайте <code>model(x, training=False)</code> вместо <code>predict</code> на одном кадре.</li><li>Задайте <code>minSize</code> в каскадах Хаара.</li></ul></article>
+
+<article class="s4"><h3>Запись видео</h3>
+<pre><code class="py">h, w = frame.shape[:2]
+out = cv2.VideoWriter("out.mp4", cv2.VideoWriter_fourcc(*"mp4v"), 20, (w, h))
+out.write(frame)        # в цикле, для каждого кадра
+out.release()</code></pre></article>
+
+<article class="s4 wide"><h3>Классификация кадров нейросетью в реальном времени</h3><p>Нейросеть вызывается раз в несколько кадров, чтобы не тормозить показ; последний результат остаётся на экране.</p>
+<pre><code class="py">import cv2
+from tensorflow.keras.applications import MobileNetV3Small
+from tensorflow.keras.applications.mobilenet_v3 import decode_predictions
+
+model = MobileNetV3Small(weights="imagenet")
+cap = cv2.VideoCapture(0)
+n, label = 0, ""
+while True:
+    ok, frame = cap.read()
+    if not ok:
+        break
+    n += 1
+    if n % 5 == 0:                                       # каждый 5-й кадр
+        rgb = cv2.cvtColor(cv2.resize(frame, (224, 224)), cv2.COLOR_BGR2RGB)
+        p = model(rgb[None].astype("float32"), training=False).numpy()
+        _, name, conf = decode_predictions(p, top=1)[0][0]
+        label = f"{name} {conf:.0%}"
+    cv2.putText(frame, label, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                1, (0, 255, 0), 2)
+    cv2.imshow("ImageNet live", frame)
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+        break
+cap.release()
+cv2.destroyAllWindows()</code></pre></article>
+
+<article class="s4"><h3>Частые проблемы</h3>
+<ul><li><b>Чёрный экран / <code>ok=False</code>:</b> неверный индекс камеры (<code>1</code>, <code>2</code>) или камеру занимает другая программа.</li><li><b>Странные цвета:</b> забыли BGR → RGB.</li><li><b>Окно «зависло»:</b> нет <code>cv2.waitKey</code> в цикле.</li><li><b>Низкий FPS:</b> тяжёлая модель или большой кадр.</li></ul></article>
+</div>
+</main>
+<footer>Совет: начинайте с базовой модели (<code>DummyClassifier</code>), измеряйте качество на отдельных данных и усложняйте метод только если он действительно улучшает метрики.</footer>
+<script>
+(function(){
+var esc=function(t){return t.replace(/[&<>]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})};
+var L={
+py:[/(#.*$)|("[^"\n]*"|'[^'\n]*')|\b(import|from|def|class|return|if|elif|else|for|in|while|with|not|and|or|as|break|continue|raise|None|True|False|lambda|yield)\b|\b(\d+)\b/gm,['c','s','k','n']],
+sh:[/(#.*$)|("[^"\n]*"|'[^'\n]*')/gm,['c','s']]
+};
+document.querySelectorAll('pre code').forEach(function(c){
+var l=L[c.className]||L.py,cls=l[1];
+c.innerHTML=esc(c.textContent).replace(l[0],function(m){
+for(var i=1;i<=cls.length;i++){if(arguments[i]!==undefined)return '<i class="'+cls[i-1]+'">'+m+'</i>'}
+return m});
+});
+})();
+</script>
+</body>
+</html>
