@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Алгоритмы на Python — шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#EEF3F8;--card:#FFFFFF;--ink:#13203A;--mute:#5A6A85;--line:#D5DEEA;--a1:#0C7C86;--a2:#B9660A;--a3:#5B4BC4;--a4:#B8325A;--a5:#3A7D2C;--code:#0F1A30;--ct:#E3EAF6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}}
+:root[data-theme="dark"]{--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,Arial,sans-serif}
+header{padding:48px 20px 28px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--mute);max-width:66ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;padding:10px 20px;overflow-x:auto}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+main{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+h2{font-size:28px;margin:44px 0 6px}
+.sub{color:var(--mute);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+article{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));border-radius:10px;padding:16px 18px;min-width:0}
+.s1{--c:var(--a1)}.s2{--c:var(--a2)}.s3{--c:var(--a3)}.s4{--c:var(--a4)}.s5{--c:var(--a5)}
+h3{margin:0 0 6px;font-size:17px}
+article p{margin:0 0 10px;color:var(--mute);font-size:14.5px}
+article ul,article ol{margin:0 0 10px;padding-left:20px;color:var(--mute);font-size:14.5px}
+pre{margin:0;background:var(--code);color:var(--ct);border-radius:8px;padding:12px 14px;overflow-x:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace}
+pre+pre,pre+p,p+pre,pre+ul,pre+ol{margin-top:8px}
+i.k{color:#FFB454;font-style:normal;font-weight:600}i.s{color:#8EE6A0;font-style:normal}i.c{color:#7F90B0;font-style:italic}i.n{color:#7FC4FF;font-style:normal}
+.wide{grid-column:1/-1}
+article p.pro{color:var(--a4)}
+.hl{border-width:2px;border-left-width:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+td code,p code,li code,.sub code,footer code,header code{font:500 13px 'JetBrains Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px}
+.tw{overflow-x:auto}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>Алгоритмы на Python</h1>
+<p>Оценка сложности, поиск, сортировки, рекурсия, хеш-таблицы, графы, деревья, кратчайшие пути, жадные алгоритмы и динамическое программирование. В конце — мини-проекты. Комментарий <code>#</code> показывает результат.</p>
+</header>
+<nav><a href="#big-o">О-нотация</a><a href="#search">Поиск</a><a href="#heap">Куча</a><a href="#sorts">Сортировки</a><a href="#rec">Рекурсия</a><a href="#hash">Хеш-таблицы</a><a href="#graph">Графы и BFS</a><a href="#trees">Деревья</a><a href="#avl">Сбалансированные</a><a href="#dijkstra">Дейкстра</a><a href="#greedy">Жадные</a><a href="#dp">ДП</a><a href="#tools">Модули</a><a href="#proj">Мини-проекты</a></nav>
+<main>
+
+<h2 id="big-o">О-нотация и оценка сложности</h2>
+<p class="sub">О-большое описывает, как растёт время работы (или память) алгоритма при росте размера входных данных <code>n</code>. Это не секунды, а скорость роста. Константы и младшие слагаемые отбрасываются: <code>3n² + 5n + 2</code> → <code>O(n²)</code>.</p>
+<div class="grid">
+<article class="s1 wide"><h3>Основные классы сложности</h3><div class="tw"><table>
+<tr><th>Запись</th><th>Название</th><th>n = 1000: операций</th><th>Пример</th></tr>
+<tr><td><code>O(1)</code></td><td>константная</td><td>1</td><td>доступ по индексу, <code>dict[key]</code></td></tr>
+<tr><td><code>O(log n)</code></td><td>логарифмическая</td><td>≈ 10</td><td>бинарный поиск, операции с кучей</td></tr>
+<tr><td><code>O(n)</code></td><td>линейная</td><td>1 000</td><td>линейный поиск, <code>sum</code>, один цикл</td></tr>
+<tr><td><code>O(n log n)</code></td><td>линейно-логарифмическая</td><td>≈ 10 000</td><td>быстрая сортировка, <code>sorted</code></td></tr>
+<tr><td><code>O(n²)</code></td><td>квадратичная</td><td>1 000 000</td><td>вложенные циклы, пузырьковая сортировка</td></tr>
+<tr><td><code>O(2ⁿ)</code></td><td>экспоненциальная</td><td>≈ 10³⁰¹</td><td>наивный Фибоначчи, перебор подмножеств</td></tr>
+<tr><td><code>O(n!)</code></td><td>факториальная</td><td>астрономическое число</td><td>перебор всех перестановок</td></tr>
+</table></div></article>
+
+<article class="s1"><h3>Как оценивать сложность</h3>
+<ul><li><b>Последовательные блоки</b> складываются, берётся самый затратный: <code>O(n) + O(n²) = O(n²)</code>.</li><li><b>Вложенные циклы</b> умножаются: два цикла по <code>n</code> → <code>O(n²)</code>.</li><li><b>Деление задачи пополам</b> на каждом шаге → <code>O(log n)</code>.</li><li><b>Константы отбрасываются</b>: <code>O(2n) = O(n)</code>.</li><li><b>Разные входы</b> — разные переменные: <code>O(n·m)</code>.</li><li>Вызов функции или метода тоже имеет цену (<code>sum</code>, <code>in</code>, <code>sorted</code> внутри цикла).</li></ul></article>
+
+<article class="s1"><h3>Примеры оценки</h3>
+<pre><code class="py">def a(lst): return lst[0]                  # O(1)
+
+def b(lst): return sum(lst)                # O(n)
+
+def c(lst):
+    for x in lst:
+        for y in lst:                      # O(n²)
+            pass
+
+def d(n):
+    while n &gt; 1:
+        n //= 2                            # O(log n)
+
+def e(lst):
+    for x in lst: pass                     # O(n)
+    for x in lst: pass                     # + O(n) → всё равно O(n)
+
+def f(lst):
+    for x in lst:
+        if x in lst: pass                  # n · O(n) = O(n²)</code></pre></article>
+
+<article class="s1"><h3>Сложность операций в Python</h3><div class="tw"><table>
+<tr><td><code>lst[i]</code>, <code>lst.append(x)</code>, <code>lst.pop()</code></td><td>O(1)</td></tr>
+<tr><td><code>lst.insert(0, x)</code>, <code>lst.pop(0)</code>, <code>del lst[0]</code></td><td>O(n)</td></tr>
+<tr><td><code>x in lst</code>, <code>lst.index(x)</code></td><td>O(n)</td></tr>
+<tr><td><code>x in set</code>, <code>d[key]</code>, <code>d[key] = v</code></td><td>O(1) в среднем</td></tr>
+<tr><td><code>lst.sort()</code>, <code>sorted(lst)</code></td><td>O(n log n)</td></tr>
+<tr><td><code>lst[a:b]</code> (срез)</td><td>O(b − a)</td></tr>
+<tr><td><code>deque.append / appendleft / popleft</code></td><td>O(1)</td></tr>
+<tr><td><code>heappush</code>, <code>heappop</code></td><td>O(log n)</td></tr>
+<tr><td><code>s += "x"</code> в цикле</td><td>O(n²) суммарно, лучше <code>"".join</code></td></tr>
+</table></div></article>
+
+<article class="s1"><h3>Худший, лучший, средний случай</h3>
+<ul><li><b>O</b> — верхняя граница (обычно худший случай).</li><li><b>Ω</b> — нижняя граница (лучший случай).</li><li><b>Θ</b> — точная оценка: и сверху, и снизу.</li><li><b>Амортизированная</b> сложность — средняя на серию операций: <code>append</code> иногда O(n) при расширении, но в среднем O(1).</li><li><b>Память:</b> тоже оценивается через O: сортировка «на месте» <code>O(1)</code>, копия списка <code>O(n)</code>, рекурсия глубиной <code>d</code> — <code>O(d)</code>.</li></ul></article>
+
+<article class="s1"><h3>Измерение времени</h3><p>Замер подтверждает оценку: при удвоении <code>n</code> время <code>O(n)</code> растёт вдвое, <code>O(n²)</code> — вчетверо.</p>
+<pre><code class="py">import time, random
+def measure(f, n):
+    data = [random.random() for _ in range(n)]
+    t = time.perf_counter()
+    f(data)
+    return time.perf_counter() - t
+
+for n in (1000, 2000, 4000):
+    print(n, round(measure(sorted, n), 5))
+
+# для коротких фрагментов: python -m timeit "sorted(range(1000))"</code></pre></article>
+</div>
+
+<h2 id="search">Алгоритмы поиска</h2>
+<div class="grid">
+<article class="s2"><h3>Линейный поиск — O(n)</h3><p>Перебирает элементы по одному. Работает на любых данных, в том числе неотсортированных.</p>
+<pre><code class="py">def linear_search(a, x):
+    for i, v in enumerate(a):
+        if v == x:
+            return i
+    return -1
+linear_search([4, 2, 9, 7], 9)    # 2</code></pre></article>
+
+<article class="s2"><h3>Бинарный поиск — O(log n)</h3><p>Только для <b>отсортированных</b> данных: каждый шаг отбрасывает половину. Для 1 000 000 элементов — не более 20 проверок.</p>
+<pre><code class="py">def binary_search(a, x):
+    lo, hi = 0, len(a) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2
+        if a[mid] == x:
+            return mid
+        if a[mid] &lt; x:
+            lo = mid + 1          # ищем справа
+        else:
+            hi = mid - 1          # ищем слева
+    return -1
+binary_search([1, 3, 5, 7, 9, 11], 7)   # 3</code></pre></article>
+
+<article class="s2"><h3>Модуль bisect</h3><p>Готовый бинарный поиск позиции вставки и вставка с сохранением порядка.</p>
+<pre><code class="py">from bisect import bisect_left, bisect_right, insort
+a = [1, 3, 3, 5, 7]
+bisect_left(a, 3)     # 1 — первая позиция для 3
+bisect_right(a, 3)    # 3 — после всех троек
+insort(a, 4)          # a → [1, 3, 3, 4, 5, 7]
+i = bisect_left(a, 5)
+i &lt; len(a) and a[i] == 5   # True — элемент найден</code></pre></article>
+
+<article class="s2"><h3>Бинарный поиск по ответу</h3><p>Применим не только к спискам: если условие «подходит» монотонно, ответ ищут делением диапазона пополам.</p>
+<pre><code class="py">def int_sqrt(n):                # наибольшее k, что k*k ≤ n
+    lo, hi = 0, n
+    while lo &lt; hi:
+        mid = (lo + hi + 1) // 2
+        if mid * mid &lt;= n:
+            lo = mid
+        else:
+            hi = mid - 1
+    return lo
+int_sqrt(50)    # 7</code></pre></article>
+
+<article class="s2"><h3>Поиск через set и dict — O(1)</h3>
+<pre><code class="py">ids = {101, 205, 307}
+205 in ids                    # True, мгновенно
+users = {"ann": 1, "bob": 2}
+users.get("bob")              # 2</code></pre></article>
+
+<article class="s2"><h3>Что выбрать</h3><div class="tw"><table>
+<tr><th>Данные</th><th>Способ</th></tr>
+<tr><td>Не отсортированы, поиск один раз</td><td>линейный, <code>x in list</code></td></tr>
+<tr><td>Отсортированы, много запросов</td><td>бинарный, <code>bisect</code></td></tr>
+<tr><td>Нужен быстрый ответ «есть/нет» или значение по ключу</td><td><code>set</code>, <code>dict</code></td></tr>
+<tr><td>Равномерно распределённые числа</td><td>интерполяционный (в среднем O(log log n))</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="heap">Куча (heap)</h2>
+<p class="sub">Двоичная куча — почти полное бинарное дерево, хранящееся в массиве. В <b>min-куче</b> родитель не больше потомков, поэтому минимум всегда в корне. Нужна для приоритетных очередей, поиска топ-k и алгоритма Дейкстры.</p>
+<div class="grid">
+<article class="s3"><h3>Устройство</h3>
+<pre><code class="sh">массив: [1, 3, 2, 7, 4, 5]        дерево:      1
+                                              /   \
+индексы потомков элемента i:                 3     2
+  левый = 2i + 1, правый = 2i + 2           / \   /
+родитель = (i − 1) // 2                    7   4 5</code></pre>
+<p style="margin-top:8px">Вставка и извлечение — <code>O(log n)</code>, просмотр минимума — <code>O(1)</code>, построение из списка (<code>heapify</code>) — <code>O(n)</code>.</p></article>
+
+<article class="s3"><h3>heapq: основные операции</h3>
+<pre><code class="py">import heapq
+h = []
+for x in [5, 1, 8, 3]:
+    heapq.heappush(h, x)
+h[0]                      # 1 — минимум
+heapq.heappop(h)          # 1
+heapq.heappop(h)          # 3
+
+nums = [5, 1, 8, 3, 9]
+heapq.heapify(nums)       # список → куча на месте
+heapq.nsmallest(2, nums)  # [1, 3]
+heapq.nlargest(2, nums)   # [9, 8]
+heapq.heappushpop(nums, 4)   # вставить и сразу извлечь минимум</code></pre></article>
+
+<article class="s3"><h3>Max-куча и кортежи</h3><p><code>heapq</code> умеет только min-кучу. Для максимума кладут числа с минусом. Для задач с приоритетом — кортежи <code>(приоритет, …)</code>.</p>
+<pre><code class="py">mx = []
+for x in [5, 1, 8]:
+    heapq.heappush(mx, -x)
+-heapq.heappop(mx)         # 8 — максимум
+
+import itertools
+counter = itertools.count()          # разрешает ничьи без сравнения задач
+pq = []
+heapq.heappush(pq, (2, next(counter), "написать код"))
+heapq.heappush(pq, (1, next(counter), "срочный баг"))
+heapq.heappop(pq)[2]       # 'срочный баг'</code></pre></article>
+
+<article class="s3"><h3>Топ-k и сортировка кучей</h3>
+<pre><code class="py">scores = {"Аня": 82, "Боря": 91, "Вика": 77, "Гоша": 95}
+heapq.nlargest(2, scores, key=scores.get)   # ['Гоша', 'Боря']
+
+def heap_sort(a):                  # O(n log n)
+    h = a[:]
+    heapq.heapify(h)
+    return [heapq.heappop(h) for _ in range(len(h))]
+heap_sort([5, 2, 9, 1])            # [1, 2, 5, 9]</code></pre></article>
+
+<article class="s3 wide"><h3>Куча «вручную»: всплытие и погружение</h3>
+<pre><code class="py">class MinHeap:
+    def __init__(self):
+        self.a = []
+
+    def push(self, x):
+        a = self.a
+        a.append(x)
+        i = len(a) - 1
+        while i &gt; 0 and a[(i - 1) // 2] &gt; a[i]:          # всплытие вверх
+            a[(i - 1) // 2], a[i] = a[i], a[(i - 1) // 2]
+            i = (i - 1) // 2
+
+    def pop(self):
+        a = self.a
+        top, last = a[0], a.pop()
+        if a:
+            a[0] = last
+            i = 0
+            while True:                                    # погружение вниз
+                l, r, m = 2 * i + 1, 2 * i + 2, i
+                if l &lt; len(a) and a[l] &lt; a[m]: m = l
+                if r &lt; len(a) and a[r] &lt; a[m]: m = r
+                if m == i:
+                    break
+                a[i], a[m] = a[m], a[i]
+                i = m
+        return top
+
+h = MinHeap()
+for x in [5, 1, 8, 3]: h.push(x)
+[h.pop() for _ in range(4)]    # [1, 3, 5, 8]</code></pre></article>
+</div>
+
+<h2 id="sorts">Сортировки</h2>
+<p class="sub">Простые сортировки <code>O(n²)</code> полезны для понимания и коротких списков. На практике используют встроенную <code>sorted()</code> / <code>list.sort()</code> (алгоритм Timsort, <code>O(n log n)</code>, устойчивый).</p>
+<div class="grid">
+<article class="s4"><h3>Пузырьком (bubble sort)</h3><p>Соседние элементы сравниваются и меняются местами; самый большой «всплывает» в конец. Если за проход обменов не было — список отсортирован.</p>
+<pre><code class="py">def bubble_sort(a):
+    a = a[:]                          # копия
+    n = len(a)
+    for i in range(n - 1):
+        swapped = False
+        for j in range(n - 1 - i):    # хвост уже на местах
+            if a[j] &gt; a[j + 1]:
+                a[j], a[j + 1] = a[j + 1], a[j]
+                swapped = True
+        if not swapped:
+            break
+    return a
+bubble_sort([5, 2, 4, 1])   # [1, 2, 4, 5]
+# проходы: [2,4,1,5] → [2,1,4,5] → [1,2,4,5]</code></pre>
+<p style="margin-top:8px">Время: <code>O(n²)</code>, лучший случай <code>O(n)</code>. Память <code>O(1)</code>. Устойчивая.</p></article>
+
+<article class="s4"><h3>Выбором (selection sort)</h3><p>На каждом шаге ищем минимум в неотсортированной части и ставим его на очередную позицию.</p>
+<pre><code class="py">def selection_sort(a):
+    a = a[:]
+    for i in range(len(a) - 1):
+        m = i
+        for j in range(i + 1, len(a)):
+            if a[j] &lt; a[m]:
+                m = j                  # индекс минимума
+        a[i], a[m] = a[m], a[i]
+    return a
+selection_sort([29, 10, 14, 37, 13])   # [10, 13, 14, 29, 37]</code></pre>
+<p style="margin-top:8px">Всегда <code>O(n²)</code> сравнений, но не более <code>n − 1</code> обменов. Память <code>O(1)</code>. Неустойчивая.</p></article>
+
+<article class="s4"><h3>Вставками (insertion sort)</h3><p>Левая часть всегда отсортирована; очередной элемент вставляется на своё место, как карта в руке.</p>
+<pre><code class="py">def insertion_sort(a):
+    a = a[:]
+    for i in range(1, len(a)):
+        key = a[i]
+        j = i - 1
+        while j &gt;= 0 and a[j] &gt; key:
+            a[j + 1] = a[j]            # сдвиг вправо
+            j -= 1
+        a[j + 1] = key
+    return a
+insertion_sort([7, 3, 5, 1])   # [1, 3, 5, 7]</code></pre>
+<p style="margin-top:8px">Худший случай <code>O(n²)</code>, на почти отсортированных данных <code>O(n)</code>. Устойчивая, быстрая на малых списках (используется внутри Timsort).</p></article>
+
+<article class="s5"><h3>Быстрая сортировка (quick sort)</h3><p>«Разделяй и властвуй»: выбираем опорный элемент (pivot), разбиваем на меньшие, равные и большие, сортируем части рекурсивно.</p>
+<pre><code class="py">def quick_sort(a):
+    if len(a) &lt;= 1:
+        return a                              # базовый случай
+    pivot = a[len(a) // 2]
+    left  = [x for x in a if x &lt; pivot]
+    mid   = [x for x in a if x == pivot]
+    right = [x for x in a if x &gt; pivot]
+    return quick_sort(left) + mid + quick_sort(right)
+quick_sort([3, 6, 1, 8, 2, 9, 2])   # [1, 2, 2, 3, 6, 8, 9]</code></pre></article>
+
+<article class="s5"><h3>Quick sort на месте (случайный pivot)</h3><p>Случайный опорный элемент делает худший случай <code>O(n²)</code> крайне маловероятным. Нужно <code>O(log n)</code> стека рекурсии.</p>
+<pre><code class="py">import random
+def quick_sort_inplace(a, lo=0, hi=None):
+    if hi is None:
+        hi = len(a) - 1
+    if lo &gt;= hi:
+        return
+    p = random.randint(lo, hi)
+    a[p], a[hi] = a[hi], a[p]
+    pivot, i = a[hi], lo
+    for j in range(lo, hi):
+        if a[j] &lt; pivot:
+            a[i], a[j] = a[j], a[i]
+            i += 1
+    a[i], a[hi] = a[hi], a[i]            # pivot на своё место
+    quick_sort_inplace(a, lo, i - 1)
+    quick_sort_inplace(a, i + 1, hi)
+
+data = [9, 4, 7, 1, 8]
+quick_sort_inplace(data)          # data → [1, 4, 7, 8, 9]</code></pre></article>
+
+<article class="s5"><h3>Встроенная сортировка</h3>
+<pre><code class="py">a = [3, 1, 2]
+sorted(a)                         # [1, 2, 3], новый список
+a.sort(reverse=True)              # на месте: [3, 2, 1]
+words = ["pear", "fig", "apple"]
+sorted(words, key=len)            # ['fig', 'pear', 'apple']
+people = [("Аня", 25), ("Боря", 20)]
+sorted(people, key=lambda p: p[1])   # [('Боря', 20), ('Аня', 25)]</code></pre></article>
+
+<article class="s4 wide"><h3>Сравнение сортировок</h3><div class="tw"><table>
+<tr><th>Алгоритм</th><th>Лучший</th><th>Средний</th><th>Худший</th><th>Память</th><th>Устойчивая</th></tr>
+<tr><td>Пузырьком</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>да</td></tr>
+<tr><td>Выбором</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>нет</td></tr>
+<tr><td>Вставками</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>да</td></tr>
+<tr><td>Быстрая</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td><td>нет</td></tr>
+<tr><td>Кучей (heap sort)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td><td>нет</td></tr>
+<tr><td>Слиянием (merge sort)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>да</td></tr>
+<tr><td>Timsort (<code>sorted</code>)</td><td>O(n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td><td>да</td></tr>
+</table></div>
+<p style="margin-top:8px">Устойчивая сортировка не меняет порядок элементов с одинаковыми ключами.</p></article>
+</div>
+
+<h2 id="rec">Рекурсия</h2>
+<p class="sub">Функция вызывает сама себя на более простой задаче. Обязательны две части: <b>базовый случай</b> (когда остановиться) и <b>шаг рекурсии</b> (сведение к меньшей задаче). Вызовы накапливаются в стеке.</p>
+<div class="grid">
+<article class="s1"><h3>Факториал</h3>
+<pre><code class="py">def factorial(n):
+    if n &lt;= 1:                   # базовый случай
+        return 1
+    return n * factorial(n - 1)  # шаг рекурсии
+factorial(5)   # 120
+# стек: 5·f(4) → 4·f(3) → 3·f(2) → 2·f(1) → 1</code></pre></article>
+
+<article class="s1"><h3>Сумма списка и разворот строки</h3>
+<pre><code class="py">def rsum(a):
+    return 0 if not a else a[0] + rsum(a[1:])
+rsum([1, 2, 3, 4])   # 10
+
+def rev(s):
+    return s if len(s) &lt;= 1 else rev(s[1:]) + s[0]
+rev("Python")        # 'nohtyP'</code></pre></article>
+
+<article class="s1"><h3>Фибоначчи: проблема и мемоизация</h3><p>Наивная версия пересчитывает одни и те же значения: <code>O(2ⁿ)</code>. Кэш результатов (<code>lru_cache</code>) делает её <code>O(n)</code>.</p>
+<pre><code class="py">from functools import lru_cache
+
+def fib_slow(n):                       # O(2ⁿ)
+    return n if n &lt; 2 else fib_slow(n - 1) + fib_slow(n - 2)
+
+@lru_cache(maxsize=None)
+def fib(n):                            # O(n)
+    return n if n &lt; 2 else fib(n - 1) + fib(n - 2)
+fib(50)    # 12586269025</code></pre></article>
+
+<article class="s1"><h3>Быстрое возведение в степень — O(log n)</h3>
+<pre><code class="py">def power(x, n):
+    if n == 0:
+        return 1
+    half = power(x, n // 2)
+    return half * half if n % 2 == 0 else half * half * x
+power(2, 10)   # 1024</code></pre></article>
+
+<article class="s1"><h3>Ханойские башни</h3><p>Переложить <code>n</code> дисков со стержня <code>a</code> на <code>c</code> через <code>b</code>. Нужно <code>2ⁿ − 1</code> ходов.</p>
+<pre><code class="py">def hanoi(n, a, b, c):
+    if n == 0:
+        return
+    hanoi(n - 1, a, c, b)
+    print(f"{a} → {c}")
+    hanoi(n - 1, b, a, c)
+hanoi(2, "A", "B", "C")   # A → B, A → C, B → C</code></pre></article>
+
+<article class="s1"><h3>Вложенные структуры</h3>
+<pre><code class="py">def flatten(x):
+    if not isinstance(x, list):
+        return [x]
+    return [y for item in x for y in flatten(item)]
+flatten([1, [2, [3, 4]], 5])   # [1, 2, 3, 4, 5]
+
+def permutations(s):
+    if len(s) &lt;= 1:
+        return [s]
+    return [c + p for i, c in enumerate(s)
+            for p in permutations(s[:i] + s[i + 1:])]
+permutations("abc")   # ['abc','acb','bac','bca','cab','cba']</code></pre></article>
+
+<article class="s1"><h3>Ограничение глубины</h3><p>В Python глубина рекурсии ограничена (по умолчанию около 1000 вызовов), хвостовая рекурсия не оптимизируется. При превышении — <code>RecursionError</code>. Глубокую рекурсию заменяют циклом или стеком.</p>
+<pre><code class="py">import sys
+sys.getrecursionlimit()        # 1000
+sys.setrecursionlimit(5000)    # осторожно: слишком большое значение роняет интерпретатор
+
+def fact_loop(n):              # то же без рекурсии
+    r = 1
+    for i in range(2, n + 1):
+        r *= i
+    return r</code></pre></article>
+
+<article class="s1"><h3>Чек-лист рекурсии</h3>
+<ul><li>Есть ли базовый случай, и достижим ли он?</li><li>Уменьшается ли задача на каждом шаге?</li><li>Нет ли повторных вычислений (тогда <code>lru_cache</code>)?</li><li>Хватит ли глубины стека?</li><li>Сложность: <code>O(число вызовов × работа в каждом)</code>.</li></ul></article>
+</div>
+
+<h2 id="hash">Хеш-таблицы</h2>
+<p class="sub">Структура «ключ → значение» с поиском, вставкой и удалением за <code>O(1)</code> в среднем. Хеш-функция превращает ключ в число, а индекс ячейки получается как <code>hash(key) % размер</code>. В Python это <code>dict</code> и <code>set</code>.</p>
+<div class="grid">
+<article class="s2"><h3>Идея и коллизии</h3>
+<pre><code class="sh">ключ → hash(ключ) → индекс = hash % размер → ячейка (bucket)
+
+"apple" → 4 ──► [4]: ("apple", 3)
+"pear"  → 4 ──► коллизия: два ключа в одной ячейке</code></pre>
+<ul style="margin-top:8px"><li><b>Цепочки:</b> в ячейке хранится список пар.</li><li><b>Открытая адресация:</b> занято — берём следующую свободную ячейку (так устроен <code>dict</code> в CPython).</li><li><b>Коэффициент заполнения</b> = элементов / ячеек. При превышении порога таблица расширяется (перехеширование).</li><li>Худший случай <code>O(n)</code> при множестве коллизий.</li></ul></article>
+
+<article class="s2"><h3>Какие ключи допустимы</h3><p>Ключ должен быть <b>хешируемым</b> (неизменяемым): числа, строки, кортежи из таких значений.</p>
+<pre><code class="py">hash(42)            # 42
+hash((1, 2))        # число
+{[1, 2]: "x"}       # TypeError: unhashable type: 'list'
+{(1, 2): "x"}       # можно: кортеж</code></pre><p style="margin-top:8px">Хеш строк меняется от запуска к запуску: не сохраняйте его в файлы.</p></article>
+
+<article class="s2 wide"><h3>Собственная хеш-таблица (метод цепочек)</h3>
+<pre><code class="py">class HashTable:
+    def __init__(self, size=8):
+        self.buckets = [[] for _ in range(size)]
+        self.count = 0
+
+    def _index(self, key):
+        return hash(key) % len(self.buckets)
+
+    def put(self, key, value):
+        bucket = self.buckets[self._index(key)]
+        for pair in bucket:
+            if pair[0] == key:             # ключ уже есть: обновляем
+                pair[1] = value
+                return
+        bucket.append([key, value])
+        self.count += 1
+        if self.count / len(self.buckets) &gt; 0.75:   # коэффициент заполнения
+            self._grow()
+
+    def get(self, key, default=None):
+        for k, v in self.buckets[self._index(key)]:
+            if k == key:
+                return v
+        return default
+
+    def _grow(self):                       # расширение вдвое и перехеширование
+        old = [p for b in self.buckets for p in b]
+        self.buckets = [[] for _ in range(len(self.buckets) * 2)]
+        self.count = 0
+        for k, v in old:
+            self.put(k, v)
+
+t = HashTable()
+t.put("apple", 3); t.put("pear", 5); t.put("apple", 7)
+t.get("apple"), t.get("kiwi", 0)    # (7, 0)</code></pre></article>
+
+<article class="s2"><h3>Задача: два числа с заданной суммой</h3><p>Хеш-таблица превращает <code>O(n²)</code> в <code>O(n)</code>.</p>
+<pre><code class="py">def two_sum(nums, target):
+    seen = {}                        # значение → индекс
+    for i, x in enumerate(nums):
+        if target - x in seen:
+            return seen[target - x], i
+        seen[x] = i
+two_sum([2, 7, 11, 15], 9)   # (0, 1)</code></pre></article>
+
+<article class="s2"><h3>Подсчёт и группировка</h3>
+<pre><code class="py">from collections import Counter, defaultdict
+Counter("abracadabra").most_common(2)    # [('a', 5), ('b', 2)]
+
+groups = defaultdict(list)               # анаграммы
+for w in ["eat", "tea", "tan", "ate", "nat"]:
+    groups["".join(sorted(w))].append(w)
+list(groups.values())   # [['eat','tea','ate'], ['tan','nat']]
+
+len(set([3, 1, 3, 2]))                   # 3 — уникальные элементы</code></pre></article>
+</div>
+
+<h2 id="graph">Графы</h2>
+<p class="sub">Граф — набор <b>вершин</b> и соединяющих их <b>рёбер</b>. Описывает дороги, социальные связи, зависимости задач, сети. Рёбра бывают ориентированными (односторонними) и неориентированными, с весом или без.</p>
+<div class="grid">
+<article class="s3"><h3>Основные понятия</h3>
+<ul><li><b>Степень</b> вершины — число рёбер. В ориентированном графе: входящая и исходящая.</li><li><b>Путь</b> — последовательность вершин, соединённых рёбрами; <b>цикл</b> — путь, возвращающийся в начало.</li><li><b>Связный</b> граф: из любой вершины можно дойти до любой.</li><li><b>Компонента связности</b> — «остров» вершин.</li><li><b>DAG</b> — ориентированный граф без циклов (зависимости задач).</li><li><b>Дерево</b> — связный граф без циклов.</li></ul></article>
+
+<article class="s3"><h3>Представление в памяти</h3>
+<pre><code class="py"># 1. Список смежности (чаще всего): память O(V + E)
+graph = {
+    "A": ["B", "C"],
+    "B": ["A", "D"],
+    "C": ["A", "D"],
+    "D": ["B", "C", "E"],
+    "E": ["D"],
+}
+# 2. Матрица смежности: память O(V²), проверка ребра O(1)
+#       A  B  C
+matrix = [[0, 1, 1],       # A
+          [1, 0, 0],       # B
+          [1, 0, 0]]       # C
+# 3. Список рёбер (с весами)
+edges = [("A", "B", 4), ("A", "C", 1)]
+
+# взвешенный: {вершина: [(сосед, вес), ...]}
+wgraph = {"A": [("B", 4), ("C", 1)], "B": [], "C": [("B", 2)]}</code></pre></article>
+
+<article class="s3"><h3>Построение графа из рёбер</h3>
+<pre><code class="py">from collections import defaultdict
+g = defaultdict(list)
+for u, v in [("A", "B"), ("A", "C"), ("B", "D")]:
+    g[u].append(v)
+    g[v].append(u)          # неориентированный: в обе стороны
+# для ориентированного — только g[u].append(v)</code></pre></article>
+
+<article class="s3"><h3>Поиск в глубину (DFS)</h3><p>Идёт как можно глубже, затем возвращается. Использует рекурсию или стек. Время <code>O(V + E)</code>.</p>
+<pre><code class="py">def dfs(graph, start, seen=None):
+    seen = seen if seen is not None else set()
+    seen.add(start)
+    for nxt in graph[start]:
+        if nxt not in seen:
+            dfs(graph, nxt, seen)
+    return seen
+
+def dfs_iter(graph, start):            # то же со стеком
+    seen, stack, order = set(), [start], []
+    while stack:
+        v = stack.pop()
+        if v in seen:
+            continue
+        seen.add(v); order.append(v)
+        stack.extend(reversed(graph[v]))
+    return order
+dfs_iter(graph, "A")   # ['A', 'B', 'D', 'C', 'E']</code></pre></article>
+
+<article class="s3"><h3>Компоненты связности</h3>
+<pre><code class="py">def components(graph):
+    seen, result = set(), []
+    for v in graph:
+        if v not in seen:
+            comp = dfs(graph, v)
+            result.append(sorted(comp))
+            seen |= comp
+    return result
+components({"A": ["B"], "B": ["A"], "C": []})   # [['A', 'B'], ['C']]</code></pre></article>
+
+<article class="s3"><h3>Топологическая сортировка (DAG)</h3><p>Порядок, в котором каждая задача идёт после своих зависимостей (алгоритм Кана).</p>
+<pre><code class="py">from collections import deque
+def topo_sort(graph):                 # {вершина: [куда ведёт]}
+    indeg = {v: 0 for v in graph}
+    for v in graph:
+        for u in graph[v]:
+            indeg[u] += 1
+    q = deque(v for v in graph if indeg[v] == 0)
+    order = []
+    while q:
+        v = q.popleft(); order.append(v)
+        for u in graph[v]:
+            indeg[u] -= 1
+            if indeg[u] == 0:
+                q.append(u)
+    return order if len(order) == len(graph) else None   # None — есть цикл
+topo_sort({"a": ["b", "c"], "b": ["d"], "c": ["d"], "d": []})   # ['a','b','c','d']</code></pre></article>
+</div>
+
+<h2 id="bfs">Поиск в ширину (BFS)</h2>
+<p class="sub">Обходит граф «волнами»: сначала все соседи стартовой вершины, затем соседи соседей. Использует <b>очередь</b> (<code>deque</code>). Находит кратчайший путь в графе <b>без весов</b> (по числу рёбер). Время <code>O(V + E)</code>.</p>
+<div class="grid">
+<article class="s4 wide"><h3>BFS: расстояния и путь</h3>
+<pre><code class="py">from collections import deque
+
+def bfs(graph, start):
+    dist = {start: 0}                  # расстояние в рёбрах
+    prev = {start: None}               # откуда пришли
+    q = deque([start])
+    while q:
+        v = q.popleft()
+        for u in graph[v]:
+            if u not in dist:          # посещаем каждую вершину один раз
+                dist[u] = dist[v] + 1
+                prev[u] = v
+                q.append(u)
+    return dist, prev
+
+def path_to(prev, target):
+    if target not in prev:
+        return None                    # недостижима
+    path = []
+    while target is not None:
+        path.append(target)
+        target = prev[target]
+    return path[::-1]
+
+dist, prev = bfs(graph, "A")           # graph — из карточки выше
+dist["E"], path_to(prev, "E")          # (3, ['A', 'B', 'D', 'E'])</code></pre></article>
+
+<article class="s4"><h3>Где применяется</h3>
+<ul><li>Кратчайший путь по числу шагов (лабиринт, карта без весов).</li><li>«Степени знакомства» в соцсетях.</li><li>Поиск связных областей, заливка.</li><li>Обход дерева по уровням.</li><li>Головоломки: слова-цепочки, ходы коня.</li></ul></article>
+
+<article class="s4"><h3>BFS и DFS</h3><div class="tw"><table>
+<tr><th></th><th>BFS</th><th>DFS</th></tr>
+<tr><td>Структура</td><td>очередь</td><td>стек / рекурсия</td></tr>
+<tr><td>Кратчайший путь</td><td>да (без весов)</td><td>нет</td></tr>
+<tr><td>Память</td><td>ширина графа</td><td>глубина графа</td></tr>
+<tr><td>Подходит для</td><td>расстояний, уровней</td><td>циклов, компонент, топосортировки</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="trees">Деревья</h2>
+<p class="sub">Дерево — иерархическая структура: один <b>корень</b>, у каждого узла один родитель и ноль или больше потомков. Узел без потомков — <b>лист</b>. <b>Глубина</b> узла — расстояние до корня, <b>высота</b> дерева — глубина самого нижнего листа. Дерево из <code>n</code> узлов имеет <code>n − 1</code> рёбер.</p>
+<div class="grid">
+<article class="s5 wide"><h3>Виды деревьев</h3><div class="tw"><table>
+<tr><th>Вид</th><th>Суть</th><th>Где применяется</th></tr>
+<tr><td><b>Общее (n-арное)</b></td><td>любое число потомков</td><td>файловая система, DOM веб-страницы, оргструктура</td></tr>
+<tr><td><b>Бинарное</b></td><td>не более двух потомков (левый и правый)</td><td>основа многих структур</td></tr>
+<tr><td>— полное (full)</td><td>у каждого узла 0 или 2 потомка</td><td>деревья выражений</td></tr>
+<tr><td>— совершенное (perfect)</td><td>все уровни заполнены полностью, <code>2ʰ⁺¹ − 1</code> узлов</td><td>идеальная форма для оценок</td></tr>
+<tr><td>— почти полное (complete)</td><td>заполнены все уровни, кроме последнего (он заполняется слева направо)</td><td>двоичная куча</td></tr>
+<tr><td>— вырожденное</td><td>у каждого узла не более одного потомка (по сути список)</td><td>худший случай для BST</td></tr>
+<tr><td><b>Бинарное дерево поиска (BST)</b></td><td>слева меньшие, справа большие значения</td><td>упорядоченные данные, поиск <code>O(h)</code></td></tr>
+<tr><td><b>Сбалансированные</b>: AVL, красно-чёрное, B-дерево, splay, treap</td><td>высота ограничена <code>O(log n)</code></td><td>словари, индексы БД, планировщики</td></tr>
+<tr><td><b>Куча (heap)</b></td><td>полное бинарное дерево, родитель ≤ потомков</td><td>приоритетные очереди</td></tr>
+<tr><td><b>Префиксное (trie)</b></td><td>путь от корня — префикс слова</td><td>автодополнение, словари, поиск по префиксу</td></tr>
+<tr><td><b>Дерево отрезков, дерево Фенвика</b></td><td>хранят суммы/минимумы по отрезкам</td><td>запросы на диапазоне и обновления за <code>O(log n)</code></td></tr>
+<tr><td><b>Остовное дерево</b></td><td>дерево, связывающее все вершины графа</td><td>сети, алгоритмы Краскала и Прима</td></tr>
+<tr><td>Деревья решений, синтаксические (AST), игровые</td><td>ветвление вариантов</td><td>машинное обучение, компиляторы, ИИ в играх</td></tr>
+<tr><td>Суффиксное дерево</td><td>все суффиксы строки</td><td>быстрый поиск подстрок</td></tr>
+</table></div></article>
+
+<article class="s5 wide"><h3>Бинарное дерево и обходы</h3>
+<pre><code class="py">from collections import deque
+
+class Node:
+    def __init__(self, val, left=None, right=None):
+        self.val, self.left, self.right = val, left, right
+
+root = Node(1, Node(2, Node(4), Node(5)), Node(3))
+#        1
+#       / \
+#      2   3
+#     / \
+#    4   5
+def preorder(n):  return [n.val] + preorder(n.left) + preorder(n.right) if n else []
+def inorder(n):   return inorder(n.left) + [n.val] + inorder(n.right) if n else []
+def postorder(n): return postorder(n.left) + postorder(n.right) + [n.val] if n else []
+
+def level_order(root):                       # в ширину: по уровням
+    res, q = [], deque([root])
+    while q:
+        n = q.popleft(); res.append(n.val)
+        if n.left:  q.append(n.left)
+        if n.right: q.append(n.right)
+    return res
+
+def height(n): return 0 if not n else 1 + max(height(n.left), height(n.right))
+
+preorder(root)      # [1, 2, 4, 5, 3]   корень → левое → правое
+inorder(root)       # [4, 2, 5, 1, 3]   левое → корень → правое
+postorder(root)     # [4, 5, 2, 3, 1]   левое → правое → корень
+level_order(root)   # [1, 2, 3, 4, 5]
+height(root)        # 3</code></pre></article>
+
+<article class="s5"><h3>Бинарное дерево поиска (BST)</h3><p>Поиск и вставка идут по одной ветке: <code>O(h)</code>. Для сбалансированного дерева это <code>O(log n)</code>, для вырожденного <code>O(n)</code>. Симметричный обход (<code>inorder</code>) выдаёт значения по возрастанию.</p>
+<pre><code class="py">def bst_insert(node, key):
+    if node is None:
+        return Node(key)
+    if key &lt; node.val:
+        node.left = bst_insert(node.left, key)
+    elif key &gt; node.val:
+        node.right = bst_insert(node.right, key)
+    return node
+
+def bst_search(node, key):
+    while node and node.val != key:
+        node = node.left if key &lt; node.val else node.right
+    return node is not None
+
+tree = None
+for k in [50, 30, 70, 20, 40, 60, 80]:
+    tree = bst_insert(tree, k)
+inorder(tree)           # [20, 30, 40, 50, 60, 70, 80]
+bst_search(tree, 60)    # True</code></pre>
+<p style="margin-top:8px"><b>Удаление:</b> лист — убрать; один потомок — заменить потомком; два потомка — заменить минимумом правого поддерева.</p></article>
+
+<article class="s5"><h3>Общее дерево (файловая система)</h3>
+<pre><code class="py">class TreeNode:
+    def __init__(self, name):
+        self.name, self.children = name, []
+    def add(self, child):
+        self.children.append(child)
+        return child
+
+root = TreeNode("project")
+src = root.add(TreeNode("src"))
+src.add(TreeNode("main.py"))
+root.add(TreeNode("README.md"))
+
+def show(node, depth=0):
+    print("  " * depth + node.name)
+    for c in node.children:
+        show(c, depth + 1)
+show(root)
+# project
+#   src
+#     main.py
+#   README.md</code></pre></article>
+
+<article class="s5"><h3>Префиксное дерево (trie)</h3>
+<pre><code class="py">class Trie:
+    def __init__(self):
+        self.root = {}
+    def insert(self, word):
+        node = self.root
+        for ch in word:
+            node = node.setdefault(ch, {})
+        node["#"] = True                    # конец слова
+    def _find(self, s):
+        node = self.root
+        for ch in s:
+            if ch not in node:
+                return None
+            node = node[ch]
+        return node
+    def search(self, word):
+        node = self._find(word)
+        return bool(node and "#" in node)
+    def starts_with(self, prefix):
+        return self._find(prefix) is not None
+
+t = Trie()
+for w in ["car", "cart", "cat"]:
+    t.insert(w)
+t.search("car"), t.search("ca"), t.starts_with("ca")   # (True, False, True)</code></pre></article>
+
+<article class="s5"><h3>Дерево отрезков (суммы на диапазоне)</h3><p>Сумма на отрезке и изменение элемента за <code>O(log n)</code> вместо <code>O(n)</code>.</p>
+<pre><code class="py">class SegTree:
+    def __init__(self, a):
+        self.n = len(a)
+        self.t = [0] * self.n + list(a)
+        for i in range(self.n - 1, 0, -1):
+            self.t[i] = self.t[2 * i] + self.t[2 * i + 1]
+
+    def update(self, i, value):
+        i += self.n
+        self.t[i] = value
+        while i &gt; 1:
+            i //= 2
+            self.t[i] = self.t[2 * i] + self.t[2 * i + 1]
+
+    def query(self, l, r):               # сумма a[l:r]
+        res, l, r = 0, l + self.n, r + self.n
+        while l &lt; r:
+            if l &amp; 1: res += self.t[l]; l += 1
+            if r &amp; 1: r -= 1; res += self.t[r]
+            l //= 2; r //= 2
+        return res
+
+st = SegTree([1, 2, 3, 4, 5])
+st.query(1, 4)       # 9  (2 + 3 + 4)
+st.update(2, 10)
+st.query(1, 4)       # 16 (2 + 10 + 4)</code></pre></article>
+</div>
+
+<h2 id="avl">Сбалансированные деревья</h2>
+<p class="sub">Если вставлять в BST отсортированные данные, оно вырождается в список и поиск становится <code>O(n)</code>. Сбалансированные деревья сами перестраиваются (повороты), удерживая высоту около <code>log n</code>: поиск, вставка и удаление — <code>O(log n)</code> всегда.</p>
+<div class="grid">
+<article class="s1"><h3>AVL-дерево</h3><p>Для каждого узла высоты левого и правого поддеревьев отличаются не более чем на 1. Разность — <b>баланс-фактор</b>. При |баланса| = 2 выполняется поворот.</p>
+<div class="tw"><table>
+<tr><th>Случай</th><th>Баланс</th><th>Исправление</th></tr>
+<tr><td>LL (левое-левое)</td><td>+2, у левого ≥ 0</td><td>правый поворот</td></tr>
+<tr><td>RR (правое-правое)</td><td>−2, у правого ≤ 0</td><td>левый поворот</td></tr>
+<tr><td>LR</td><td>+2, у левого −1</td><td>левый поворот левого, затем правый</td></tr>
+<tr><td>RL</td><td>−2, у правого +1</td><td>правый поворот правого, затем левый</td></tr>
+</table></div></article>
+
+<article class="s1"><h3>Правый поворот</h3>
+<pre><code class="sh">       y                x
+      / \              / \
+     x   C   ──►      A   y
+    / \                  / \
+   A   B                B   C
+порядок ключей A &lt; x &lt; B &lt; y &lt; C сохраняется</code></pre></article>
+
+<article class="s1 wide"><h3>Вставка в AVL-дерево</h3>
+<pre><code class="py">class AVLNode:
+    def __init__(self, key):
+        self.key, self.left, self.right, self.height = key, None, None, 1
+
+def height(n):  return n.height if n else 0
+def update(n):  n.height = 1 + max(height(n.left), height(n.right))
+def balance(n): return height(n.left) - height(n.right)
+
+def rotate_right(y):
+    x = y.left
+    y.left, x.right = x.right, y
+    update(y); update(x)
+    return x
+
+def rotate_left(x):
+    y = x.right
+    x.right, y.left = y.left, x
+    update(x); update(y)
+    return y
+
+def avl_insert(node, key):
+    if node is None:
+        return AVLNode(key)
+    if key &lt; node.key:
+        node.left = avl_insert(node.left, key)
+    elif key &gt; node.key:
+        node.right = avl_insert(node.right, key)
+    else:
+        return node                                   # дубликаты игнорируем
+    update(node)
+    b = balance(node)
+    if b &gt; 1:                                         # перевес влево
+        if key &gt; node.left.key:
+            node.left = rotate_left(node.left)        # случай LR
+        return rotate_right(node)                     # случай LL
+    if b &lt; -1:                                        # перевес вправо
+        if key &lt; node.right.key:
+            node.right = rotate_right(node.right)     # случай RL
+        return rotate_left(node)                      # случай RR
+    return node
+
+root = None
+for k in [1, 2, 3, 4, 5, 6, 7]:      # отсортированный ввод
+    root = avl_insert(root, k)
+root.key, root.height     # (4, 3) — дерево идеально сбалансировано
+# обычное BST дало бы высоту 7</code></pre></article>
+
+<article class="s1"><h3>Красно-чёрное дерево</h3><p>Узлы красные или чёрные. Правила:</p>
+<ol><li>Корень чёрный.</li><li>Листья (<code>NIL</code>) чёрные.</li><li>У красного узла оба потомка чёрные.</li><li>На всех путях от узла до листьев одинаковое число чёрных узлов.</li></ol>
+<p>Следствие: высота не больше <code>2·log₂(n + 1)</code>. Меньше поворотов, чем у AVL, быстрее вставка и удаление. Используется в стандартных библиотеках (<code>std::map</code> в C++, <code>TreeMap</code> в Java).</p></article>
+
+<article class="s1"><h3>B-дерево и B+-дерево</h3><p>В узле много ключей (десятки и сотни), поэтому дерево низкое и читает мало блоков с диска. Все листья на одной глубине. В B+-дереве данные лежат только в листьях, листья связаны списком (удобны диапазонные запросы). Применяются в индексах баз данных и файловых системах.</p></article>
+
+<article class="s1 wide"><h3>Сравнение и Python</h3><div class="tw"><table>
+<tr><th>Структура</th><th>Поиск / вставка / удаление</th><th>Особенности</th></tr>
+<tr><td>BST</td><td>O(h): в худшем O(n)</td><td>просто, но может вырождаться</td></tr>
+<tr><td>AVL</td><td>O(log n)</td><td>строгий баланс, быстрый поиск, больше поворотов</td></tr>
+<tr><td>Красно-чёрное</td><td>O(log n)</td><td>мягкий баланс, быстрее вставка</td></tr>
+<tr><td>B-дерево</td><td>O(log n)</td><td>оптимально для диска и БД</td></tr>
+<tr><td>Splay, treap</td><td>O(log n) в среднем</td><td>самонастраивающиеся и вероятностные</td></tr>
+</table></div>
+<p style="margin-top:8px">В стандартной библиотеке Python сбалансированных деревьев нет. Для упорядоченных коллекций используют сторонний пакет <code>sortedcontainers</code> (<code>pip install sortedcontainers</code>: <code>SortedList</code>, <code>SortedDict</code>) или <code>bisect.insort</code> (вставка <code>O(n)</code>).</p></article>
+</div>
+
+<h2 id="dijkstra">Алгоритм Дейкстры</h2>
+<p class="sub">Находит кратчайшие пути от одной вершины до всех остальных во <b>взвешенном</b> графе с <b>неотрицательными</b> весами. Идея: всегда обрабатывать вершину с наименьшим найденным расстоянием (жадный выбор) и пробовать улучшить расстояния до её соседей. Минимум берётся из кучи.</p>
+<div class="grid">
+<article class="s2 wide"><h3>Реализация на heapq</h3>
+<pre><code class="py">import heapq
+
+def dijkstra(graph, start):
+    dist = {v: float("inf") for v in graph}
+    prev = {}
+    dist[start] = 0
+    pq = [(0, start)]                        # (расстояние, вершина)
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d &gt; dist[u]:                      # устаревшая запись — пропускаем
+            continue
+        for v, w in graph[u]:
+            nd = d + w
+            if nd &lt; dist[v]:                 # нашли путь короче
+                dist[v] = nd
+                prev[v] = u
+                heapq.heappush(pq, (nd, v))
+    return dist, prev
+
+def restore(prev, start, target):
+    if target != start and target not in prev:
+        return None                          # недостижима
+    path = [target]
+    while path[-1] != start:
+        path.append(prev[path[-1]])
+    return path[::-1]
+
+graph = {
+    "A": [("B", 4), ("C", 1)],
+    "C": [("B", 2), ("D", 5)],
+    "B": [("D", 1)],
+    "D": [],
+}
+dist, prev = dijkstra(graph, "A")
+dist                           # {'A': 0, 'C': 1, 'B': 3, 'D': 4}
+restore(prev, "A", "D")        # ['A', 'C', 'B', 'D']</code></pre></article>
+
+<article class="s2"><h3>Сложность</h3><div class="tw"><table>
+<tr><td>с кучей (<code>heapq</code>)</td><td><code>O((V + E) log V)</code></td></tr>
+<tr><td>с простым массивом</td><td><code>O(V²)</code>, хорошо для плотных графов</td></tr>
+<tr><td>память</td><td><code>O(V + E)</code></td></tr>
+</table></div>
+<p style="margin-top:8px">Если нужен путь только до одной цели, можно остановиться, когда её достали из кучи.</p></article>
+
+<article class="s2"><h3>Ограничения и альтернативы</h3>
+<ul><li>Отрицательные веса: Дейкстра <b>неприменима</b>, берите алгоритм Беллмана — Форда.</li><li>Без весов (все рёбра равны): достаточно BFS.</li><li>Есть хорошая оценка расстояния до цели (карты): A* ускоряет поиск.</li><li>Пути между всеми парами вершин: Флойд — Уоршелл.</li></ul></article>
+</div>
+
+<h2 id="greedy">Жадные алгоритмы</h2>
+<p class="sub">На каждом шаге выбирается локально лучший вариант в расчёте на то, что итог окажется оптимальным. Быстро и просто, но <b>верно не всегда</b>: нужно доказать (или проверить), что жадный выбор не портит решение.</p>
+<div class="grid">
+<article class="s3"><h3>Выбор заявок (расписание)</h3><p>Какое наибольшее число непересекающихся событий можно провести? Жадное правило: брать то, что заканчивается раньше всех.</p>
+<pre><code class="py">def select(intervals):
+    intervals = sorted(intervals, key=lambda t: t[1])   # по концу
+    res, end = [], float("-inf")
+    for s, e in intervals:
+        if s &gt;= end:
+            res.append((s, e))
+            end = e
+    return res
+select([(1, 4), (3, 5), (0, 6), (5, 7), (3, 9), (5, 9),
+        (6, 10), (8, 11), (8, 12), (2, 14), (12, 16)])
+# [(1, 4), (5, 7), (8, 11), (12, 16)]</code></pre></article>
+
+<article class="s3"><h3>Размен монет</h3><p>Берём самые крупные монеты. Для «канонических» наборов (как в рублях или долларах) это оптимально.</p>
+<pre><code class="py">def greedy_change(amount, coins):
+    res = []
+    for c in sorted(coins, reverse=True):
+        k, amount = divmod(amount, c)
+        res += [c] * k
+    return res if amount == 0 else None
+greedy_change(93, [50, 10, 5, 1])   # [50, 10, 10, 10, 10, 1, 1, 1]</code></pre>
+<p style="margin-top:8px" class="pro">Не всегда: для монет [4, 3, 1] и суммы 6 жадный даёт [4, 1, 1] (3 монеты), а оптимум [3, 3] (2 монеты). Тогда нужно динамическое программирование.</p></article>
+
+<article class="s3"><h3>Дробный рюкзак</h3><p>Предметы можно делить: берём в порядке убывания «ценность на единицу веса».</p>
+<pre><code class="py">def fractional_knapsack(items, cap):      # items: (ценность, вес)
+    total = 0.0
+    for v, w in sorted(items, key=lambda t: t[0] / t[1], reverse=True):
+        take = min(w, cap)
+        total += v * take / w
+        cap -= take
+        if cap == 0:
+            break
+    return total
+fractional_knapsack([(60, 10), (100, 20), (120, 30)], 50)   # 240.0</code></pre></article>
+
+<article class="s3 wide"><h3>Известные жадные алгоритмы</h3><div class="tw"><table>
+<tr><th>Алгоритм</th><th>Жадный выбор</th></tr>
+<tr><td>Дейкстра</td><td>вершина с минимальным расстоянием</td></tr>
+<tr><td>Краскал</td><td>самое лёгкое ребро, не образующее цикл (остовное дерево)</td></tr>
+<tr><td>Прим</td><td>самое лёгкое ребро, ведущее в новую вершину</td></tr>
+<tr><td>Хаффман (сжатие)</td><td>объединяем два наименее частых символа</td></tr>
+<tr><td>Выбор заявок</td><td>событие, заканчивающееся раньше всех</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="dp">Динамическое программирование</h2>
+<p class="sub">Метод для задач с <b>перекрывающимися подзадачами</b> (одни и те же вычисляются много раз) и <b>оптимальной подструктурой</b> (решение собирается из решений подзадач). Результаты запоминаются, поэтому экспонента превращается в полином.</p>
+<div class="grid">
+<article class="s4"><h3>Как решать</h3>
+<ol><li>Определите <b>состояние</b>: что хранит <code>dp[i]</code>.</li><li>Запишите <b>формулу перехода</b> через меньшие состояния.</li><li>Задайте <b>базовые значения</b>.</li><li>Выберите порядок вычисления.</li><li>Найдите, где лежит ответ.</li></ol></article>
+
+<article class="s4"><h3>Два подхода</h3><div class="tw"><table>
+<tr><th>Сверху вниз (top-down)</th><th>Снизу вверх (bottom-up)</th></tr>
+<tr><td>рекурсия + кэш (<code>lru_cache</code>)</td><td>таблица, заполняемая циклами</td></tr>
+<tr><td>считает только нужное</td><td>нет рекурсии, можно сэкономить память</td></tr>
+</table></div></article>
+
+<article class="s4"><h3>Числа Фибоначчи</h3>
+<pre><code class="py">from functools import lru_cache
+@lru_cache(maxsize=None)
+def fib(n):                           # сверху вниз
+    return n if n &lt; 2 else fib(n - 1) + fib(n - 2)
+
+def fib_iter(n):                      # снизу вверх, память O(1)
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+fib_iter(50)    # 12586269025</code></pre></article>
+
+<article class="s4"><h3>Размен монет (минимум монет)</h3><p><code>dp[x] = min(dp[x − c] + 1)</code> по всем монетам <code>c</code>.</p>
+<pre><code class="py">def min_coins(coins, amount):
+    INF = float("inf")
+    dp = [0] + [INF] * amount
+    for x in range(1, amount + 1):
+        for c in coins:
+            if c &lt;= x and dp[x - c] + 1 &lt; dp[x]:
+                dp[x] = dp[x - c] + 1
+    return dp[amount] if dp[amount] != INF else -1
+min_coins([1, 3, 4], 6)    # 2  (3 + 3), жадный дал бы 3</code></pre></article>
+
+<article class="s4"><h3>Рюкзак 0/1</h3><p>Предмет берётся целиком или не берётся. <code>dp[c]</code> — максимальная ценность при вместимости <code>c</code>. Вместимость перебираем справа налево, чтобы каждый предмет учесть один раз.</p>
+<pre><code class="py">def knapsack(items, cap):              # items: (ценность, вес)
+    dp = [0] * (cap + 1)
+    for v, w in items:
+        for c in range(cap, w - 1, -1):
+            dp[c] = max(dp[c], dp[c - w] + v)
+    return dp[cap]
+knapsack([(60, 10), (100, 20), (120, 30)], 50)   # 220</code></pre></article>
+
+<article class="s4"><h3>Наибольшая общая подпоследовательность (LCS)</h3>
+<pre><code class="py">def lcs(a, b):
+    dp = [[0] * (len(b) + 1) for _ in range(len(a) + 1)]
+    for i in range(1, len(a) + 1):
+        for j in range(1, len(b) + 1):
+            if a[i - 1] == b[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1] + 1
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp[-1][-1]
+lcs("ABCBDAB", "BDCABA")    # 4</code></pre></article>
+
+<article class="s4"><h3>Расстояние Левенштейна</h3><p>Минимум вставок, удалений и замен, чтобы превратить одну строку в другую (проверка орфографии, поиск похожих слов).</p>
+<pre><code class="py">def edit_distance(a, b):
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1,                  # удаление
+                           cur[j - 1] + 1,               # вставка
+                           prev[j - 1] + (ca != cb)))    # замена
+        prev = cur
+    return prev[-1]
+edit_distance("kitten", "sitting")    # 3</code></pre></article>
+
+<article class="s4 wide"><h3>Подходы к задачам оптимизации</h3><div class="tw"><table>
+<tr><th>Подход</th><th>Идея</th><th>Всегда оптимален</th><th>Пример</th></tr>
+<tr><td>Полный перебор</td><td>проверить все варианты</td><td>да, но очень медленно</td><td>все перестановки</td></tr>
+<tr><td>Жадный</td><td>лучший локальный выбор</td><td>только при доказанном свойстве</td><td>Дейкстра, выбор заявок</td></tr>
+<tr><td>Динамическое программирование</td><td>запоминание подзадач</td><td>да</td><td>рюкзак 0/1, LCS</td></tr>
+<tr><td>Разделяй и властвуй</td><td>независимые подзадачи + слияние</td><td>да</td><td>быстрая сортировка, бинарный поиск</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="tools">Инструменты Python для алгоритмов</h2>
+<div class="grid">
+<article class="s5 wide"><h3>Модули и встроенные средства</h3><div class="tw"><table>
+<tr><th>Модуль</th><th>Что даёт</th><th>Пример</th></tr>
+<tr><td><code>heapq</code></td><td>куча, топ-k, приоритетная очередь</td><td><code>heappush</code>, <code>heappop</code>, <code>nlargest</code></td></tr>
+<tr><td><code>bisect</code></td><td>бинарный поиск и вставка в отсортированный список</td><td><code>bisect_left</code>, <code>insort</code></td></tr>
+<tr><td><code>collections</code></td><td><code>deque</code> (очередь O(1)), <code>Counter</code>, <code>defaultdict</code></td><td><code>deque.popleft()</code></td></tr>
+<tr><td><code>functools</code></td><td>мемоизация</td><td><code>@lru_cache</code>, <code>@cache</code></td></tr>
+<tr><td><code>itertools</code></td><td>перестановки, сочетания, накопление</td><td><code>permutations</code>, <code>combinations</code>, <code>accumulate</code></td></tr>
+<tr><td><code>math</code></td><td>математика для оценок</td><td><code>log2</code>, <code>gcd</code>, <code>comb</code>, <code>inf</code></td></tr>
+<tr><td><code>time</code>, <code>timeit</code></td><td>измерение скорости</td><td><code>perf_counter()</code></td></tr>
+<tr><td><code>sys</code></td><td>лимит рекурсии</td><td><code>setrecursionlimit</code></td></tr>
+<tr><td><code>random</code></td><td>тестовые данные</td><td><code>shuffle</code>, <code>sample</code>, <code>seed</code></td></tr>
+<tr><td><code>sortedcontainers</code>, <code>networkx</code> (сторонние)</td><td>упорядоченные коллекции; готовые алгоритмы на графах</td><td><code>pip install sortedcontainers networkx</code></td></tr>
+</table></div></article>
+</div>
+
+<h2 id="proj">Мини-проекты</h2>
+<p class="sub">Каждый проект — отдельный файл, запускается командой <code>python имя_файла.py</code>. Проект 1 использует <code>matplotlib</code> (<code>pip install matplotlib</code>), остальные — только стандартную библиотеку.</p>
+<div class="grid">
+<article class="s1 wide"><h3>Проект 1: соревнование сортировок</h3><p>Сравнивает пузырёк, выбор, вставки, быструю и встроенную сортировки на случайных данных и строит график в логарифмическом масштабе. Закрепляет O-нотацию: у квадратичных сортировок кривая круче.</p>
+<pre><code class="py">import random, time
+import matplotlib.pyplot as plt
+
+def bubble(a):
+    a = a[:]
+    for i in range(len(a) - 1):
+        swapped = False
+        for j in range(len(a) - 1 - i):
+            if a[j] &gt; a[j + 1]:
+                a[j], a[j + 1] = a[j + 1], a[j]
+                swapped = True
+        if not swapped:
+            break
+    return a
+
+def selection(a):
+    a = a[:]
+    for i in range(len(a) - 1):
+        m = min(range(i, len(a)), key=a.__getitem__)
+        a[i], a[m] = a[m], a[i]
+    return a
+
+def insertion(a):
+    a = a[:]
+    for i in range(1, len(a)):
+        key, j = a[i], i - 1
+        while j &gt;= 0 and a[j] &gt; key:
+            a[j + 1] = a[j]
+            j -= 1
+        a[j + 1] = key
+    return a
+
+def quick(a):
+    if len(a) &lt;= 1:
+        return a
+    p = a[len(a) // 2]
+    return (quick([x for x in a if x &lt; p]) + [x for x in a if x == p]
+            + quick([x for x in a if x &gt; p]))
+
+ALGOS = {"пузырёк": bubble, "выбор": selection, "вставки": insertion,
+         "быстрая": quick, "sorted": sorted}
+SIZES = [500, 1000, 2000, 4000]
+results = {name: [] for name in ALGOS}
+
+print(f"{'n':&gt;6}" + "".join(f"{name:&gt;10}" for name in ALGOS))
+for n in SIZES:
+    data = [random.randint(0, 10**6) for _ in range(n)]
+    row = []
+    for name, f in ALGOS.items():
+        t0 = time.perf_counter()
+        out = f(data)
+        dt = time.perf_counter() - t0
+        assert out == sorted(data)             # проверка правильности
+        results[name].append(dt)
+        row.append(dt)
+    print(f"{n:&gt;6}" + "".join(f"{t:&gt;10.4f}" for t in row))
+
+for name, times in results.items():
+    plt.loglog(SIZES, times, marker="o", label=name)
+plt.xlabel("n (размер списка)"); plt.ylabel("время, с")
+plt.title("Сортировки: время и размер данных"); plt.legend(); plt.grid(True, alpha=0.3)
+plt.show()
+# при удвоении n: O(n²) растёт примерно в 4 раза, O(n log n) — чуть более чем вдвое</code></pre></article>
+
+<article class="s2 wide"><h3>Проект 2: маршрутизатор — BFS и Дейкстра</h3><p>Один и тот же граф дорог даёт разные «лучшие» маршруты: BFS минимизирует число дорог, Дейкстра — километры.</p>
+<pre><code class="py">import heapq
+from collections import defaultdict, deque
+
+ROADS = [("Москва", "Тверь", 170), ("Москва", "Тула", 190),
+         ("Москва", "Курск", 600), ("Тула", "Орёл", 180),
+         ("Орёл", "Курск", 160), ("Тверь", "Санкт-Петербург", 500),
+         ("Москва", "Владимир", 190)]            # условные расстояния, км
+
+graph = defaultdict(list)
+for a, b, km in ROADS:
+    graph[a].append((b, km))
+    graph[b].append((a, km))
+
+def restore(prev, target):
+    path = []
+    while target is not None:
+        path.append(target)
+        target = prev[target]
+    return path[::-1]
+
+def fewest_roads(start, goal):                   # BFS
+    prev, q = {start: None}, deque([start])
+    while q:
+        v = q.popleft()
+        if v == goal:
+            break
+        for u, _ in graph[v]:
+            if u not in prev:
+                prev[u] = v
+                q.append(u)
+    return restore(prev, goal) if goal in prev else None
+
+def shortest(start, goal):                       # Дейкстра
+    dist, prev, pq = {start: 0}, {start: None}, [(0, start)]
+    while pq:
+        d, v = heapq.heappop(pq)
+        if v == goal:
+            return restore(prev, goal), d
+        if d &gt; dist.get(v, float("inf")):
+            continue
+        for u, km in graph[v]:
+            nd = d + km
+            if nd &lt; dist.get(u, float("inf")):
+                dist[u], prev[u] = nd, v
+                heapq.heappush(pq, (nd, u))
+    return None, None
+
+print(fewest_roads("Москва", "Курск"))   # ['Москва', 'Курск']  (1 дорога, 600 км)
+print(shortest("Москва", "Курск"))       # (['Москва', 'Тула', 'Орёл', 'Курск'], 530)</code></pre></article>
+
+<article class="s3 wide"><h3>Проект 3: лабиринт (BFS на сетке)</h3><p><code>S</code> — старт, <code>E</code> — выход, <code>#</code> — стена. Программа находит кратчайший путь и рисует его звёздочками.</p>
+<pre><code class="py">from collections import deque
+
+MAZE = [
+    "S.#.....",
+    ".##.###.",
+    "....#...",
+    ".####.#.",
+    "......#E",
+]
+
+def solve(maze):
+    grid = [list(r) for r in maze]
+    for r, row in enumerate(grid):
+        for c, ch in enumerate(row):
+            if ch == "S": start = (r, c)
+            if ch == "E": end = (r, c)
+    q, prev = deque([start]), {start: None}
+    while q:
+        cur = q.popleft()
+        if cur == end:
+            break
+        r, c = cur
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if (0 &lt;= nr &lt; len(grid) and 0 &lt;= nc &lt; len(grid[0])
+                    and grid[nr][nc] != "#" and (nr, nc) not in prev):
+                prev[(nr, nc)] = cur
+                q.append((nr, nc))
+    if end not in prev:
+        return None
+    path, cur = [], end
+    while cur:                                   # восстанавливаем путь
+        path.append(cur)
+        cur = prev[cur]
+    return path[::-1]
+
+path = solve(MAZE)
+if path:
+    grid = [list(r) for r in MAZE]
+    for r, c in path[1:-1]:
+        grid[r][c] = "*"
+    print("\n".join("".join(row) for row in grid))
+    print("шагов:", len(path) - 1)               # 15
+else:
+    print("пути нет")</code></pre></article>
+
+<article class="s4 wide"><h3>Проект 4: автодополнение (trie + Counter + heapq)</h3><p>Считает частоту слов в тексте (хеш-таблица), складывает их в префиксное дерево и подсказывает самые частые продолжения (куча).</p>
+<pre><code class="py">import heapq
+from collections import Counter
+
+class Trie:
+    def __init__(self):
+        self.root = {}
+
+    def add(self, word, freq):
+        node = self.root
+        for ch in word:
+            node = node.setdefault(ch, {})
+        node["$"] = freq                       # конец слова и его частота
+
+    def suggest(self, prefix, k=3):
+        node = self.root
+        for ch in prefix:
+            if ch not in node:
+                return []
+            node = node[ch]
+        found = []
+        def dfs(n, acc):
+            for ch, child in n.items():
+                if ch == "$":
+                    found.append((child, prefix + acc))
+                else:
+                    dfs(child, acc + ch)
+        dfs(node, "")
+        return [w for _, w in heapq.nlargest(k, found)]    # топ-k по частоте
+
+text = "python programming program protocol python project python proof program"
+trie = Trie()
+for word, freq in Counter(text.split()).items():
+    trie.add(word, freq)
+
+print(trie.suggest("pro"))   # ['program', 'protocol', 'proof'] — при равной частоте порядок обратный алфавитному
+print(trie.suggest("py"))    # ['python']
+print(trie.suggest("x"))     # []</code></pre></article>
+
+<article class="s5 wide"><h3>Проект 5: жадный против динамического программирования</h3><p>Показывает, когда простое жадное правило ошибается: размен монет и рюкзак.</p>
+<pre><code class="py">def greedy_change(amount, coins):
+    res = []
+    for c in sorted(coins, reverse=True):
+        k, amount = divmod(amount, c)
+        res += [c] * k
+    return res if amount == 0 else None
+
+def dp_change(amount, coins):
+    INF = float("inf")
+    best = [0] + [INF] * amount
+    take = [0] * (amount + 1)
+    for x in range(1, amount + 1):
+        for c in coins:
+            if c &lt;= x and best[x - c] + 1 &lt; best[x]:
+                best[x], take[x] = best[x - c] + 1, c
+    if best[amount] == INF:
+        return None
+    res = []
+    while amount:                              # восстанавливаем набор монет
+        res.append(take[amount])
+        amount -= take[amount]
+    return res
+
+for coins, amount in [([50, 10, 5, 1], 93), ([4, 3, 1], 6)]:
+    print(coins, amount, "жадный:", greedy_change(amount, coins),
+          "ДП:", dp_change(amount, coins))
+# [50, 10, 5, 1] 93 жадный: [50, 10, 10, 10, 10, 1, 1, 1] ДП: тот же набор (8 монет)
+# [4, 3, 1] 6 жадный: [4, 1, 1] ДП: [3, 3]
+
+ITEMS = [(60, 10), (100, 20), (120, 30)]       # (ценность, вес)
+
+def greedy_knapsack(items, cap):               # по удельной ценности
+    total = 0
+    for v, w in sorted(items, key=lambda t: t[0] / t[1], reverse=True):
+        if w &lt;= cap:
+            total += v
+            cap -= w
+    return total
+
+def dp_knapsack(items, cap):
+    dp = [0] * (cap + 1)
+    for v, w in items:
+        for c in range(cap, w - 1, -1):
+            dp[c] = max(dp[c], dp[c - w] + v)
+    return dp[cap]
+
+print(greedy_knapsack(ITEMS, 50), dp_knapsack(ITEMS, 50))   # 160 220</code></pre>
+<p style="margin-top:8px">Идеи для развития: добавить в проект 2 чтение графа из файла, в проект 3 — произвольные лабиринты и вывод в файл, в проект 4 — подсказки по тексту книги.</p></article>
+</div>
+</main>
+<footer>Совет: сначала оцените сложность на бумаге, потом пишите код и подтверждайте оценку замерами времени. Если в стандартной библиотеке уже есть нужная структура или алгоритм, используйте её.</footer>
+<script>
+(function(){
+var esc=function(t){return t.replace(/[&<>]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})};
+var L={
+py:[/(#.*$)|("[^"\n]*"|'[^'\n]*')|\b(import|from|def|class|return|if|elif|else|for|in|while|with|not|and|or|as|try|except|break|continue|None|True|False|lambda|assert|yield)\b|\b(\d+)\b/gm,['c','s','k','n']],
+sh:[/(#.*$)|("[^"\n]*"|'[^'\n]*')/gm,['c','s']]
+};
+document.querySelectorAll('pre code').forEach(function(c){
+var l=L[c.className]||L.py,cls=l[1];
+c.innerHTML=esc(c.textContent).replace(l[0],function(m){
+for(var i=1;i<=cls.length;i++){if(arguments[i]!==undefined)return '<i class="'+cls[i-1]+'">'+m+'</i>'}
+return m});
+});
+})();
+</script>
+</body>
+</html>
