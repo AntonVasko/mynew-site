@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Исключения в Python — шпаргалка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#EEF3F8;--card:#FFFFFF;--ink:#13203A;--mute:#5A6A85;--line:#D5DEEA;--a1:#0C7C86;--a2:#B9660A;--a3:#5B4BC4;--a4:#B8325A;--a5:#3A7D2C;--code:#0F1A30;--ct:#E3EAF6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}}
+:root[data-theme="dark"]{--bg:#0B1220;--card:#131D31;--ink:#E6ECF7;--mute:#9AABC6;--line:#27344F;--a1:#4FD1C5;--a2:#F2B25C;--a3:#A99BFF;--a4:#FF8FB0;--a5:#8FD97C;--code:#080F1D}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Onest,system-ui,Arial,sans-serif}
+header{padding:48px 20px 28px;max-width:1180px;margin:0 auto}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:0 0 12px;font-weight:800;letter-spacing:-.02em}
+header p{margin:0;color:var(--mute);max-width:66ch}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;padding:10px 20px;overflow-x:auto}
+nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+nav a:hover,nav a:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+main{max-width:1180px;margin:0 auto;padding:8px 20px 60px}
+h2{font-size:28px;margin:44px 0 6px}
+.sub{color:var(--mute);margin:0 0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+article{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--a1));border-radius:10px;padding:16px 18px;min-width:0}
+.s1{--c:var(--a1)}.s2{--c:var(--a2)}.s3{--c:var(--a3)}.s4{--c:var(--a4)}.s5{--c:var(--a5)}
+h3{margin:0 0 6px;font-size:17px}
+article p{margin:0 0 10px;color:var(--mute);font-size:14.5px}
+article ul,article ol{margin:0 0 10px;padding-left:20px;color:var(--mute);font-size:14.5px}
+pre{margin:0;background:var(--code);color:var(--ct);border-radius:8px;padding:12px 14px;overflow-x:auto;font:400 13px/1.55 'JetBrains Mono',ui-monospace,Consolas,monospace}
+pre+pre,pre+p,p+pre,pre+ul,pre+ol{margin-top:8px}
+i.k{color:#FFB454;font-style:normal;font-weight:600}i.s{color:#8EE6A0;font-style:normal}i.c{color:#7F90B0;font-style:italic}i.n{color:#7FC4FF;font-style:normal}
+.wide{grid-column:1/-1}
+.hl{border-width:2px;border-left-width:6px}
+article p.pro{color:var(--a5)}article p.con{color:var(--a4)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+td code,p code,li code,.sub code,footer code,header code{font:500 13px 'JetBrains Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px}
+.tw{overflow-x:auto}
+footer{color:var(--mute);font-size:13px;text-align:center;padding:0 20px 30px}
+</style>
+</head>
+<body>
+<header>
+<h1>Исключения в Python</h1>
+<p>Обработка ошибок: <code>try / except / else / finally</code>, встроенные исключения, <code>raise</code>, <code>assert</code>, свои исключения, менеджеры контекста и группы исключений. В конце — мини-проекты. Комментарий <code>#</code> показывает результат.</p>
+</header>
+<nav><a href="#basics">Основы</a><a href="#try">try / except</a><a href="#ef">else / finally</a><a href="#builtin">Встроенные</a><a href="#info">Информация об ошибке</a><a href="#patterns">Шаблоны</a><a href="#raise">raise</a><a href="#assert">assert</a><a href="#custom">Свои исключения</a><a href="#with">with</a><a href="#group">Группы</a><a href="#best">Практики</a><a href="#proj">Мини-проекты</a></nav>
+<main>
+
+<h2 id="basics">Основы: что такое исключение</h2>
+<p class="sub">Исключение — объект-сигнал об ошибке во время работы программы. Если его не обработать, он поднимается вверх по цепочке вызовов, и программа завершается с трассировкой (traceback).</p>
+<div class="grid">
+<article class="s1"><h3>Ошибка без обработки</h3>
+<pre><code class="py">def divide(a, b):
+    return a / b
+
+def main():
+    print(divide(10, 0))
+
+main()</code></pre>
+<pre><code class="sh">Traceback (most recent call last):
+  File "app.py", line 7, in &lt;module&gt;
+    main()
+  File "app.py", line 5, in main
+    print(divide(10, 0))
+  File "app.py", line 2, in divide
+    return a / b
+ZeroDivisionError: division by zero</code></pre></article>
+
+<article class="s1"><h3>Как читать traceback</h3>
+<ul><li>Читайте <b>снизу вверх</b>: последняя строка — тип и сообщение ошибки.</li><li>Строка над ней — место, где ошибка возникла.</li><li>Выше — цепочка вызовов, которая к ней привела.</li><li>Сообщение <code>File … line N</code> показывает файл и строку.</li></ul></article>
+
+<article class="s1"><h3>Ошибка синтаксиса и исключение</h3><p><code>SyntaxError</code> возникает до запуска (код не разобрался). Исключения возникают во время работы, и их можно перехватить.</p>
+<pre><code class="py">print("привет"          # SyntaxError — программа не запустится
+int("abc")               # ValueError — можно перехватить</code></pre></article>
+
+<article class="s1"><h3>Как идёт поиск обработчика</h3>
+<pre><code class="sh">ошибка в divide()
+   └─ нет try → поднимается в main()
+        └─ нет try → поднимается в модуль
+             └─ нет обработчика → программа завершается
+Если try/except найден на любом уровне — управление переходит в него.</code></pre></article>
+</div>
+
+<h2 id="try">Конструкция try … except</h2>
+<div class="grid">
+<article class="s2"><h3>Базовая форма</h3><p>Код в <code>try</code> выполняется; при ошибке указанного типа управление переходит в <code>except</code>.</p>
+<pre><code class="py">try:
+    n = int(input("Число: "))
+    print(10 / n)
+except ZeroDivisionError:
+    print("Делить на ноль нельзя")
+except ValueError:
+    print("Нужно ввести число")
+# ввод 0   → Делить на ноль нельзя
+# ввод abc → Нужно ввести число</code></pre></article>
+
+<article class="s2"><h3>Получить объект ошибки: as</h3>
+<pre><code class="py">try:
+    int("abc")
+except ValueError as e:
+    print(e)                  # invalid literal for int() with base 10: 'abc'
+    print(type(e).__name__)   # ValueError
+# после блока except имя e удаляется</code></pre></article>
+
+<article class="s2"><h3>Несколько исключений в одном except</h3><p>Типы перечисляются в <b>скобках</b> (кортеж).</p>
+<pre><code class="py">try:
+    result = data["x"] / int(data["y"])
+except (KeyError, ValueError, ZeroDivisionError) as e:
+    print(f"Некорректные данные: {e!r}")</code></pre></article>
+
+<article class="s2"><h3>Порядок except важен</h3><p>Проверяются сверху вниз, срабатывает первый подходящий. Частные исключения ставьте выше общих, иначе общий «перехватит» всё.</p>
+<pre><code class="py">try:
+    open("no_file.txt")
+except FileNotFoundError:      # частный
+    print("Файл не найден")
+except OSError:                # более общий
+    print("Ошибка ввода-вывода")
+except Exception:              # самый общий — последним
+    print("Что-то другое")</code></pre></article>
+
+<article class="s2"><h3>except Exception и «голый» except</h3>
+<pre><code class="py">try:
+    run()
+except Exception as e:         # ловит почти все ошибки программы
+    print("Ошибка:", e)
+
+try:
+    run()
+except:                        # ПЛОХО: ловит и Ctrl+C, и sys.exit()
+    pass</code></pre><p class="con" style="margin-top:8px">«Голый» <code>except:</code> и <code>except BaseException</code> скрывают <code>KeyboardInterrupt</code> и <code>SystemExit</code>. Используйте конкретные типы или хотя бы <code>Exception</code>.</p></article>
+
+<article class="s2"><h3>Вложенные try</h3>
+<pre><code class="py">try:
+    f = open("data.txt")
+    try:
+        value = int(f.readline())
+    except ValueError:
+        value = 0                      # внутренняя ошибка обработана локально
+    finally:
+        f.close()
+except FileNotFoundError:
+    value = -1                         # внешняя — другая ошибка
+print(value)</code></pre></article>
+
+<article class="s2"><h3>Обработка в вызывающем коде</h3><p>Функция может не обрабатывать ошибку, а оставить решение вызывающему.</p>
+<pre><code class="py">def read_age(text):
+    return int(text)                   # ошибка поднимется выше
+
+try:
+    age = read_age("двадцать")
+except ValueError:
+    age = None
+print(age)    # None</code></pre></article>
+
+<article class="s2"><h3>Не перехватывайте лишнее</h3><p>Держите в <code>try</code> только строки, где ошибка ожидаема.</p>
+<pre><code class="py"># плохо: любая ошибка внутри будет «обработана» как ValueError
+try:
+    n = int(text)
+    result = complicated(n)
+    save(result)
+except ValueError: ...
+
+# хорошо
+try:
+    n = int(text)
+except ValueError:
+    n = 0
+result = complicated(n)</code></pre></article>
+</div>
+
+<h2 id="ef">else и finally</h2>
+<div class="grid">
+<article class="s3"><h3>else: если ошибки не было</h3><p>Блок <code>else</code> выполняется, только когда в <code>try</code> исключений не произошло. Ошибки внутри <code>else</code> не перехватываются соседними <code>except</code>.</p>
+<pre><code class="py">try:
+    n = int(input("Число: "))
+except ValueError:
+    print("Не число")
+else:
+    print("Квадрат:", n * n)       # только если ввод корректен</code></pre></article>
+
+<article class="s3"><h3>finally: выполняется всегда</h3><p>Код в <code>finally</code> срабатывает при любом исходе: успех, ошибка, <code>return</code>, <code>break</code>. Используется для освобождения ресурсов.</p>
+<pre><code class="py">f = open("log.txt", "w")
+try:
+    f.write("запись\n")
+    risky()
+finally:
+    f.close()                      # файл закроется в любом случае</code></pre></article>
+
+<article class="s3"><h3>Полная форма</h3>
+<pre><code class="py">try:
+    value = int(text)
+except ValueError:
+    print("ошибка преобразования")
+else:
+    print("успех:", value)
+finally:
+    print("всегда выполняется")</code></pre></article>
+
+<article class="s3"><h3>Порядок выполнения</h3>
+<pre><code class="sh">нет ошибки:           try → else → finally
+ошибка перехвачена:   try (до ошибки) → except → finally
+ошибка не перехвачена: try (до ошибки) → finally → ошибка идёт вверх</code></pre></article>
+
+<article class="s3"><h3>try … finally без except</h3><p>Ошибка не подавляется, но очистка выполняется.</p>
+<pre><code class="py">def work():
+    try:
+        return "результат"
+    finally:
+        print("очистка")
+work()    # печатает «очистка», возвращает 'результат'</code></pre></article>
+
+<article class="s3 hl"><h3>Ловушка: return в finally</h3><p><code>return</code>, <code>break</code> или <code>continue</code> внутри <code>finally</code> отменяют исключение: ошибка пропадает бесследно. Избегайте этого.</p>
+<pre><code class="py">def bad():
+    try:
+        raise ValueError("потеряется")
+    finally:
+        return "ошибки как не бывало"
+bad()    # 'ошибки как не бывало'</code></pre></article>
+</div>
+
+<h2 id="builtin">Встроенные исключения</h2>
+<p class="sub">Все исключения — классы, образующие иерархию. <code>except</code> ловит указанный класс и всех его потомков.</p>
+<div class="grid">
+<article class="s4"><h3>Иерархия (сокращённо)</h3>
+<pre><code class="sh">BaseException
+├── SystemExit               sys.exit()
+├── KeyboardInterrupt        Ctrl+C
+├── GeneratorExit
+└── Exception                ← от него наследуются «обычные» ошибки
+    ├── ArithmeticError → ZeroDivisionError, OverflowError
+    ├── AssertionError
+    ├── AttributeError
+    ├── EOFError
+    ├── ImportError → ModuleNotFoundError
+    ├── LookupError → IndexError, KeyError
+    ├── NameError → UnboundLocalError
+    ├── OSError → FileNotFoundError, PermissionError,
+    │            FileExistsError, TimeoutError, ConnectionError
+    ├── RuntimeError → RecursionError, NotImplementedError
+    ├── StopIteration
+    ├── SyntaxError → IndentationError
+    ├── TypeError
+    └── ValueError → UnicodeError (UnicodeDecodeError)</code></pre></article>
+
+<article class="s4"><h3>Что это даёт</h3>
+<pre><code class="py">try:
+    d = {"a": 1}
+    d["b"]
+except LookupError:        # ловит и KeyError, и IndexError
+    print("нет такого ключа или индекса")
+
+ZeroDivisionError.__mro__  # цепочка родителей:
+# (ZeroDivisionError, ArithmeticError, Exception, BaseException, object)
+issubclass(KeyError, LookupError)   # True</code></pre></article>
+
+<article class="s4 wide"><h3>Частые исключения и когда они возникают</h3><div class="tw"><table>
+<tr><th>Исключение</th><th>Когда</th><th>Пример</th></tr>
+<tr><td><code>ValueError</code></td><td>значение неподходящее, тип верный</td><td><code>int("abc")</code></td></tr>
+<tr><td><code>TypeError</code></td><td>операция с неверным типом</td><td><code>"a" + 1</code>, <code>len(5)</code></td></tr>
+<tr><td><code>ZeroDivisionError</code></td><td>деление на ноль</td><td><code>1 / 0</code>, <code>5 % 0</code></td></tr>
+<tr><td><code>IndexError</code></td><td>индекс вне диапазона</td><td><code>[1, 2][5]</code></td></tr>
+<tr><td><code>KeyError</code></td><td>нет ключа в словаре</td><td><code>{"a": 1}["b"]</code></td></tr>
+<tr><td><code>AttributeError</code></td><td>нет атрибута или метода</td><td><code>None.upper()</code></td></tr>
+<tr><td><code>NameError</code></td><td>имя не определено</td><td><code>print(x)</code> без <code>x</code></td></tr>
+<tr><td><code>FileNotFoundError</code></td><td>файла нет</td><td><code>open("no.txt")</code></td></tr>
+<tr><td><code>PermissionError</code></td><td>нет прав доступа</td><td>запись в защищённую папку</td></tr>
+<tr><td><code>ImportError</code> / <code>ModuleNotFoundError</code></td><td>модуль не найден</td><td><code>import nomodule</code></td></tr>
+<tr><td><code>StopIteration</code></td><td>итератор закончился</td><td><code>next(iter([]))</code></td></tr>
+<tr><td><code>RecursionError</code></td><td>слишком глубокая рекурсия</td><td>функция без базового случая</td></tr>
+<tr><td><code>OverflowError</code></td><td>результат слишком велик</td><td><code>math.exp(1000)</code></td></tr>
+<tr><td><code>UnicodeDecodeError</code></td><td>не удалось декодировать байты</td><td><code>b"\xff".decode("utf-8")</code></td></tr>
+<tr><td><code>NotImplementedError</code></td><td>метод не реализован</td><td>заготовка в базовом классе</td></tr>
+<tr><td><code>KeyboardInterrupt</code></td><td>пользователь нажал Ctrl+C</td><td>прерывание программы</td></tr>
+<tr><td><code>AssertionError</code></td><td>не выполнилось условие <code>assert</code></td><td><code>assert 2 + 2 == 5</code></td></tr>
+</table></div></article>
+</div>
+
+<h2 id="info">Информация об исключении</h2>
+<div class="grid">
+<article class="s5"><h3>Сообщение, тип, аргументы</h3>
+<pre><code class="py">try:
+    1 / 0
+except ZeroDivisionError as e:
+    str(e)               # 'division by zero'
+    repr(e)              # "ZeroDivisionError('division by zero')"
+    e.args               # ('division by zero',)
+    type(e).__name__     # 'ZeroDivisionError'</code></pre></article>
+
+<article class="s5"><h3>Атрибуты OSError</h3>
+<pre><code class="py">try:
+    open("no.txt")
+except FileNotFoundError as e:
+    e.errno          # 2
+    e.strerror       # 'No such file or directory'
+    e.filename       # 'no.txt'</code></pre></article>
+
+<article class="s5"><h3>Трассировка в виде текста</h3>
+<pre><code class="py">import traceback
+try:
+    1 / 0
+except ZeroDivisionError:
+    traceback.print_exc()             # напечатать в stderr
+    text = traceback.format_exc()     # получить как строку
+    # e.__traceback__ — объект трассировки</code></pre></article>
+
+<article class="s5"><h3>Запись в журнал (logging)</h3><p><code>logging.exception</code> записывает сообщение уровня ERROR вместе с трассировкой. Вызывается внутри <code>except</code>.</p>
+<pre><code class="py">import logging
+logging.basicConfig(filename="app.log", level=logging.INFO,
+                    format="%(asctime)s %(levelname)s %(message)s")
+try:
+    risky()
+except Exception:
+    logging.exception("Сбой при обработке заказа")</code></pre></article>
+
+<article class="s5"><h3>Заметки к ошибке (Python 3.11+)</h3>
+<pre><code class="py">try:
+    int("abc")
+except ValueError as e:
+    e.add_note(f"Поле: возраст, строка 12")
+    raise                             # заметка попадёт в traceback</code></pre></article>
+
+<article class="s5"><h3>Глобальный обработчик</h3><p>Перехватывает необработанные исключения на верхнем уровне (например, для записи в журнал).</p>
+<pre><code class="py">import sys
+def handler(exc_type, exc, tb):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc, tb)
+        return
+    print(f"Критическая ошибка: {exc}")
+sys.excepthook = handler</code></pre></article>
+</div>
+
+<h2 id="patterns">Типовые шаблоны</h2>
+<div class="grid">
+<article class="s1"><h3>Ввод до корректного значения</h3>
+<pre><code class="py">def read_int(prompt, lo=None, hi=None):
+    while True:
+        try:
+            n = int(input(prompt))
+        except ValueError:
+            print("Введите целое число")
+            continue
+        if (lo is not None and n &lt; lo) or (hi is not None and n &gt; hi):
+            print(f"Допустимо от {lo} до {hi}")
+            continue
+        return n</code></pre></article>
+
+<article class="s1"><h3>EAFP и LBYL</h3><p><b>LBYL</b> — «посмотри, прежде чем прыгнуть» (проверки заранее). <b>EAFP</b> — «проще попросить прощения»: выполнить и обработать ошибку. В Python принят EAFP.</p>
+<pre><code class="py"># LBYL
+if "key" in d:
+    value = d["key"]
+else:
+    value = None
+# EAFP
+try:
+    value = d["key"]
+except KeyError:
+    value = None
+# а для словарей проще: d.get("key")</code></pre></article>
+
+<article class="s1"><h3>Значение по умолчанию</h3>
+<pre><code class="py">def to_int(text, default=0):
+    try:
+        return int(text)
+    except (ValueError, TypeError):
+        return default
+to_int("42"), to_int("abc"), to_int(None)    # (42, 0, 0)</code></pre></article>
+
+<article class="s1"><h3>Повтор при неудаче</h3>
+<pre><code class="py">import time
+for attempt in range(1, 4):
+    try:
+        data = fetch()
+        break                                  # успех — выходим
+    except ConnectionError as e:
+        print(f"Попытка {attempt} не удалась: {e}")
+        time.sleep(1)
+else:
+    raise RuntimeError("Сервер недоступен")   # все попытки исчерпаны</code></pre></article>
+
+<article class="s1"><h3>Пропустить плохие записи</h3>
+<pre><code class="py">rows = ["10", "x", "30", ""]
+nums, bad = [], []
+for r in rows:
+    try:
+        nums.append(int(r))
+    except ValueError:
+        bad.append(r)
+nums, bad     # ([10, 30], ['x', ''])</code></pre></article>
+
+<article class="s1"><h3>Прерывание с клавиатуры</h3>
+<pre><code class="py">try:
+    while True:
+        work()
+except KeyboardInterrupt:
+    print("\nОстановлено пользователем")
+finally:
+    cleanup()</code></pre></article>
+
+<article class="s1"><h3>Конец ввода и выход из программы</h3>
+<pre><code class="py">import sys
+try:
+    line = input()
+except EOFError:                 # поток ввода закончился
+    line = ""
+
+if error_found:
+    sys.exit(1)                  # SystemExit с кодом 1 (0 — успех)</code></pre></article>
+</div>
+
+<h2 id="raise">raise: самостоятельно вызвать исключение</h2>
+<p class="sub"><code>raise</code> нужен, чтобы сообщить об ошибке самому: когда данные некорректны, нарушено условие или нужно пробросить ошибку дальше.</p>
+<div class="grid">
+<article class="s2"><h3>Формы raise</h3>
+<pre><code class="py">raise ValueError("сообщение")      # с текстом (чаще всего)
+raise ValueError                   # класс без аргументов
+raise ValueError("a", 42)          # несколько аргументов → e.args
+err = KeyError("id")
+raise err                          # готовый объект
+raise                              # внутри except: повторить текущую ошибку</code></pre></article>
+
+<article class="s2"><h3>Проверка аргументов</h3><p>Неверный тип — <code>TypeError</code>, неверное значение — <code>ValueError</code>.</p>
+<pre><code class="py">def set_age(age):
+    if not isinstance(age, int):
+        raise TypeError(f"age должен быть int, получен {type(age).__name__}")
+    if not 0 &lt;= age &lt;= 120:
+        raise ValueError(f"age вне диапазона 0–120: {age}")
+    return age
+
+try:
+    set_age(-5)
+except ValueError as e:
+    print(e)        # age вне диапазона 0–120: -5</code></pre></article>
+
+<article class="s2"><h3>Повторный raise (re-raise)</h3><p>Обработать ошибку частично (записать в журнал, откатить изменения) и передать дальше. «Голый» <code>raise</code> сохраняет исходную трассировку.</p>
+<pre><code class="py">try:
+    save_to_db(order)
+except DatabaseError as e:
+    logging.error("Не удалось сохранить: %s", e)
+    rollback()
+    raise                     # вызывающий код тоже узнает об ошибке</code></pre></article>
+
+<article class="s2"><h3>raise … from: цепочка причин</h3><p>Заменяет низкоуровневую ошибку понятной и сохраняет исходную как причину (<code>__cause__</code>). В traceback видны обе.</p>
+<pre><code class="py">def load_port(text):
+    try:
+        return int(text)
+    except ValueError as e:
+        raise RuntimeError("Некорректный порт в настройках") from e
+
+try:
+    load_port("abc")
+except RuntimeError as e:
+    e.__cause__        # ValueError("invalid literal ...")</code></pre></article>
+
+<article class="s2"><h3>from None: скрыть причину</h3><p>Если исходная ошибка — технические детали, которые пользователю не нужны.</p>
+<pre><code class="py">try:
+    value = config["timeout"]
+except KeyError:
+    raise ValueError("Не задан параметр timeout") from None</code></pre></article>
+
+<article class="s2"><h3>Автоматическая цепочка (__context__)</h3><p>Если новая ошибка возникает <b>внутри except</b> без <code>from</code>, Python сам запоминает предыдущую в <code>__context__</code>.</p>
+<pre><code class="sh">ValueError: ...
+During handling of the above exception, another exception occurred:
+RuntimeError: ...      # (без from)
+
+...was the direct cause of the following exception:
+RuntimeError: ...      # (с from e)</code></pre></article>
+
+<article class="s2"><h3>Заготовки: NotImplementedError</h3>
+<pre><code class="py">class Shape:
+    def area(self):
+        raise NotImplementedError("Подкласс должен реализовать area()")
+
+class Square(Shape):
+    def __init__(self, a): self.a = a
+    def area(self): return self.a ** 2
+
+Square(3).area()    # 9
+Shape().area()      # NotImplementedError</code></pre></article>
+
+<article class="s2"><h3>Выход из программы</h3>
+<pre><code class="py">import sys
+sys.exit(0)                   # успех (SystemExit)
+sys.exit(1)                   # ошибка, код возврата 1
+sys.exit("Критическая ошибка")   # текст в stderr, код 1
+raise SystemExit(2)           # то же самое</code></pre></article>
+
+<article class="s2 wide"><h3>Какой тип исключения выбрать</h3><div class="tw"><table>
+<tr><th>Ситуация</th><th>Исключение</th></tr>
+<tr><td>Неверный тип аргумента</td><td><code>TypeError</code></td></tr>
+<tr><td>Верный тип, но недопустимое значение</td><td><code>ValueError</code></td></tr>
+<tr><td>Нет элемента по ключу / индексу</td><td><code>KeyError</code> / <code>IndexError</code></td></tr>
+<tr><td>Метод ещё не реализован</td><td><code>NotImplementedError</code></td></tr>
+<tr><td>Невозможное состояние объекта</td><td><code>RuntimeError</code></td></tr>
+<tr><td>Ошибка предметной области (баланс, заказ, доступ)</td><td>собственное исключение</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="assert">assert: проверка допущений</h2>
+<p class="sub"><code>assert условие, "сообщение"</code> вызывает <code>AssertionError</code>, если условие ложно. Это инструмент разработчика: проверка того, что в программе «не может быть» неверно.</p>
+<div class="grid">
+<article class="s3"><h3>Синтаксис</h3>
+<pre><code class="py">assert 2 + 2 == 4                      # всё хорошо, ничего не происходит
+assert 2 + 2 == 5                      # AssertionError
+assert 2 + 2 == 5, "арифметика сломалась"
+# AssertionError: арифметика сломалась
+
+# эквивалент:
+if __debug__ and not условие:
+    raise AssertionError(сообщение)</code></pre></article>
+
+<article class="s3"><h3>Типовое применение</h3>
+<pre><code class="py">def average(nums):
+    assert len(nums) &gt; 0, "список не должен быть пустым"   # предусловие
+    result = sum(nums) / len(nums)
+    assert min(nums) &lt;= result &lt;= max(nums)               # постусловие
+    return result
+
+class Account:
+    def withdraw(self, amount):
+        self.balance -= amount
+        assert self.balance &gt;= 0, "баланс не может быть отрицательным"   # инвариант</code></pre></article>
+
+<article class="s3 hl"><h3>assert можно отключить</h3><p>При запуске с ключом <code>-O</code> все <code>assert</code> пропускаются. Поэтому они не годятся для проверки входных данных и безопасности.</p>
+<pre><code class="sh">python app.py        # assert работают
+python -O app.py     # assert отключены (__debug__ == False)</code></pre>
+<pre><code class="py">def delete_user(user):
+    assert user.is_admin          # ПЛОХО: при -O проверка исчезнет
+    ...
+def delete_user(user):
+    if not user.is_admin:         # ХОРОШО
+        raise PermissionError("Нужны права администратора")</code></pre></article>
+
+<article class="s3"><h3>Ловушки assert</h3>
+<pre><code class="py"># 1. Скобки создают кортеж — он всегда «истинный»
+assert (x &gt; 0, "x должен быть положительным")   # проверка НЕ работает
+assert x &gt; 0, "x должен быть положительным"     # верно
+
+# 2. Не помещайте в assert действия с побочным эффектом
+assert queue.pop() is not None   # при -O pop() не вызовется!</code></pre></article>
+
+<article class="s3"><h3>assert в тестах</h3>
+<pre><code class="py"># pytest
+import pytest
+def test_divide():
+    assert divide(6, 3) == 2
+    with pytest.raises(ZeroDivisionError):
+        divide(1, 0)
+
+# unittest
+import unittest
+class T(unittest.TestCase):
+    def test_div(self):
+        self.assertEqual(divide(6, 3), 2)
+        with self.assertRaises(ZeroDivisionError):
+            divide(1, 0)</code></pre></article>
+
+<article class="s3 wide"><h3>assert или raise</h3><div class="tw"><table>
+<tr><th></th><th><code>assert</code></th><th><code>raise</code></th></tr>
+<tr><td>Для чего</td><td>внутренние допущения, отладка, тесты</td><td>проверка данных, ошибки для пользователей API</td></tr>
+<tr><td>Источник ошибки</td><td>баг в самой программе</td><td>неверный ввод, внешние условия</td></tr>
+<tr><td>Отключается через <code>-O</code></td><td>да</td><td>нет</td></tr>
+<tr><td>Тип ошибки</td><td>только <code>AssertionError</code></td><td>любое подходящее исключение</td></tr>
+<tr><td>Ловить в коде</td><td>не нужно</td><td>да, это часть логики</td></tr>
+</table></div></article>
+</div>
+
+<h2 id="custom">Собственные исключения</h2>
+<p class="sub">Свой класс ошибки делает код выразительнее: <code>InsufficientFundsError</code> понятнее, чем <code>ValueError</code>, и его можно ловить отдельно. Наследуйтесь от <code>Exception</code> (не от <code>BaseException</code>).</p>
+<div class="grid">
+<article class="s4"><h3>Самое простое</h3>
+<pre><code class="py">class EmptyBasketError(Exception):
+    """Корзина пуста."""
+
+def checkout(basket):
+    if not basket:
+        raise EmptyBasketError("Нельзя оформить пустую корзину")
+
+try:
+    checkout([])
+except EmptyBasketError as e:
+    print(e)        # Нельзя оформить пустую корзину</code></pre></article>
+
+<article class="s4"><h3>С данными и сообщением</h3><p>Дополнительные поля помогают обработчику принять решение.</p>
+<pre><code class="py">class InsufficientFundsError(Exception):
+    def __init__(self, balance, amount):
+        super().__init__(f"Недостаточно средств: баланс {balance}, нужно {amount}")
+        self.balance = balance
+        self.amount = amount
+
+try:
+    raise InsufficientFundsError(100, 250)
+except InsufficientFundsError as e:
+    print(e)                               # сообщение
+    print("Не хватает:", e.amount - e.balance)   # 150</code></pre></article>
+
+<article class="s4"><h3>Иерархия ошибок приложения</h3><p>Общий базовый класс позволяет перехватить все ошибки приложения одной строкой или обработать каждую отдельно.</p>
+<pre><code class="py">class AppError(Exception):
+    """Базовая ошибка приложения."""
+
+class ValidationError(AppError): ...
+class NotFoundError(AppError): ...
+class AccessDeniedError(AppError): ...
+
+try:
+    handle_request()
+except NotFoundError:
+    print("404")
+except AppError as e:         # любая другая ошибка приложения
+    print("Ошибка:", e)</code></pre></article>
+
+<article class="s4"><h3>Свой __str__ и код ошибки</h3>
+<pre><code class="py">class ApiError(Exception):
+    def __init__(self, status, message):
+        super().__init__(status, message)
+        self.status, self.message = status, message
+    def __str__(self):
+        return f"[{self.status}] {self.message}"
+
+raise ApiError(404, "Страница не найдена")
+# ApiError: [404] Страница не найдена</code></pre></article>
+
+<article class="s4"><h3>Наследование от встроенных</h3><p>Если ошибка по смыслу — частный случай встроенной, наследуйтесь от неё: старый код с <code>except ValueError</code> продолжит работать.</p>
+<pre><code class="py">class NegativeAgeError(ValueError):
+    pass
+
+try:
+    raise NegativeAgeError("возраст &lt; 0")
+except ValueError as e:        # поймали как ValueError
+    print(type(e).__name__)    # NegativeAgeError</code></pre></article>
+
+<article class="s4"><h3>Оборачивание чужих ошибок</h3><p>Библиотечные ошибки превращают в ошибки вашего уровня, сохраняя причину.</p>
+<pre><code class="py">class StorageError(AppError): ...
+
+def read_note(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+    except OSError as e:
+        raise StorageError(f"Не удалось прочитать {path}") from e</code></pre></article>
+
+<article class="s4 wide"><h3>Правила хорошего тона</h3>
+<ul><li>Имя заканчивается на <code>Error</code> (или <code>Exception</code> для не-ошибок).</li><li>Один модуль <code>errors.py</code> для всех исключений проекта.</li><li>Одна базовая ошибка приложения, от неё — конкретные.</li><li>Сообщение отвечает на вопрос «что пошло не так и с какими данными».</li><li>Не создавайте исключение на каждую мелочь: если обработчик у всех один — хватит одного класса.</li></ul></article>
+</div>
+
+<h2 id="with">Менеджеры контекста (with)</h2>
+<p class="sub"><code>with</code> гарантирует освобождение ресурса даже при ошибке. Это замена <code>try … finally</code> для файлов, соединений, блокировок.</p>
+<div class="grid">
+<article class="s5"><h3>with open</h3>
+<pre><code class="py">try:
+    with open("data.txt", encoding="utf-8") as f:
+        text = f.read()               # файл закроется сам
+except FileNotFoundError:
+    text = ""
+# внутри with ошибка тоже закроет файл</code></pre></article>
+
+<article class="s5"><h3>Несколько ресурсов</h3>
+<pre><code class="py">with open("in.txt") as src, open("out.txt", "w") as dst:
+    dst.write(src.read().upper())</code></pre></article>
+
+<article class="s5"><h3>Свой менеджер: класс</h3><p><code>__exit__</code> вызывается всегда. Если он вернёт <code>True</code>, исключение подавляется.</p>
+<pre><code class="py">import time
+class Timer:
+    def __enter__(self):
+        self.t0 = time.perf_counter()
+        return self
+    def __exit__(self, exc_type, exc, tb):
+        print(f"{time.perf_counter() - self.t0:.3f} с")
+        return False              # ошибку не подавлять
+
+with Timer():
+    sum(range(10**6))</code></pre></article>
+
+<article class="s5"><h3>Свой менеджер: contextmanager</h3>
+<pre><code class="py">from contextlib import contextmanager
+
+@contextmanager
+def transaction(db):
+    db.begin()
+    try:
+        yield db                  # тело with выполняется здесь
+    except Exception:
+        db.rollback()
+        raise
+    else:
+        db.commit()</code></pre></article>
+
+<article class="s5"><h3>suppress: молча игнорировать</h3>
+<pre><code class="py">import os
+from contextlib import suppress
+with suppress(FileNotFoundError):
+    os.remove("tmp.txt")          # нет файла — не страшно</code></pre></article>
+</div>
+
+<h2 id="group">Группы исключений (Python 3.11+)</h2>
+<div class="grid">
+<article class="s1 wide"><h3>ExceptionGroup и except*</h3><p>Позволяют сообщить сразу о нескольких независимых ошибках (например, при проверке формы или при параллельных задачах). Блок <code>except*</code> обрабатывает подходящие ошибки из группы.</p>
+<pre><code class="py">try:
+    raise ExceptionGroup("Ошибки валидации", [
+        ValueError("имя пустое"),
+        TypeError("возраст должен быть числом"),
+        ValueError("некорректный email"),
+    ])
+except* ValueError as eg:
+    for e in eg.exceptions:
+        print("ValueError:", e)         # имя пустое / некорректный email
+except* TypeError as eg:
+    print("TypeError:", eg.exceptions[0])</code></pre></article>
+</div>
+
+<h2 id="best">Хорошие практики</h2>
+<div class="grid">
+<article class="s2"><h3>Делайте</h3>
+<ul><li>Ловите <b>конкретные</b> исключения.</li><li>Держите <code>try</code> коротким.</li><li>Освобождайте ресурсы через <code>with</code> или <code>finally</code>.</li><li>Пишите понятные сообщения с данными.</li><li>Записывайте ошибки в журнал (<code>logging.exception</code>).</li><li>Пробрасывайте ошибку дальше, если не можете обработать (<code>raise</code>).</li><li>Используйте <code>raise … from</code> при замене исключения.</li><li>Создавайте свою иерархию исключений для проекта.</li></ul></article>
+
+<article class="s2"><h3>Не делайте</h3>
+<ul><li><code>except: pass</code> — ошибка исчезает бесследно.</li><li><code>except Exception: print("ошибка")</code> без деталей.</li><li>Ловить <code>BaseException</code>, <code>KeyboardInterrupt</code> без причины.</li><li><code>return</code> в <code>finally</code>.</li><li><code>assert</code> для проверки ввода пользователя.</li><li>Продолжать работу с некорректным состоянием после ошибки.</li><li>Использовать исключения вместо обычных <code>if</code> там, где ошибка — норма и в «горячем» цикле.</li></ul></article>
+
+<article class="s2 wide"><h3>Что применять</h3><div class="tw"><table>
+<tr><th>Задача</th><th>Инструмент</th></tr>
+<tr><td>Перехватить ожидаемую ошибку</td><td><code>try / except ТипОшибки</code></td></tr>
+<tr><td>Выполнить код только при успехе</td><td><code>else</code></td></tr>
+<tr><td>Освободить ресурс в любом случае</td><td><code>finally</code> или <code>with</code></td></tr>
+<tr><td>Сообщить об ошибке</td><td><code>raise</code></td></tr>
+<tr><td>Передать ошибку выше после обработки</td><td><code>raise</code> (без аргументов)</td></tr>
+<tr><td>Заменить ошибку на свою, сохранив причину</td><td><code>raise MyError(...) from e</code></td></tr>
+<tr><td>Проверить допущение при отладке и в тестах</td><td><code>assert</code></td></tr>
+<tr><td>Различать ошибки предметной области</td><td>собственные исключения</td></tr>
+<tr><td>Сообщить о нескольких ошибках сразу</td><td><code>ExceptionGroup</code>, <code>except*</code></td></tr>
+</table></div></article>
+</div>
+
+<h2 id="proj">Мини-проекты</h2>
+<p class="sub">Каждый проект — отдельный файл, запуск: <code>python имя_файла.py</code>. Вместе они используют все конструкции: <code>try / except / else / finally</code>, <code>raise</code>, <code>raise from</code>, <code>assert</code>, свои исключения, <code>with</code> и группы исключений. Проект 5 требует Python 3.11+.</p>
+<div class="grid">
+<article class="s1 wide"><h3>Проект 1: безопасный калькулятор (try / except / else / finally)</h3><p>Цикл ввода без падений: некорректные числа, неизвестные операции, деление на ноль, Ctrl+C.</p>
+<pre><code class="py">import operator
+
+OPS = {"+": operator.add, "-": operator.sub,
+       "*": operator.mul, "/": operator.truediv}
+
+def read_number(prompt):
+    while True:
+        try:
+            return float(input(prompt).replace(",", "."))
+        except ValueError:
+            print("Это не число, попробуйте ещё раз")
+
+def main():
+    print("Калькулятор. Выход: пустая операция или Ctrl+C")
+    try:
+        while True:
+            a = read_number("a = ")
+            op = input("операция (+ - * /): ").strip()
+            if not op:
+                break
+            b = read_number("b = ")
+            try:
+                result = OPS[op](a, b)
+            except KeyError:
+                print(f"Неизвестная операция: {op!r}")
+            except ZeroDivisionError:
+                print("Деление на ноль невозможно")
+            else:
+                print(f"= {result:g}")            # только при успехе
+            finally:
+                print("-" * 20)                   # после каждого вычисления
+    except (KeyboardInterrupt, EOFError):
+        print("\nДо свидания")
+
+main()</code></pre></article>
+
+<article class="s2 wide"><h3>Проект 2: загрузка конфигурации (несколько except, raise from, logging)</h3><p>Читает <code>config.json</code>. Нет файла — берёт значения по умолчанию, битый файл — понятная ошибка с причиной, неверный порт — <code>ValueError</code>.</p>
+<pre><code class="py">import json
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+class ConfigError(Exception):
+    """Ошибка загрузки конфигурации."""
+
+DEFAULTS = {"host": "localhost", "port": 8080, "debug": False}
+
+def validate(cfg):
+    port = cfg["port"]
+    if not isinstance(port, int) or not 1 &lt;= port &lt;= 65535:
+        raise ValueError(f"port должен быть числом 1–65535, получено {port!r}")
+
+def load_config(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        logging.warning("Файл %s не найден, используются значения по умолчанию", path)
+        return dict(DEFAULTS)
+    except json.JSONDecodeError as e:
+        raise ConfigError(f"Некорректный JSON в {path}: строка {e.lineno}") from e
+    except PermissionError as e:
+        raise ConfigError(f"Нет доступа к {path}") from e
+    else:
+        if not isinstance(data, dict):
+            raise ConfigError("Корень файла должен быть JSON-объектом")
+        config = {**DEFAULTS, **data}
+        validate(config)
+        return config
+
+if __name__ == "__main__":
+    try:
+        cfg = load_config("config.json")
+    except (ConfigError, ValueError) as e:
+        logging.error("Запуск невозможен: %s", e)
+        raise SystemExit(1)
+    print("Конфигурация:", cfg)
+
+# нет файла    → WARNING ... / Конфигурация: {'host': 'localhost', 'port': 8080, 'debug': False}
+# {"port": "abc"} → ERROR: Запуск невозможен: port должен быть числом 1–65535, получено 'abc'
+# {"port": 9000   (обрыв) → ERROR: Запуск невозможен: Некорректный JSON в config.json: строка 1</code></pre></article>
+
+<article class="s3 wide"><h3>Проект 3: банковский счёт (свои исключения, raise, assert)</h3><p>Иерархия ошибок предметной области, проверка входных данных через <code>raise</code>, внутренние инварианты через <code>assert</code>, откат перевода при ошибке.</p>
+<pre><code class="py">class BankError(Exception):
+    """Базовое исключение банка."""
+
+class InvalidAmountError(BankError):
+    def __init__(self, amount):
+        super().__init__(f"Некорректная сумма: {amount!r}")
+        self.amount = amount
+
+class InsufficientFundsError(BankError):
+    def __init__(self, balance, amount):
+        super().__init__(f"Недостаточно средств: на счёте {balance}, нужно {amount}")
+        self.balance, self.amount = balance, amount
+
+class Account:
+    def __init__(self, owner, balance=0):
+        if balance &lt; 0:
+            raise ValueError("начальный баланс не может быть отрицательным")
+        self.owner, self.balance = owner, balance
+
+    @staticmethod
+    def _check(amount):
+        if not isinstance(amount, (int, float)) or amount &lt;= 0:
+            raise InvalidAmountError(amount)
+
+    def deposit(self, amount):
+        self._check(amount)
+        self.balance += amount
+        assert self.balance &gt;= 0, "баланс стал отрицательным"   # инвариант
+
+    def withdraw(self, amount):
+        self._check(amount)
+        if amount &gt; self.balance:
+            raise InsufficientFundsError(self.balance, amount)
+        self.balance -= amount
+        assert self.balance &gt;= 0
+
+def transfer(src, dst, amount):
+    src.withdraw(amount)
+    try:
+        dst.deposit(amount)
+    except BankError:
+        src.deposit(amount)        # откат
+        raise                      # и сообщаем об ошибке дальше
+
+a, b = Account("Аня", 100), Account("Боря")
+for amount in (30, -5, "10", 500):
+    try:
+        transfer(a, b, amount)
+        print(f"Перевод {amount} выполнен: {a.balance} / {b.balance}")
+    except InvalidAmountError as e:
+        print("Ошибка суммы:", e)
+    except InsufficientFundsError as e:
+        print("Отказ:", e, f"(не хватает {e.amount - e.balance})")
+    except BankError as e:
+        print("Банковская ошибка:", e)
+# Перевод 30 выполнен: 70 / 30
+# Ошибка суммы: Некорректная сумма: -5
+# Ошибка суммы: Некорректная сумма: '10'
+# Отказ: Недостаточно средств: на счёте 70, нужно 500 (не хватает 430)</code></pre></article>
+
+<article class="s4 wide"><h3>Проект 4: повтор операции и этапы (декоратор, with, finally, raise from)</h3><p>Декоратор повторяет «капризную» функцию, при исчерпании попыток поднимает <code>RetryError</code> с причиной. Менеджер контекста <code>stage</code> сообщает об успехе или ошибке этапа.</p>
+<pre><code class="py">import functools, random, time
+from contextlib import contextmanager, suppress
+
+class RetryError(Exception):
+    """Все попытки исчерпаны."""
+
+def retry(times=3, delay=0.2, exceptions=(ConnectionError, TimeoutError)):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            last = None
+            for attempt in range(1, times + 1):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    last = e
+                    print(f"  попытка {attempt}/{times} не удалась: {e}")
+                    time.sleep(delay)
+            raise RetryError(f"{func.__name__}: все {times} попыток неудачны") from last
+        return wrapper
+    return decorator
+
+@retry(times=4)
+def fetch():
+    if random.random() &lt; 0.7:
+        raise ConnectionError("сервер не отвечает")
+    return "данные получены"
+
+@contextmanager
+def stage(name):
+    print(f"▶ {name}")
+    try:
+        yield
+    except Exception as e:
+        print(f"✖ {name}: {type(e).__name__}: {e}")
+        raise
+    else:
+        print(f"✔ {name}")
+    finally:
+        print(f"  (этап «{name}» завершён)")
+
+random.seed(1)                       # для воспроизводимого результата
+with suppress(RetryError):           # исчерпание попыток не роняет программу
+    with stage("загрузка"):
+        print(fetch())
+# при seed(1): одна неудачная попытка, затем успех:
+# ▶ загрузка / попытка 1/4 не удалась: сервер не отвечает / данные получены / ✔ загрузка</code></pre></article>
+
+<article class="s5 wide"><h3>Проект 5: валидатор данных (ExceptionGroup, except*, assert)</h3><p>Проверяет форму целиком и сообщает <b>обо всех</b> ошибках сразу. В конце — самопроверка через <code>assert</code>. Python 3.11+.</p>
+<pre><code class="py">def validate_user(data):
+    errors = []
+    if not str(data.get("name", "")).strip():
+        errors.append(ValueError("имя обязательно"))
+    age = data.get("age")
+    if not isinstance(age, int):
+        errors.append(TypeError("возраст должен быть целым числом"))
+    elif not 0 &lt;= age &lt;= 120:
+        errors.append(ValueError(f"возраст вне диапазона: {age}"))
+    if "@" not in str(data.get("email", "")):
+        errors.append(ValueError("некорректный email"))
+    if errors:
+        raise ExceptionGroup("Ошибки валидации", errors)
+
+# --- самопроверка (assert) ---
+assert validate_user({"name": "Аня", "age": 20, "email": "a@b.c"}) is None
+try:
+    validate_user({})
+    raise AssertionError("ожидалось исключение")
+except ExceptionGroup as eg:
+    assert len(eg.exceptions) == 3, "должно быть 3 ошибки"
+
+# --- использование ---
+try:
+    validate_user({"name": "", "age": "20", "email": "abc"})
+except* ValueError as eg:
+    for e in eg.exceptions:
+        print("ValueError:", e)
+except* TypeError as eg:
+    for e in eg.exceptions:
+        print("TypeError:", e)
+# ValueError: имя обязательно
+# ValueError: некорректный email
+# TypeError: возраст должен быть целым числом</code></pre><p style="margin-top:8px">Идеи для развития: объединить проекты в одно приложение с общим модулем <code>errors.py</code>, добавить запись всех ошибок в журнал через <code>logging.exception</code>, покрыть тестами на <code>pytest</code> с <code>pytest.raises</code>.</p></article>
+</div>
+</main>
+<footer>Совет: ловите только то, что умеете обработать, а остальное пусть поднимается выше. Ошибка с понятным сообщением и сохранённой причиной экономит часы отладки.</footer>
+<script>
+(function(){
+var esc=function(t){return t.replace(/[&<>]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})};
+var L={
+py:[/(#.*$)|("[^"\n]*"|'[^'\n]*')|\b(import|from|def|class|return|if|elif|else|for|in|while|with|not|and|or|as|try|except|finally|raise|assert|break|continue|pass|yield|lambda|global|None|True|False)\b|\b(\d+)\b/gm,['c','s','k','n']],
+sh:[/(#.*$)|("[^"\n]*"|'[^'\n]*')/gm,['c','s']]
+};
+document.querySelectorAll('pre code').forEach(function(c){
+var l=L[c.className]||L.py,cls=l[1];
+c.innerHTML=esc(c.textContent).replace(l[0],function(m){
+for(var i=1;i<=cls.length;i++){if(arguments[i]!==undefined)return '<i class="'+cls[i-1]+'">'+m+'</i>'}
+return m});
+});
+})();
+</script>
+</body>
+</html>
